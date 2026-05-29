@@ -1,24 +1,16 @@
-import { Dimension } from '../types/evidence';
+import { DimensionScore } from '../types/evidence';
 
 interface Props {
-  dimension: Dimension;
-  index: number;
+  dimension: DimensionScore & { topStrengths?: string[]; improvementAreas?: string[] };
 }
 
-export function DimensionScoreGauge({ dimension, index }: Props) {
+export function DimensionScoreGauge({ dimension }: Props) {
   const score = dimension.score;
   const getGaugeColor = () => {
     if (score >= 75) return 'var(--color-success)';
     if (score >= 55) return 'var(--color-accent)';
     if (score >= 30) return 'var(--color-warning)';
     return 'var(--color-danger)';
-  };
-
-  const getStatusEmoji = () => {
-    if (score >= 75) return '✅';
-    if (score >= 55) return '📈';
-    if (score >= 30) return '⚠️';
-    return '🔧';
   };
 
   const getDimensionIcon = (dim: string) => {

@@ -18,11 +18,11 @@ export function SkillExtraction({ evidence, extractedSkills, onContinue }: Props
   }
 
   // Count unique high-demand skills detected
-  const uniqueSkillNames = Array.from(skillCounts.keys());
-  const highDemandCount = uniqueSkillNames.filter((name) => {
-    const entry = skillTaxonomy.find((s) => s.name === name);
-    return entry?.demand === 'high';
-  }).length;
+  // const uniqueSkillNames = Array.from(skillCounts.keys());
+  // const highDemandCount = uniqueSkillNames.filter((name) => {
+  //   const entry = skillTaxonomy.find((s) => s.name === name);
+  //   return entry?.demand === 'high';
+  // }).length;
 
   // Market intelligence: alignment score + missing high-demand skills
   const marketInsights = generateMarketInsights(extractedSkills);

@@ -22,11 +22,6 @@ export function SkillProgressionRoad({ skills }: Props) {
     }
   };
 
-  const getMilestoneIcon = (idx: number, total: number) => {
-    if (idx === total - 1) return '🏁'; // Finish line
-    return '📍'; // Checkpoint
-  };
-
   return (
     <div style={{ marginTop: '32px', marginBottom: '32px' }}>
       {/* Road Title */}

@@ -493,7 +493,7 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
           </p>
           <div className={styles.dimensionsGrid}>
             {profile.dimensions.map((dimension, idx) => (
-              <DimensionScoreGauge key={idx} dimension={dimension} index={idx} />
+              <DimensionScoreGauge key={idx} dimension={dimension} />
             ))}
           </div>
         </div>

@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { Evidence, StudentProfile } from '../types/evidence';
+import { Evidence, StudentProfile, ExtractedSkill } from '../types/evidence';
 import { EvidenceCard } from '../components/EvidenceCard';
 import { EvidenceForm } from '../components/EvidenceForm';
 import { SkillsByDemandVisualization } from '../components/SkillsByDemandVisualization';
 import { exportEvidenceToPDF } from '../utils/pdfExport';
 import { exportProfileToJSON } from '../utils/profileExport';
-import { extractSkillsFromEvidence } from '../utils/skillExtraction';
+// import { extractSkillsFromEvidence } from '../utils/skillExtraction'; // Not currently used
 import styles from './ProfileAndEvidence.module.css';
 
 interface Props {
@@ -409,7 +409,7 @@ export function ProfileAndEvidence({
               {/* Skills Grouped by Demand */}
               {(() => {
                 const allExtractedSkills = useMemo(() => {
-                  const skills: Array<{ skill: string; confidence: 'high' | 'medium' | 'low' }> = [];
+                  const skills: ExtractedSkill[] = [];
                   evidence.forEach(item => {
                     if (item.technologies) {
                       item.technologies.split(',').forEach(tech => {
@@ -418,6 +418,8 @@ export function ProfileAndEvidence({
                           skills.push({
                             skill: trimmed,
                             confidence: 'high',
+                            sourceEvidenceId: item.id,
+                            sourcePhrase: item.technologies || '',
                           });
                         }
                       });

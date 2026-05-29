@@ -82,7 +82,7 @@ export const careerSuccessStories: SuccessStory[] = [
   },
 ];
 
-export function getRelevantStory(currentScore: number, yearsExperience: number): SuccessStory | null {
+export function getRelevantStory(currentScore: number, _yearsExperience: number): SuccessStory | null {
   // Return a success story that's slightly above current level to inspire
   if (currentScore < 50) {
     return careerSuccessStories[0]; // Start with Priya's Year 1-2 story
@@ -93,7 +93,7 @@ export function getRelevantStory(currentScore: number, yearsExperience: number):
   }
 }
 
-export function getSalaryContext(score: number, yearsExperience: number): string {
+export function getSalaryContext(score: number, _yearsExperience: number): string {
   if (score >= 75) {
     return 'You\'re in the salary range of senior engineers. SGD 180k-250k/year in Singapore, with equity packages.';
   } else if (score >= 55) {
