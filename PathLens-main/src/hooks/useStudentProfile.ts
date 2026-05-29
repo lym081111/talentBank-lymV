@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { StudentProfile } from '../types/evidence';
-import { danielLeeProfile } from '../data/mockStudent';
+import { priyaSharmaProfile } from '../data/mockStudent';
 
 const STORAGE_KEY = 'pathlens_student_profile';
 
@@ -11,7 +11,7 @@ function loadProfile(): StudentProfile {
   } catch {
     // ignore parse errors
   }
-  return danielLeeProfile;
+  return priyaSharmaProfile;
 }
 
 function saveProfile(profile: StudentProfile): void {
@@ -41,11 +41,11 @@ export function useStudentProfile() {
   }, []);
 
   const resetProfile = useCallback(() => {
-    setProfile(danielLeeProfile);
-    saveProfile(danielLeeProfile);
+    setProfile(priyaSharmaProfile);
+    saveProfile(priyaSharmaProfile);
   }, []);
 
-  const isDemoProfile = profile.name === danielLeeProfile.name && profile.id === danielLeeProfile.id;
+  const isDemoProfile = profile.name === priyaSharmaProfile.name && profile.id === priyaSharmaProfile.id;
 
   return { profile, updateProfile, resetProfile, isDemoProfile };
 }
