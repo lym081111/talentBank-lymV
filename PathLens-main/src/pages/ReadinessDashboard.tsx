@@ -23,27 +23,12 @@ function PortfolioQualitySection({ evidence }: { evidence: Evidence[] }) {
 
   return (
     <div style={{ marginBottom: '32px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-        <div>
-          <h3 style={{ margin: '0 0 4px 0', fontSize: '18px', fontWeight: '700', color: 'var(--color-text)' }}>
-            💼 Portfolio Quality Analysis
-          </h3>
-          <p style={{ margin: '0', fontSize: '13px', color: 'var(--color-text-secondary)' }}>
-            Feedback on your projects to help you prepare for internship applications
-          </p>
-        </div>
-        <div style={{
-          background: 'linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-accent-light) 100%)',
-          border: '1px solid var(--color-primary)',
-          borderRadius: 'var(--radius-md)',
-          padding: '12px 16px',
-          textAlign: 'center'
-        }}>
-          <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '2px' }}>Portfolio Quality Score</div>
-          <div style={{ fontSize: '24px', fontWeight: '700', color: 'var(--color-primary)' }}>{averageScore}</div>
-          <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>/ 100</div>
-        </div>
-      </div>
+      <h3 style={{ margin: '0 0 12px 0', fontSize: '18px', fontWeight: '700', color: 'var(--color-text)' }}>
+        💼 Your Portfolio Quality: <span style={{ color: 'var(--color-primary)', fontSize: '24px' }}>{averageScore}/100</span>
+      </h3>
+      <p style={{ margin: '0 0 20px 0', fontSize: '13px', color: 'var(--color-text-secondary)' }}>
+        Each of your projects scored across <strong>documentation, complexity, impact, and deployment</strong>. Below is detailed feedback to strengthen your applications.
+      </p>
       <div style={{ display: 'grid', gap: '16px' }}>
         {portfolioScores.map(score => (
           <PortfolioQualityCard key={score.itemId} quality={score} />
@@ -282,7 +267,7 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
         <AICareerInsight evidence={evidence} profile={studentProfile} />
 
         <div className={styles.overallSection}>
-          <h2>Your Career Landscape</h2>
+          <h2 style={{ color: 'var(--color-text)', fontWeight: '800', fontSize: '28px', marginBottom: '20px' }}>Your Career Landscape</h2>
 
           <div className={`${styles.overallCard} ${scoreDone ? styles.scorePulse : ''}`}>
             <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', fontWeight: '600', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
