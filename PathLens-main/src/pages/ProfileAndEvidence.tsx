@@ -102,13 +102,6 @@ export function ProfileAndEvidence({
     }
   }, [showSuccess]);
 
-  useEffect(() => {
-    if (formMode !== 'closed' && formRef.current) {
-      setTimeout(() => {
-        formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
-    }
-  }, [formMode]);
 
   function handleSave(data: Omit<Evidence, 'id'>) {
     if (formMode === 'add' || (typeof formMode === 'object' && 'template' in formMode)) {
@@ -345,13 +338,36 @@ export function ProfileAndEvidence({
           </div>
 
           {formMode !== 'closed' && (
-            <div ref={formRef}>
-              <EvidenceForm
-                initial={typeof formMode === 'object' && 'editing' in formMode ? formMode.editing : undefined}
-                startWith={typeof formMode === 'object' && 'template' in formMode ? formMode.template : undefined}
-                onSave={handleSave}
-                onCancel={() => setFormMode('closed')}
-              />
+            <div style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1000,
+              backdropFilter: 'blur(4px)',
+            }}>
+              <div style={{
+                backgroundColor: 'var(--color-bg)',
+                borderRadius: 'var(--radius-xl)',
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+                maxHeight: '90vh',
+                overflowY: 'auto',
+                width: '90%',
+                maxWidth: '600px',
+                padding: '32px',
+              }} ref={formRef}>
+                <EvidenceForm
+                  initial={typeof formMode === 'object' && 'editing' in formMode ? formMode.editing : undefined}
+                  startWith={typeof formMode === 'object' && 'template' in formMode ? formMode.template : undefined}
+                  onSave={handleSave}
+                  onCancel={() => setFormMode('closed')}
+                />
+              </div>
             </div>
           )}
 
