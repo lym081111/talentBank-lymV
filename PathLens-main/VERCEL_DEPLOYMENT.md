@@ -1,78 +1,62 @@
 # Vercel Deployment Guide
 
-## 🚀 Quick Deploy
+## ✅ Latest Code Deployed
 
-Your code is now on GitHub: **https://github.com/lym081111/talentBank-lymV**
+Your updated code is now on GitHub: **https://github.com/lym081111/talentBank-lymV**
 
-### Option 1: Auto-Deploy (Recommended)
+**Live URL:** https://path-lens-wine.vercel.app
 
-1. Go to **https://vercel.com**
-2. Click **"New Project"** 
-3. Import the GitHub repo: `lym081111/talentBank-lymV`
-4. Vercel will auto-detect the build settings:
-   - **Framework Preset:** Vite
-   - **Build Command:** `npm run build`
-   - **Output Directory:** `dist`
-   - **Install Command:** `npm install`
-5. Click **"Deploy"**
-6. Your app will be live at: `https://talentbank-lymv.vercel.app` (auto-generated URL)
-
-### Option 2: Deploy via CLI
-
-```bash
-npm install -g vercel
-vercel login
-vercel --prod
-```
-
-Your live URL will appear in the terminal.
+Vercel has automatically re-deployed your latest changes. The live site now includes:
+- Fixed ProfileAndEvidence auto-edit form on new profile creation
+- Removed redundant "start with blank form" link
+- Fixed "+ Add Item" button overlap
+- Removed duplicate "Dimensions at target" section
+- Clearer scoring card labels ("Readiness Score" vs "Portfolio Quality Score")
 
 ---
 
-## ✅ Updates Applied
+## 📊 Latest Deployment Status
 
-All bug fixes from the PDF have been implemented and pushed:
-
-### ProfileAndEvidence Page
-- ✅ Auto-show profile edit form on new profile creation
-- ✅ Remove redundant "start with blank form" link
-- ✅ Fix "+ Add Item" button overlap with cards
-- ✅ Improve profile creation flow
-
-### ReadinessDashboard Page
-- ✅ Remove duplicate "Dimensions at target" section
-- ✅ Add clear scoring card labels ("Readiness Score" vs "Portfolio Quality Score")
-- ✅ Improve landscape section typography
-
-### Commit Hash
-```
-66f2203 - Merged with remote + UI/UX fixes
-5848c86 - Fix UI/UX issues from user feedback
-```
+| Item | Status |
+|------|--------|
+| **Code** | ✅ Pushed to GitHub |
+| **Repository** | https://github.com/lym081111/talentBank-lymV |
+| **Live URL** | https://path-lens-wine.vercel.app |
+| **Auto-Deploy** | ✅ Triggered on push |
+| **Bug Fixes** | ✅ All 5 issues resolved |
 
 ---
 
-## 📝 Update Repository README
+## ✅ What Changed in Latest Deploy
 
-After deployment, update the README live demo link:
+### ProfileAndEvidence Improvements
+- Auto-show profile edit form when creating new profile (no need to click Edit button)
+- Removed redundant "start with a blank form" link
+- Moved "+ Add Item" button to bottom to eliminate layout overlap
+- Cleaner profile creation flow
 
-```markdown
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?logo=vercel)](https://YOUR_VERCEL_URL)
-```
+### ReadinessDashboard Improvements  
+- Removed duplicate "Dimensions at target" section that redundantly showed diagram info
+- Added clear labels: "Readiness Score" (overall) vs "Portfolio Quality Score" (content analysis)
+- Improved landscape section typography for better readability
 
-Replace `YOUR_VERCEL_URL` with your actual Vercel deployment URL (e.g., `https://talentbank-lymv.vercel.app`)
+### Commits
+- `993131c` - Add Vercel deployment guide
+- `66f2203` - Merged with remote + UI/UX fixes
+- `5848c86` - Fix UI/UX issues from user feedback
 
 ---
 
-## 🔗 Once Deployed
+## 🧪 Test the Live Site
 
-Share your live URL:
-- GitHub Profile: Add to repository description
-- Environment Variables: If needed, add `VITE_ANTHROPIC_API_KEY` in Vercel dashboard → Settings → Environment Variables
-- Test the app at your live URL
+Visit: **https://path-lens-wine.vercel.app**
+
+1. Click "Build My Own Profile"
+2. You should see the profile edit form automatically (not need to click Edit)
+3. Add evidence items and verify "+ Add More Evidence" button is at the bottom
+4. Go through to Readiness Dashboard and verify clearer score labels
+5. Check that "Dimensions at target" duplicate section is removed
 
 ---
 
-**Status:** ✅ Code ready for deployment  
-**Repository:** https://github.com/lym081111/talentBank-lymV  
-**Next Step:** Deploy to Vercel and share the live URL
+**Status:** ✅ **LIVE WITH LATEST FIXES**
