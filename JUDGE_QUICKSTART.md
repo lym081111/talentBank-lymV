@@ -1,6 +1,6 @@
 # PathLens — Judge Quickstart
 
-**Live deployment:** https://path-lens-wine.vercel.app  
+**Live deployment:** https://talentbank-lymv-career-os.vercel.app  
 **Module:** Adaptive Readiness Profile — Universities Track  
 **Hackathon:** Talentbank Tech Hackathon 2026 · Build Asia's Career OS
 
@@ -10,7 +10,7 @@
 
 ## Fastest Path: 2-Minute Demo
 
-1. Open **https://path-lens-wine.vercel.app**
+1. Open **https://talentbank-lymv-career-os.vercel.app**
 2. Click **"✨ See a Live Demo"** — Choose from 3 personas (Daniel Lee, Sarah Tan, Ahmad Razif)
 3. Click any persona card to load their profile (instant load, no latency)
 4. Click **"See My Readiness"** — Watch streaming Claude AI insights render live

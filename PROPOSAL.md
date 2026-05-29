@@ -3,7 +3,7 @@
 **Talentbank Tech Hackathon 2026**  
 **Track:** Universities Track  
 **Career OS module focus:** Module 03 - Adaptive Readiness Profile, with a lightweight Module 04 Career Marketplace bridge  
-**Prototype:** https://path-lens-wine.vercel.app
+**Prototype:** https://talentbank-lymv-career-os.vercel.app
 
 ## Problem
 

@@ -2,7 +2,7 @@
 
 **Navigate your career. Do not just predict it.**
 
-**Live demo:** https://path-lens-wine.vercel.app  
+**Live demo:** https://talentbank-lymv-career-os.vercel.app  
 **Hackathon:** Talentbank Tech Hackathon 2026 - Build Asia's Career OS  
 **Module:** Adaptive Readiness Profile - Universities Track, with a Career Marketplace bridge
 

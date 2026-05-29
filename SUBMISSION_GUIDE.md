@@ -1,6 +1,6 @@
 # PathLens — Hackathon Submission Guide
 
-**Live Deployment:** https://path-lens-wine.vercel.app  
+**Live Deployment:** https://talentbank-lymv-career-os.vercel.app  
 **Repository:** https://github.com/LouisC9/PathLens  
 **Module:** Adaptive Readiness Profile — Universities Track (03 of 05)  
 **Hackathon:** Talentbank Tech Hackathon 2026 · Build Asia's Career OS
@@ -11,7 +11,7 @@
 
 ### 2-Minute Demo (Start Here)
 
-1. **Open:** https://path-lens-wine.vercel.app
+1. **Open:** https://talentbank-lymv-career-os.vercel.app
 2. **Click:** "✨ See a Live Demo" → Choose any persona (Daniel Lee / Sarah Tan / Ahmad Razif)
 3. **Watch:** Loads demo student profile instantly
 4. **Click:** "See My Readiness" → Watch Claude AI streaming insights
@@ -211,7 +211,7 @@ Without it, the app falls back to smart rule-based insights automatically.
 
 ## Submission Checklist
 
-- ✅ **Live deployment:** https://path-lens-wine.vercel.app
+- ✅ **Live deployment:** https://talentbank-lymv-career-os.vercel.app
 - ✅ **GitHub repository:** https://github.com/LouisC9/PathLens
 - ✅ **Code quality:** 95/95 tests, 0 TypeScript errors
 - ✅ **Documentation:** 6 markdown files (README, FEATURES, JUDGE_QUICKSTART, ARCHITECTURE, PROPOSAL, QA_REPORT)

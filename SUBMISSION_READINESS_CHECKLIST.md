@@ -2,7 +2,7 @@
 
 **Competition:** Talentbank Tech Hackathon 2026  
 **Challenge:** Build Asia's Career OS  
-**Prototype URL:** https://path-lens-wine.vercel.app  
+**Prototype URL:** https://talentbank-lymv-career-os.vercel.app  
 **Current implementation folder:** `C:\Users\User\Downloads\PathLens-main\PathLens-career-os-implementation`
 
 ## Stage 1 Intent Submission

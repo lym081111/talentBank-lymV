@@ -1,7 +1,7 @@
 # Deploy PathLens
 
 **Implementation folder:** `C:\Users\User\Downloads\PathLens-main\PathLens-career-os-implementation`  
-**Current live demo:** https://path-lens-wine.vercel.app
+**Current live demo:** https://talentbank-lymv-career-os.vercel.app
 
 This copy contains the Career OS implementation update: sharper Adaptive Readiness Profile positioning, a Module 04 Career Marketplace preview, refreshed docs, and marketplace matching tests.
 
@@ -61,7 +61,7 @@ Also check mobile at 375px width.
 ## Submission Snippet
 
 ```text
-Live Demo: https://path-lens-wine.vercel.app
+Live Demo: https://talentbank-lymv-career-os.vercel.app
 
 How to evaluate:
 1. Open the URL.
