@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from 'react';
 import { ReadinessProfile, Evidence, StudentProfile } from '../types/evidence';
-import { ReadinessDimensionCard } from '../components/ReadinessDimensionCard';
+import { DimensionScoreGauge } from '../components/DimensionScoreGauge';
 import { AICareerInsight } from '../components/AICareerInsight';
 import { RadarChart } from '../components/RadarChart';
 import { ATSScoreCard } from '../components/ATSScoreCard';
@@ -305,26 +305,42 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
           </div>
         </div>
 
-        <div className={styles.scoringGuide}>
-          <h4>📊 What Your Score Means</h4>
-          <div className={styles.scoreThresholds}>
-            <div className={styles.scoreThreshold}>
-              <strong>75+: Market Ready</strong><br/>
-              <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>Competitive for senior/staff roles. Comparable to Priya Sharma (SWE at Grab). Salary range: SGD 180k+/year in Singapore.</span>
+        {/* Visual Score Range Indicators */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gap: '12px',
+          marginBottom: '32px',
+        }}>
+          {[
+            { label: '75+', emoji: '🏆', color: 'var(--color-success)', desc: 'Market Ready', salary: 'SGD 180k+' },
+            { label: '55-74', emoji: '📈', color: 'var(--color-accent)', desc: 'Good Progress', salary: 'SGD 120-160k' },
+            { label: '30-54', emoji: '⚙️', color: 'var(--color-warning)', desc: 'Building', salary: 'SGD 48-72k' },
+            { label: '<30', emoji: '🌱', color: 'var(--color-danger)', desc: 'Starting Out', salary: 'Entry Level' },
+          ].map((range, idx) => (
+            <div
+              key={idx}
+              style={{
+                background: 'var(--color-surface)',
+                border: `2px solid ${range.color}`,
+                borderRadius: 'var(--radius-lg)',
+                padding: '16px',
+                textAlign: 'center',
+                opacity: profile.overall >= (idx === 3 ? 0 : idx === 2 ? 30 : idx === 1 ? 55 : 75) ? 1 : 0.6,
+              }}
+            >
+              <div style={{ fontSize: '28px', marginBottom: '4px' }}>{range.emoji}</div>
+              <div style={{ fontSize: '14px', fontWeight: '700', color: range.color, marginBottom: '2px' }}>
+                {range.label}
+              </div>
+              <div style={{ fontSize: '11px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '4px' }}>
+                {range.desc}
+              </div>
+              <div style={{ fontSize: '10px', color: 'var(--color-text-muted)' }}>
+                {range.salary}
+              </div>
             </div>
-            <div className={styles.scoreThreshold}>
-              <strong>55–74: Good Progress</strong><br/>
-              <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>Ready for mid-level roles. Similar to Kai Chen's path (Data Eng at ByteDance). Focus on high-impact skill gaps to unlock +20-30% salary uplift.</span>
-            </div>
-            <div className={styles.scoreThreshold}>
-              <strong>30–54: Building Foundation</strong><br/>
-              <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>Developing real skills through projects. Choose 1-2 high-ROI skills to accelerate your path. 6-12 months focused effort → 55+ score.</span>
-            </div>
-            <div className={styles.scoreThreshold}>
-              <strong>&lt;30: Starting Out</strong><br/>
-              <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>Build 1-2 solid projects + skill depth. Real portfolio evidence is more valuable than certifications. 3-6 months → significant score jump.</span>
-            </div>
-          </div>
+          ))}
         </div>
 
         {/* Market Impact Section */}
@@ -480,13 +496,13 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
         })()}
 
         <div className={styles.dimensionsSection}>
-          <h3>Your 6 Dimensions</h3>
+          <h3>📊 Your 6 Dimensions</h3>
           <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginBottom: '16px' }}>
-            Each dimension reflects evidence you provided. <strong>Target 75+ in each for strong internship competitiveness.</strong>
+            Visual breakdown of your career readiness across key dimensions.
           </p>
           <div className={styles.dimensionsGrid}>
             {profile.dimensions.map((dimension, idx) => (
-              <ReadinessDimensionCard key={idx} dimension={dimension} index={idx} />
+              <DimensionScoreGauge key={idx} dimension={dimension} index={idx} />
             ))}
           </div>
         </div>
