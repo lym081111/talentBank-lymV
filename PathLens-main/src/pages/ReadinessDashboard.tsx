@@ -10,6 +10,7 @@ type ExportFn = typeof import('../utils/pdfExport').exportProfileToPDF;
 import { analyzePortfolioQuality } from '../utils/portfolioQuality';
 import { getJobRecommendations, getSkillRecommendations, getInterviewFocusAreas } from '../utils/aiRecommendations';
 import { skillTaxonomy } from '../data/skillTaxonomy';
+import { getRelevantStory } from '../data/careerSuccessStories';
 import styles from './ReadinessDashboard.module.css';
 
 function PortfolioQualitySection({ evidence }: { evidence: Evidence[] }) {
@@ -380,6 +381,61 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
 
         {/* Radar Chart for visual overview */}
         <RadarChart dimensions={profile.dimensions} />
+
+        {/* Success Story - Real Career Example */}
+        {(() => {
+          const story = getRelevantStory(profile.overall, 0);
+          if (!story) return null;
+          return (
+            <div style={{
+              background: 'var(--color-surface)',
+              border: '2px solid var(--color-accent)',
+              borderRadius: 'var(--radius-xl)',
+              padding: '28px',
+              marginBottom: '32px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                <span style={{ fontSize: '24px' }}>🚀</span>
+                <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: 'var(--color-text)' }}>
+                  Real Career Example: {story.name}
+                </h3>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginBottom: '20px' }}>
+                <div>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: 'var(--color-text-muted)' }}>Current Role</p>
+                  <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: 'var(--color-text)' }}>
+                    {story.role} @ {story.company}
+                  </p>
+                </div>
+                <div>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: 'var(--color-text-muted)' }}>Current Score</p>
+                  <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: 'var(--color-primary)' }}>
+                    {story.currentScore}/100 ({story.yearsExperience} yrs)
+                  </p>
+                </div>
+              </div>
+              <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: 'var(--color-text-secondary)', fontStyle: 'italic' }}>
+                "{story.keyLearning}"
+              </p>
+              <div style={{ background: 'var(--color-bg)', padding: '16px', borderRadius: 'var(--radius-lg)', marginBottom: '16px' }}>
+                <p style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: '600', color: 'var(--color-text)' }}>Salary Journey:</p>
+                {story.salaryJourney.map((s, idx) => (
+                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: idx < story.salaryJourney.length - 1 ? '6px' : 0 }}>
+                    <span><strong>Year {s.year}</strong> ({s.role})</span>
+                    <span style={{ color: 'var(--color-accent)', fontWeight: '600' }}>{s.salary}</span>
+                  </div>
+                ))}
+              </div>
+              <p style={{ margin: '0 0 12px 0', fontSize: '12px', fontWeight: '600', color: 'var(--color-text)' }}>Key Skill Inflection Points:</p>
+              {story.keySkillInflectionPoints.map((point, idx) => (
+                <div key={idx} style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: idx < story.keySkillInflectionPoints.length - 1 ? '8px' : 0 }}>
+                  <span style={{ color: 'var(--color-success)', fontWeight: '600' }}>Year {point.year}:</span> {point.skill}
+                  <div style={{ marginTop: '2px', fontSize: '11px', color: 'var(--color-primary)' }}>Salary impact: {point.salaryImpact}</div>
+                </div>
+              ))}
+            </div>
+          );
+        })()}
 
         {/* Detected Skills Summary */}
         {profile.allExtractedSkills.length > 0 && (() => {
