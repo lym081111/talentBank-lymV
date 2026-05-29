@@ -37,7 +37,7 @@ function App() {
   const { isDark, toggle: toggleDarkMode } = useDarkMode();
 
   const { evidence, addEvidence, updateEvidence, deleteEvidence, resetToDemo, clearAll, setEvidence } = useEvidence();
-  const { profile: studentProfile, updateProfile, isDemoProfile } = useStudentProfile();
+  const { profile: studentProfile, updateProfile, resetProfile, resetToFreshProfile, isDemoProfile } = useStudentProfile();
 
   const readinessProfile = useMemo(() => {
     return calculateReadinessProfile(evidence);
@@ -76,7 +76,13 @@ function App() {
 
   const handleBuildOwn = () => {
     clearAll();
+    resetToFreshProfile();
     handleNavigate('profile');
+  };
+
+  const handleResetDemo = () => {
+    resetProfile();
+    resetToDemo();
   };
 
   const handleGoHome = () => {
@@ -159,7 +165,7 @@ function App() {
           currentPage={currentPage}
           onNavigate={handleNavigate}
           showNav={currentPage !== 'landing'}
-          onResetDemo={resetToDemo}
+          onResetDemo={handleResetDemo}
           onGoHome={handleGoHome}
           isDark={isDark}
           onToggleDarkMode={toggleDarkMode}

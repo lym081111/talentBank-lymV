@@ -91,8 +91,15 @@ export function ProfileAndEvidence({
 }: Props) {
   const [formMode, setFormMode] = useState<FormMode>('closed');
   const [showSuccess, setShowSuccess] = useState(false);
-  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [isEditingProfile, setIsEditingProfile] = useState(!profile.name.trim());
   const [editForm, setEditForm] = useState(profile);
+
+  useEffect(() => {
+    setEditForm(profile);
+    if (!profile.name.trim()) {
+      setIsEditingProfile(true);
+    }
+  }, [profile]);
 
   useEffect(() => {
     if (showSuccess) {
@@ -267,7 +274,7 @@ export function ProfileAndEvidence({
           ) : (
             <>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <h2 style={{ margin: 0 }}>{profile.name}</h2>
+                <h2 style={{ margin: 0 }}>{profile.name || 'Your Profile'}</h2>
                 <button
                   onClick={() => {
                     setEditForm(profile);
