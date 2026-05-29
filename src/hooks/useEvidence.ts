@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Evidence } from '../types/evidence';
-import { danielLeeProfile } from '../data/mockStudent';
+import { priyaSharmaProfile } from '../data/mockStudent';
 import { loadEvidence, saveEvidence } from '../utils/evidenceStorage';
 
 function generateId(): string {
@@ -10,7 +10,7 @@ function generateId(): string {
 export function useEvidence() {
   const [evidence, setEvidence] = useState<Evidence[]>(() => {
     const stored = loadEvidence();
-    return stored ?? danielLeeProfile.evidence;
+    return stored ?? priyaSharmaProfile.evidence;
   });
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export function useEvidence() {
   }, []);
 
   const resetToDemo = useCallback(() => {
-    setEvidence(danielLeeProfile.evidence);
+    setEvidence(priyaSharmaProfile.evidence);
   }, []);
 
   const clearAll = useCallback(() => {

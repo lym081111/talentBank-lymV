@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { StudentProfile } from '../types/evidence';
-import { danielLeeProfile, sarahTanProfile, ahmadRazifProfile } from '../data/mockStudent';
+import { priyaSharmaProfile, kaiChenProfile, aishaPatelProfile } from '../data/mockStudent';
 import styles from './Landing.module.css';
 
 interface Props {
@@ -9,9 +9,9 @@ interface Props {
 }
 
 const DEMO_PERSONAS = [
-  { profile: danielLeeProfile, emoji: 'SWE', desc: 'SWE Track - 3rd Year' },
-  { profile: sarahTanProfile, emoji: 'DATA', desc: 'Data Track - 3rd Year' },
-  { profile: ahmadRazifProfile, emoji: 'FULL', desc: 'Full-Stack - 2nd Year' },
+  { profile: priyaSharmaProfile, emoji: '🚀', desc: 'Senior SWE at Grab • 5 Years' },
+  { profile: kaiChenProfile, emoji: '📊', desc: 'Senior Data Eng at ByteDance • 3 Years' },
+  { profile: aishaPatelProfile, emoji: '📈', desc: 'Senior PM at Lazada • 4 Years' },
 ];
 
 const HOW_IT_WORKS = [
