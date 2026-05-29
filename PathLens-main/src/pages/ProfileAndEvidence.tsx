@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Evidence, StudentProfile } from '../types/evidence';
 import { EvidenceCard } from '../components/EvidenceCard';
 import { EvidenceForm } from '../components/EvidenceForm';
@@ -93,6 +93,7 @@ export function ProfileAndEvidence({
   const [showSuccess, setShowSuccess] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(!isDemoMode && evidence.length === 0);
   const [editForm, setEditForm] = useState(profile);
+  const formRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (showSuccess) {
@@ -100,6 +101,14 @@ export function ProfileAndEvidence({
       return () => clearTimeout(timer);
     }
   }, [showSuccess]);
+
+  useEffect(() => {
+    if (formMode !== 'closed' && formRef.current) {
+      setTimeout(() => {
+        formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [formMode]);
 
   function handleSave(data: Omit<Evidence, 'id'>) {
     if (formMode === 'add' || (typeof formMode === 'object' && 'template' in formMode)) {
@@ -336,12 +345,14 @@ export function ProfileAndEvidence({
           </div>
 
           {formMode !== 'closed' && (
-            <EvidenceForm
-              initial={typeof formMode === 'object' && 'editing' in formMode ? formMode.editing : undefined}
-              startWith={typeof formMode === 'object' && 'template' in formMode ? formMode.template : undefined}
-              onSave={handleSave}
-              onCancel={() => setFormMode('closed')}
-            />
+            <div ref={formRef}>
+              <EvidenceForm
+                initial={typeof formMode === 'object' && 'editing' in formMode ? formMode.editing : undefined}
+                startWith={typeof formMode === 'object' && 'template' in formMode ? formMode.template : undefined}
+                onSave={handleSave}
+                onCancel={() => setFormMode('closed')}
+              />
+            </div>
           )}
 
           {evidence.length === 0 ? (
