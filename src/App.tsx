@@ -37,7 +37,7 @@ function App() {
   const { isDark, toggle: toggleDarkMode } = useDarkMode();
 
   const { evidence, addEvidence, updateEvidence, deleteEvidence, resetToDemo, clearAll, setEvidence } = useEvidence();
-  const { profile: studentProfile, updateProfile, resetProfile, resetToFreshProfile, isDemoProfile } = useStudentProfile();
+  const { profile: studentProfile, updateProfile, isDemoProfile } = useStudentProfile();
 
   const readinessProfile = useMemo(() => {
     return calculateReadinessProfile(evidence);
@@ -76,13 +76,7 @@ function App() {
 
   const handleBuildOwn = () => {
     clearAll();
-    resetToFreshProfile();
     handleNavigate('profile');
-  };
-
-  const handleResetDemo = () => {
-    resetProfile();
-    resetToDemo();
   };
 
   const handleGoHome = () => {
@@ -132,7 +126,6 @@ function App() {
         return (
           <Gaps
             gaps={gaps}
-            profile={readinessProfile}
             onViewCohort={() => handleNavigate('cohort')}
             onUpdateEvidence={() => handleNavigate('profile')}
           />
@@ -165,7 +158,7 @@ function App() {
           currentPage={currentPage}
           onNavigate={handleNavigate}
           showNav={currentPage !== 'landing'}
-          onResetDemo={handleResetDemo}
+          onResetDemo={resetToDemo}
           onGoHome={handleGoHome}
           isDark={isDark}
           onToggleDarkMode={toggleDarkMode}

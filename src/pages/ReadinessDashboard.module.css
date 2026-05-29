@@ -21,12 +21,12 @@
 }
 
 .overallCard {
-  background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-secondary-light) 50%, var(--color-success-light) 100%);
+  background: linear-gradient(135deg, #eff6ff 0%, #ecfdf5 50%, #f9fafb 100%);
   border-radius: var(--radius-xl);
   padding: 48px 32px;
   text-align: center;
   margin-bottom: 20px;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 4px 20px rgba(30, 64, 175, 0.08);
   border: 1px solid var(--color-border);
   position: relative;
   overflow: hidden;
@@ -39,7 +39,7 @@
   right: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, var(--color-primary-light) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(30, 64, 175, 0.08) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -100,8 +100,8 @@
 }
 
 .scoringGuide {
-  background: linear-gradient(135deg, var(--color-success-light) 0%, var(--color-primary-light) 100%);
-  border: 1px solid var(--color-success);
+  background: linear-gradient(135deg, #ecfdf5 0%, #eff6ff 100%);
+  border: 1px solid var(--color-accent);
   border-radius: var(--radius-lg);
   padding: 24px;
   margin-bottom: 32px;

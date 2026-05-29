@@ -142,7 +142,6 @@ export function AICareerInsight({ evidence, profile }: Props) {
               <ul className={styles.promptInfoList}>
                 <li><strong>Model:</strong> claude-haiku-4-5 (Anthropic) — fast, efficient, low-cost</li>
                 <li><strong>Inputs used:</strong> Your evidence titles, descriptions, technologies, and target role</li>
-                <li><strong>What AI does not decide:</strong> Dimension scores, skill extraction, ATS score, and marketplace matching stay deterministic and explainable</li>
                 <li><strong>Prompt approach:</strong> Structured JSON output — narrative, key gap, next step — to ensure consistent, parseable responses</li>
                 <li><strong>What it does NOT have:</strong> Your grades, real job market APIs, your actual code, or verified outcomes</li>
                 <li><strong>Fallback:</strong> If the API is unavailable, a deterministic rule-based insight runs instead — same format, no LLM</li>

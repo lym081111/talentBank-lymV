@@ -1,5 +1,6 @@
 import { Evidence, ExtractedSkill } from '../types/evidence';
 import { SkillExtractionCard } from '../components/SkillExtractionCard';
+import { SkillsByDemandVisualization } from '../components/SkillsByDemandVisualization';
 import { skillTaxonomy } from '../data/skillTaxonomy';
 import { generateMarketInsights, categorizeSkills } from '../utils/marketInsights';
 import styles from './SkillExtraction.module.css';
@@ -17,11 +18,11 @@ export function SkillExtraction({ evidence, extractedSkills, onContinue }: Props
   }
 
   // Count unique high-demand skills detected
-  const uniqueSkillNames = Array.from(skillCounts.keys());
-  const highDemandCount = uniqueSkillNames.filter((name) => {
-    const entry = skillTaxonomy.find((s) => s.name === name);
-    return entry?.demand === 'high';
-  }).length;
+  // const uniqueSkillNames = Array.from(skillCounts.keys());
+  // const highDemandCount = uniqueSkillNames.filter((name) => {
+  //   const entry = skillTaxonomy.find((s) => s.name === name);
+  //   return entry?.demand === 'high';
+  // }).length;
 
   // Market intelligence: alignment score + missing high-demand skills
   const marketInsights = generateMarketInsights(extractedSkills);
@@ -147,53 +148,56 @@ export function SkillExtraction({ evidence, extractedSkills, onContinue }: Props
           </div>
         </div>
 
-        {highDemandCount > 0 && (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            background: 'var(--color-success-light)',
-            border: '1px solid var(--color-success)',
-            borderRadius: 'var(--radius-md)',
-            padding: '12px 16px',
-            marginBottom: '20px',
-            fontSize: '13px',
-          }}>
-            <span style={{ fontSize: '18px' }}>🔥</span>
-            <span>
-              <strong style={{ color: 'var(--color-success)' }}>{highDemandCount} high-demand skill{highDemandCount !== 1 ? 's' : ''}</strong>
-              {' '}detected — Python, React, Cloud, and similar skills are among the most requested by Asia tech employers right now.
-              {highDemandCount >= 4 && ' Strong market alignment!'}
-            </span>
+        {/* Grouped Skills by Demand */}
+        <div style={{
+          background: 'var(--color-surface)',
+          border: '1px solid var(--color-border)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '28px',
+          marginBottom: '24px',
+        }}>
+          <h3 style={{ margin: '0 0 20px 0', fontSize: '18px', fontWeight: '700', color: 'var(--color-text)' }}>
+            Your Skills Organized by Market Value
+          </h3>
+          <SkillsByDemandVisualization extractedSkills={extractedSkills} />
+        </div>
+
+        {/* Evidence breakdown - visual cards */}
+        <div style={{
+          background: 'var(--color-surface)',
+          border: '1px solid var(--color-border)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '28px',
+          marginBottom: '24px',
+        }}>
+          <h3 style={{ margin: '0 0 20px 0', fontSize: '16px', fontWeight: '700', color: 'var(--color-text)' }}>
+            📋 Skills by Evidence Item
+          </h3>
+          <div className={styles.extractionCards}>
+            {evidence.map((item) => (
+              <SkillExtractionCard key={item.id} evidence={item} extractedSkills={extractedSkills} />
+            ))}
           </div>
-        )}
-
-        <div className={styles.explanation}>
-          <p style={{ margin: '0 0 8px 0' }}>
-            <strong>Transparent extraction:</strong> Keyword-matched against our taxonomy. Every skill comes directly from your evidence.
-          </p>
-          <p style={{ margin: '0', fontSize: '13px', color: 'var(--color-text-secondary)' }}>
-            Want to add more skills? Go back and add more detail to your evidence descriptions.
-          </p>
         </div>
 
-        <button className={styles.continueButton} onClick={onContinue} style={{ marginBottom: '24px' }}>
-          See Your Readiness Score
-        </button>
-
-        <div className={styles.extractionCards}>
-          {evidence.map((item) => (
-            <SkillExtractionCard key={item.id} evidence={item} extractedSkills={extractedSkills} />
-          ))}
-        </div>
-
-        <div className={styles.nextSteps}>
-          <p>
-            <strong>Next Step:</strong> These skills get mapped to 6 readiness dimensions that matter for internships: Technical Depth, Portfolio Strength, Work Readiness, Communication, Production Mindset, and Role Fit.
+        {/* Next step - visual card */}
+        <div style={{
+          background: 'linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-accent-light) 100%)',
+          border: '2px solid var(--color-primary)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '28px',
+          marginBottom: '24px',
+          textAlign: 'center',
+        }}>
+          <h3 style={{ margin: '0 0 12px 0', fontSize: '18px', fontWeight: '700', color: 'var(--color-text)' }}>
+            Ready to See Your Readiness?
+          </h3>
+          <p style={{ margin: '0 0 20px 0', fontSize: '14px', color: 'var(--color-text-secondary)', maxWidth: '500px', marginLeft: 'auto', marginRight: 'auto' }}>
+            Your skills map to 6 dimensions that matter: <strong>Technical Depth</strong> • <strong>Portfolio Strength</strong> • <strong>Work Readiness</strong> • <strong>Communication</strong> • <strong>Production Mindset</strong> • <strong>Role Fit</strong>
           </p>
-          <p style={{ marginTop: '12px', fontSize: '13px', color: 'var(--color-text-secondary)' }}>
-            💡 <strong>Tip:</strong> If you see skills missing, you can go back and add more detail to your evidence before continuing.
-          </p>
+          <button className={styles.continueButton} onClick={onContinue}>
+            See Your Readiness Score →
+          </button>
         </div>
       </div>
     </div>

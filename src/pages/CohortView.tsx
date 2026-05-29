@@ -216,17 +216,6 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack }:
         {viewMode === 'university' && (
           <div id="cohort-panel" role="tabpanel" aria-label="University perspective">
             <div className={styles.context}>
-              <h3>University Readiness Command Center</h3>
-              <p>
-                This is the primary PathLens buyer view: universities see evidence-backed readiness patterns early enough to intervene.
-                The goal is not to label students permanently, but to decide which workshops, projects, and employer partnerships will close the largest cohort gaps.
-              </p>
-              <p>
-                The same data also becomes the handoff into Module 04: employers can receive structured skill, score, and blocker signals instead of generic resumes.
-              </p>
-            </div>
-
-            <div className={styles.context}>
               <h3>Why Universities Care About Readiness</h3>
               <p>
                 Career services typically engage students in their final semester — far too late to close meaningful gaps.
@@ -401,8 +390,8 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack }:
             </div>
 
             <div className={styles.employerDisclaimer}>
-              This view simulates how Module 04 consumes PathLens output: extracted skills, readiness dimensions,
-              top blockers, and evidence-backed interview probes. It is a marketplace bridge, not a final hiring verdict.
+              This view simulates how employers can use PathLens for structured candidate evaluation.
+              Module 04 (Internship Marketplace) integrates this profile directly into job matching.
             </div>
           </div>
         )}

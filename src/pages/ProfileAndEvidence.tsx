@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
-import { Evidence, StudentProfile } from '../types/evidence';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { Evidence, StudentProfile, ExtractedSkill } from '../types/evidence';
 import { EvidenceCard } from '../components/EvidenceCard';
 import { EvidenceForm } from '../components/EvidenceForm';
+import { SkillsByDemandVisualization } from '../components/SkillsByDemandVisualization';
 import { exportEvidenceToPDF } from '../utils/pdfExport';
 import { exportProfileToJSON } from '../utils/profileExport';
+// import { extractSkillsFromEvidence } from '../utils/skillExtraction'; // Not currently used
 import styles from './ProfileAndEvidence.module.css';
 
 interface Props {
@@ -91,15 +93,9 @@ export function ProfileAndEvidence({
 }: Props) {
   const [formMode, setFormMode] = useState<FormMode>('closed');
   const [showSuccess, setShowSuccess] = useState(false);
-  const [isEditingProfile, setIsEditingProfile] = useState(!profile.name.trim());
+  const [isEditingProfile, setIsEditingProfile] = useState(!isDemoMode && evidence.length === 0);
   const [editForm, setEditForm] = useState(profile);
-
-  useEffect(() => {
-    setEditForm(profile);
-    if (!profile.name.trim()) {
-      setIsEditingProfile(true);
-    }
-  }, [profile]);
+  const formRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (showSuccess) {
@@ -107,6 +103,7 @@ export function ProfileAndEvidence({
       return () => clearTimeout(timer);
     }
   }, [showSuccess]);
+
 
   function handleSave(data: Omit<Evidence, 'id'>) {
     if (formMode === 'add' || (typeof formMode === 'object' && 'template' in formMode)) {
@@ -274,7 +271,7 @@ export function ProfileAndEvidence({
           ) : (
             <>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <h2 style={{ margin: 0 }}>{profile.name || 'Your Profile'}</h2>
+                <h2 style={{ margin: 0 }}>{profile.name}</h2>
                 <button
                   onClick={() => {
                     setEditForm(profile);
@@ -340,20 +337,40 @@ export function ProfileAndEvidence({
                 Add your best work. We'll extract skills automatically and score your readiness across dimensions that matter for internships.
               </p>
             </div>
-            {formMode === 'closed' && (
-              <button className={styles.addBtn} onClick={() => setFormMode('add')}>
-                + Add Item
-              </button>
-            )}
           </div>
 
           {formMode !== 'closed' && (
-            <EvidenceForm
-              initial={typeof formMode === 'object' && 'editing' in formMode ? formMode.editing : undefined}
-              startWith={typeof formMode === 'object' && 'template' in formMode ? formMode.template : undefined}
-              onSave={handleSave}
-              onCancel={() => setFormMode('closed')}
-            />
+            <div style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1000,
+              backdropFilter: 'blur(4px)',
+            }}>
+              <div style={{
+                backgroundColor: 'var(--color-bg)',
+                borderRadius: 'var(--radius-xl)',
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+                maxHeight: '90vh',
+                overflowY: 'auto',
+                width: '90%',
+                maxWidth: '600px',
+                padding: '32px',
+              }} ref={formRef}>
+                <EvidenceForm
+                  initial={typeof formMode === 'object' && 'editing' in formMode ? formMode.editing : undefined}
+                  startWith={typeof formMode === 'object' && 'template' in formMode ? formMode.template : undefined}
+                  onSave={handleSave}
+                  onCancel={() => setFormMode('closed')}
+                />
+              </div>
+            </div>
           )}
 
           {evidence.length === 0 ? (
@@ -375,27 +392,72 @@ export function ProfileAndEvidence({
                   </button>
                 ))}
               </div>
-              <p className={styles.templateOr}>
-                or{' '}
-                <button className={styles.templateBlankLink} onClick={() => setFormMode('add')}>
-                  start with a blank form
-                </button>
-              </p>
             </div>
           ) : (
-            <div className={styles.evidenceList}>
-              {evidence.map(item => (
-                <EvidenceCard
-                  key={item.id}
-                  evidence={item}
-                  onEdit={e => setFormMode({ editing: e })}
-                  onDelete={onDeleteEvidence}
-                />
-              ))}
-            </div>
+            <>
+              <div className={styles.evidenceList}>
+                {evidence.map(item => (
+                  <EvidenceCard
+                    key={item.id}
+                    evidence={item}
+                    onEdit={e => setFormMode({ editing: e })}
+                    onDelete={onDeleteEvidence}
+                  />
+                ))}
+              </div>
+
+              {/* Skills Grouped by Demand */}
+              {(() => {
+                const allExtractedSkills = useMemo(() => {
+                  const skills: ExtractedSkill[] = [];
+                  evidence.forEach(item => {
+                    if (item.technologies) {
+                      item.technologies.split(',').forEach(tech => {
+                        const trimmed = tech.trim();
+                        if (trimmed) {
+                          skills.push({
+                            skill: trimmed,
+                            confidence: 'high',
+                            sourceEvidenceId: item.id,
+                            sourcePhrase: item.technologies || '',
+                          });
+                        }
+                      });
+                    }
+                  });
+                  return skills;
+                }, [evidence]);
+
+                if (allExtractedSkills.length === 0) return null;
+
+                return (
+                  <div style={{
+                    background: 'var(--color-surface)',
+                    border: '1px solid var(--color-border)',
+                    borderRadius: 'var(--radius-lg)',
+                    padding: '24px',
+                    marginTop: '32px',
+                    marginBottom: '20px',
+                  }}>
+                    <h3 style={{ margin: '0 0 20px 0', fontSize: '16px', fontWeight: '700', color: 'var(--color-text)' }}>
+                      📊 Skills Summary (by Demand Level)
+                    </h3>
+                    <SkillsByDemandVisualization extractedSkills={allExtractedSkills} />
+                  </div>
+                );
+              })()}
+            </>
           )}
 
           <div className={styles.actionButtons}>
+            {evidence.length > 0 && formMode === 'closed' && (
+              <button
+                className={styles.exportButton}
+                onClick={() => setFormMode('add')}
+              >
+                + Add More Evidence
+              </button>
+            )}
             {evidence.length > 0 && (
               <>
                 <button

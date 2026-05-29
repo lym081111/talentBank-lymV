@@ -4,16 +4,6 @@ import { priyaSharmaProfile } from '../data/mockStudent';
 
 const STORAGE_KEY = 'pathlens_student_profile';
 
-export const blankStudentProfile: StudentProfile = {
-  id: 'fresh_profile',
-  name: '',
-  university: '',
-  year: 3,
-  major: 'Computer Science',
-  targetRole: 'Software Engineer Intern',
-  evidence: [],
-};
-
 function loadProfile(): StudentProfile {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -55,12 +45,7 @@ export function useStudentProfile() {
     saveProfile(priyaSharmaProfile);
   }, []);
 
-  const resetToFreshProfile = useCallback(() => {
-    setProfile(blankStudentProfile);
-    saveProfile(blankStudentProfile);
-  }, []);
-
   const isDemoProfile = profile.name === priyaSharmaProfile.name && profile.id === priyaSharmaProfile.id;
 
-  return { profile, updateProfile, resetProfile, resetToFreshProfile, isDemoProfile };
+  return { profile, updateProfile, resetProfile, isDemoProfile };
 }

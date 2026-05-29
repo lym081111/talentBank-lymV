@@ -1,18 +1,18 @@
-/* Design tokens - Modern professional education platform */
+/* Design tokens - Professional enterprise platform for Asia tech careers */
 :root {
-  /* Primary color: Deep purple for authority & growth */
-  --color-primary: #6d28d9;
-  --color-primary-dark: #5b21b6;
-  --color-primary-light: #ede9fe;
+  /* Primary color: Deep Blue for trust & professional authority */
+  --color-primary: #1e40af;
+  --color-primary-dark: #1e3a8a;
+  --color-primary-light: #eff6ff;
 
-  /* Accent: Vibrant orange for energy & action */
-  --color-accent: #ff6b35;
-  --color-accent-light: #fff7ed;
-  --color-accent-dark: #d94919;
+  /* Accent: Vibrant Green for growth & success */
+  --color-accent: #10b981;
+  --color-accent-light: #ecfdf5;
+  --color-accent-dark: #059669;
 
-  /* Secondary: Warm coral/peach for supporting elements */
-  --color-secondary: #ec9a5d;
-  --color-secondary-light: #fdf3ed;
+  /* Secondary: Slate blue for supporting elements */
+  --color-secondary: #475569;
+  --color-secondary-light: #f1f5f9;
 
   /* Success: Fresh green for positive progress */
   --color-success: #10b981;
@@ -26,17 +26,17 @@
   --color-danger: #ef4444;
   --color-danger-light: #fee2e2;
 
-  /* Neutral grays - carefully tuned for hierarchy */
-  --color-text: #0f172a;
-  --color-text-secondary: #475569;
-  --color-text-muted: #94a3b8;
-  --color-border: #e2e8f0;
-  --color-divider: #cbd5e1;
+  /* Neutral grays - professional clean palette */
+  --color-text: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-text-muted: #9ca3af;
+  --color-border: #e5e7eb;
+  --color-divider: #d1d5db;
 
-  --color-bg: #f8fafc;
-  --color-bg-alt: #f1f5f9;
+  --color-bg: #f3f4f6;
+  --color-bg-alt: #eff2f5;
   --color-surface: #ffffff;
-  --color-surface-hover: #f8fafc;
+  --color-surface-hover: #f9fafb;
 
   /* Shadows - refined for depth */
   --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
@@ -74,25 +74,25 @@
 
 /* ── Dark Mode ─────────────────────────────── */
 :root.dark-mode {
-  --color-text: #e2e8f0;
-  --color-text-secondary: #94a3b8;
-  --color-text-muted: #64748b;
-  --color-border: #334155;
-  --color-divider: #475569;
+  --color-text: #f3f4f6;
+  --color-text-secondary: #d1d5db;
+  --color-text-muted: #9ca3af;
+  --color-border: #374151;
+  --color-divider: #4b5563;
 
-  --color-bg: #0f172a;
-  --color-bg-alt: #1e293b;
-  --color-surface: #1e293b;
-  --color-surface-hover: #334155;
+  --color-bg: #111827;
+  --color-bg-alt: #1f2937;
+  --color-surface: #1f2937;
+  --color-surface-hover: #374151;
 
-  /* Keep primary/accent vivid in dark mode */
-  --color-primary: #a78bfa;
-  --color-primary-dark: #c4b5fd;
-  --color-primary-light: rgba(167, 139, 250, 0.12);
-  --color-accent: #fb923c;
-  --color-accent-light: rgba(251, 146, 60, 0.12);
-  --color-secondary: #fbbf24;
-  --color-secondary-light: rgba(251, 191, 36, 0.12);
+  /* Keep primary/accent vivid in dark mode - professional blues and greens */
+  --color-primary: #60a5fa;
+  --color-primary-dark: #93c5fd;
+  --color-primary-light: rgba(96, 165, 250, 0.12);
+  --color-accent: #34d399;
+  --color-accent-light: rgba(52, 211, 153, 0.12);
+  --color-secondary: #94a3b8;
+  --color-secondary-light: rgba(148, 163, 184, 0.12);
   --color-success: #34d399;
   --color-success-light: rgba(52, 211, 153, 0.12);
   --color-warning: #fbbf24;
@@ -112,22 +112,22 @@
 :root.dark-mode input,
 :root.dark-mode textarea,
 :root.dark-mode select {
-  background: #1e293b;
-  color: #e2e8f0;
-  border-color: #334155;
+  background: #1f2937;
+  color: #f3f4f6;
+  border-color: #374151;
   color-scheme: dark;
 }
 
 :root.dark-mode input::placeholder,
 :root.dark-mode textarea::placeholder {
-  color: #64748b;
+  color: #9ca3af;
 }
 
 :root.dark-mode input:focus,
 :root.dark-mode textarea:focus,
 :root.dark-mode select:focus {
-  border-color: #a78bfa;
-  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15);
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
 }
 
 * {
