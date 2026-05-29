@@ -1,180 +1,193 @@
 import { StudentProfile, Evidence } from '../types/evidence';
 
-const evidence: Evidence[] = [
+// ============================================================================
+// PERSONA 1: Priya Sharma
+// Senior Software Engineer at Grab, Singapore
+// Career Path: Intern (2021) → SWE II (2022) → Senior SWE (2025)
+// Salary Growth: SGD 3,500/month → SGD 8,000/month → SGD 15,000/month + equity
+// Key Success Factor: System Design mastery (Year 3 inflection point)
+// ============================================================================
+
+const priyaEvidence: Evidence[] = [
   {
-    id: 'fyp_001',
-    type: 'fyp',
-    title: 'AI Governance Document Classifier',
-    description:
-      'Built an AI-powered system to classify and analyze university governance documents using Python and NLP (spaCy + scikit-learn). Developed a React dashboard for governance staff to review and annotate classified documents in real-time. Integrated PostgreSQL for document storage with a REST API backend. System processes 200+ documents monthly and is actively used by the university governance office. Wrote unit tests with pytest; achieved 87% classification accuracy.',
-    technologies: 'Python, spaCy, scikit-learn, React, PostgreSQL, REST API, pytest',
-    duration: '6 months (Sep 2023 – Mar 2024)',
-    outcome: 'Deployed to university server. Graded A. Adopted by governance office.',
-    link: 'https://github.com/daniellee-dev/ai-governance-classifier',
-  },
-  {
-    id: 'internship_001',
+    id: 'priya_internship_2021',
     type: 'internship',
-    title: 'Software Engineering Intern — FinTech Startup, Kuala Lumpur',
+    title: 'SWE Intern — Grab, Singapore (2021)',
     description:
-      'Developed backend features for a SaaS payments platform using Node.js and Express. Built and documented REST APIs for user management and transaction processing, handling 500+ requests/day. Participated in daily standups, sprint planning, and code reviews. Resolved 3 critical production bugs using error logging (Sentry) and reduced average API latency by 18%. Mentored by senior engineers in a team of 6.',
-    technologies: 'Node.js, Express, JavaScript, PostgreSQL, REST API, Sentry, Agile',
-    duration: '3 months (Jun – Aug 2024)',
-    outcome: 'Delivered 5 sprint features. Received return offer.',
-    link: 'https://github.com/daniellee-dev/internship-portfolio',
+      'Developed backend microservices for Grab\'s transportation platform using Python and Go. Built RESTful APIs handling 50K+ requests/day for trip matching and payment processing. Worked on distributed systems with Redis caching and PostgreSQL optimization. Wrote comprehensive unit tests with 92% code coverage. Mentored by Staff Engineer on system design foundations. Delivered 3 production features shipped to 2M+ users within 3 months.',
+    technologies: 'Python, Go, PostgreSQL, Redis, Microservices',
+    duration: '3 months (Jun – Aug 2021)',
+    outcome: 'Converted to SWE II full-time. Starting salary: SGD 3,500/month.',
+    link: 'https://www.grab.com',
   },
   {
-    id: 'portfolio_001',
-    type: 'portfolio',
-    title: 'Personal Developer Portfolio',
+    id: 'priya_swe2_2022',
+    type: 'internship',
+    title: 'SWE II — Grab, Singapore (2022-2023)',
     description:
-      'Designed and built a personal portfolio site to showcase projects with a React frontend and Node.js API. Deployed on Vercel with automatic CI via GitHub Actions. Includes project descriptions, technology breakdowns, and live demo links. Receives 80+ unique monthly visitors. Code is fully open-source.',
-    technologies: 'React, Node.js, CSS Modules, JavaScript, GitHub Actions, Vercel',
-    link: 'https://github.com/daniellee-dev/portfolio-website',
-    outcome: 'Live site with CI/CD pipeline. 80+ monthly visitors.',
+      'Led development of payment reconciliation system processing SGD 10B+ in monthly transactions. Designed distributed ledger system with strong consistency guarantees using Raft consensus. Reduced transaction settlement time by 40% through algorithmic optimization. Mentored 1 junior engineer on system design and code review practices. Presented architecture to executive stakeholders. Took on-call rotation for critical payment services.',
+    technologies: 'Go, Distributed Systems, PostgreSQL, Kafka, System Design',
+    duration: '18 months (2022-2023)',
+    outcome: 'Recognized for technical depth. Salary: SGD 8,000/month. Promoted track for Senior SWE.',
   },
   {
-    id: 'certificate_001',
+    id: 'priya_senior_2024',
+    type: 'internship',
+    title: 'Senior SWE — Grab, Singapore (2024-2025)',
+    description:
+      'Architect and technical lead for Grab\'s core driver-consumer matching system. Responsible for 40+ microservices serving 8M+ daily active users. Designed real-time matching algorithm reducing average wait time by 25% while improving driver earnings by 18%. Led cross-team initiatives improving system reliability to 99.99% uptime SLA. Managed team of 2 engineers, conducting code reviews and technical mentorship. Influenced platform architecture decisions affecting entire organization.',
+    technologies: 'Go, Python, Distributed Systems, Machine Learning, AWS',
+    duration: '12+ months (2024-2025)',
+    outcome: 'Senior engineer role. Leading critical platform systems. Salary: SGD 15,000/month + RSU equity package. Total annual: ~SGD 180k+.',
+    link: 'https://www.grab.com',
+  },
+  {
+    id: 'priya_skill_system_design',
     type: 'certificate',
-    title: 'AWS Certified Cloud Practitioner',
-    issuer: 'Amazon Web Services',
+    title: 'System Design Mastery (Key Inflection Point)',
+    issuer: 'Grab Internal Training + Self-Study',
     description:
-      'Passed the AWS Certified Cloud Practitioner exam (CLF-C02). Covered core AWS services: EC2, S3, RDS, Lambda, IAM, and VPC. Completed 12 hours of hands-on labs deploying applications on AWS. Understands cloud cost optimization and shared responsibility security model.',
-    technologies: 'AWS, EC2, S3, Lambda, IAM, Cloud Architecture',
+      'Acquired deep expertise in designing large-scale distributed systems during Year 3 (2023). Fluent in CAP theorem, consistency trade-offs, sharding strategies, consensus algorithms (Raft), and database optimization. Designed systems serving 100M+ QPS. This skill inflection point was the critical factor driving 30% salary growth from SWE II to Senior SWE.',
+    technologies: 'Distributed Systems, Microservices, System Design, Scalability',
     verified: true,
-    outcome: 'Certified. Score: 832/1000.',
-  },
-  {
-    id: 'hackathon_001',
-    type: 'hackathon',
-    title: 'Hack@UTM 2024 — RecSys Finalist',
-    description:
-      'Built a course recommendation system in 24 hours with 3 teammates. Implemented collaborative filtering in Python (scikit-learn) to match students with elective courses based on historical enrollment patterns. React frontend with live recommendation feed. Presented a working demo to a panel of 5 judges, answering technical questions on the algorithm design.',
-    technologies: 'Python, scikit-learn, React, REST API, Collaborative Filtering',
-    teamSize: 4,
-    yourRole: 'Backend & ML developer',
-    outcome: 'Finalist (top 5 of 40 teams). Live demo shipped.',
-    link: 'https://github.com/daniellee-dev/hackutm-recsys',
+    outcome: 'Recognized expert in org. Salary impact: +30% increase. This skill enables Staff Engineer trajectory.',
   },
 ];
 
-export const danielLeeProfile: StudentProfile = {
-  id: 'student_001',
-  name: 'Daniel Lee',
-  university: 'Universiti Teknologi Malaysia (UTM)',
-  year: 3,
-  major: 'Computer Science',
-  targetRole: 'Software Engineer',
-  evidence,
+export const priyaSharmaProfile: StudentProfile = {
+  id: 'student_priya_001',
+  name: 'Priya Sharma',
+  university: 'IIT Bombay (Alumni)',
+  year: 5,
+  major: 'Computer Science & Mathematics',
+  targetRole: 'Senior Software Engineer',
+  evidence: priyaEvidence,
 };
 
-// Additional demo personas for judges
-const sarahTanEvidence: Evidence[] = [
+// ============================================================================
+// PERSONA 2: Kai Chen
+// Data Engineer at ByteDance, Singapore
+// Career Path: Data Analyst (2022) → Data Engineer (2023) → Senior Data Engineer (2025)
+// Salary Growth: SGD 6,000/month → SGD 10,000/month → SGD 12,000/month + RSU
+// Key Success Factor: Real-time pipeline architecture (Year 2 inflection point)
+// Market Context: Data Engineer roles have VERY HIGH demand (12-15% YoY growth)
+// ============================================================================
+
+const kaiEvidence: Evidence[] = [
   {
-    id: 'coursework_001',
-    type: 'certificate',
-    title: 'Data Analysis & Visualization Coursework',
-    issuer: 'National University of Singapore',
-    description:
-      'Completed a semester-long data analysis project analyzing 500K+ records of Singapore public transportation usage patterns. Built interactive Tableau dashboards showing peak-hour trends, cost analysis by zone, and passenger demographics. Wrote Python scripts to clean, aggregate, and analyze the dataset. Final report included statistical significance testing and business recommendations.',
-    technologies: 'Python, Pandas, NumPy, Tableau, SQL',
-    verified: false,
-    outcome: 'Grade: A-. Dashboard published on Tableau Public.',
-  },
-  {
-    id: 'portfolio_002',
-    type: 'portfolio',
-    title: 'Weather Prediction Model',
-    description:
-      'Built an end-to-end ML pipeline to predict daily rainfall in Singapore using historical weather data (2010-2024, 5.5K records). Trained multiple models (Linear Regression, Random Forest, XGBoost) and achieved 87% accuracy with XGBoost. Deployed model as REST API on Heroku. Created a React dashboard that predicts weather for the next 7 days. Processes 10K predictions daily.',
-    technologies: 'Python, scikit-learn, XGBoost, REST API, React, Heroku, PostgreSQL',
-    link: 'https://github.com/sarahtan-ds/weather-predictor',
-    outcome: 'Live API with 10K daily predictions. Model achieving 87% accuracy.',
-  },
-  {
-    id: 'internship_002',
+    id: 'kai_analyst_2022',
     type: 'internship',
-    title: 'Data Analytics Intern — E-Commerce Company, Singapore',
+    title: 'Data Analyst — DBS Bank, Singapore (2022)',
     description:
-      'Analyzed user behavior data (2M+ events/month) using Python and SQL. Built automated dashboards tracking daily active users, conversion funnels, and feature engagement. Identified a critical bug in checkout flow causing 8% cart abandonment—fix increased conversions by 12%. Mentored by data lead in a team of 5 analysts. Learned advanced SQL optimization and A/B testing methodologies.',
-    technologies: 'Python, SQL, Tableau, Google Analytics, Excel, Statistical Analysis',
-    duration: '4 months (May – Aug 2024)',
-    outcome: 'Identified 8% conversion loss. Return offer received.',
-    link: 'https://github.com/sarahtan-ds/ecommerce-analytics',
+      'Analyzed customer financial behavior using SQL and Python. Built Tableau dashboards for 50+ stakeholders tracking transaction patterns, fraud signals, and customer segmentation. Identified 3 high-value customer segments, enabling targeted marketing campaigns generating SGD 2M+ revenue uplift. Used SQL optimization and statistical analysis (A/B testing). Collaborated with risk and marketing teams. Foundation in data infrastructure understanding.',
+    technologies: 'SQL, Python, Tableau, Excel, Statistical Analysis',
+    duration: '10 months (2022)',
+    outcome: 'Strong analyst foundation. Promoted to Data Engineer. Salary: SGD 6,000/month.',
   },
   {
-    id: 'project_001',
-    type: 'portfolio',
-    title: 'Real-Time Metrics Dashboard',
+    id: 'kai_data_engineer_2023',
+    type: 'internship',
+    title: 'Data Engineer — ByteDance, Singapore (2023-2024)',
     description:
-      'Designed and deployed a real-time monitoring dashboard for a fintech platform. Ingests 500K+ events daily from a Kafka pipeline. Built with React frontend + Node.js backend + ClickHouse for analytics. Shows system health, transaction volumes, and revenue metrics with 30-second latency. Used by 15+ internal stakeholders.',
-    technologies: 'React, Node.js, Kafka, ClickHouse, WebSockets, AWS EC2',
-    link: 'https://github.com/sarahtan-ds/realtime-dashboard',
-    outcome: 'In production. 500K events/day. Used by 15+ stakeholders.',
+      'Transitioned to ByteDance to build data pipelines. Designed real-time data pipeline ingesting 100M+ events/day using Kafka, Flink, and Spark. Reduced data latency from 4 hours to 15 minutes for recommendation system. Built data quality monitoring system detecting pipeline failures automatically. Mentored 1 junior engineer on pipeline design patterns. Owned end-to-end data infrastructure for 3 product teams.',
+    technologies: 'Kafka, Apache Flink, Spark, Python, ClickHouse, Data Pipeline Architecture',
+    duration: '14 months (2023-2024)',
+    outcome: 'Recognized for infrastructure expertise. Salary: SGD 10,000/month. On path to Staff Engineer.',
+  },
+  {
+    id: 'kai_senior_2025',
+    type: 'internship',
+    title: 'Senior Data Engineer — ByteDance, Singapore (2025)',
+    description:
+      'Senior role managing data infrastructure for ByteDance Southeast Asia. Leading team of 2 engineers on core data platform. Designed next-generation event streaming architecture supporting 500M events/day. Architected data warehouse consolidation reducing costs by 35%. Led RFC process for major infrastructure decisions. Mentoring junior engineers on system design and career growth.',
+    technologies: 'Kafka, Spark, ClickHouse, Python, Kubernetes, Data Architecture',
+    duration: '6+ months (2025)',
+    outcome: 'Senior data engineer. Salary: SGD 12,000/month + RSU equity. Total annual: ~SGD 155k+.',
+    link: 'https://www.bytedance.com',
+  },
+  {
+    id: 'kai_skill_realtime',
+    type: 'certificate',
+    title: 'Real-Time Data Architecture Expertise',
+    issuer: 'ByteDance Learning + Industry Experience',
+    description:
+      'Mastered real-time streaming architecture during 2023-2024. Expert in Kafka tuning, Flink windowing, stateful processing, and distributed tracing. Designed systems with sub-second latency and exactly-once semantics. This skill made Kai highly valuable in data engineering market with 15% YoY demand growth.',
+    technologies: 'Real-Time Streaming, Kafka, Flink, Exactly-Once Processing',
+    verified: true,
+    outcome: 'Unique expertise. Salary impact: +25-30% premium for this skill in Asia tech market.',
   },
 ];
 
-export const sarahTanProfile: StudentProfile = {
-  id: 'student_002',
-  name: 'Sarah Tan',
-  university: 'National University of Singapore (NUS)',
+export const kaiChenProfile: StudentProfile = {
+  id: 'student_kai_002',
+  name: 'Kai Chen',
+  university: 'Nanyang Technological University (NTU), Singapore',
   year: 3,
-  major: 'Data Science',
+  major: 'Computer Engineering',
   targetRole: 'Data Engineer',
-  evidence: sarahTanEvidence,
+  evidence: kaiEvidence,
 };
 
-const ahmadRazifEvidence: Evidence[] = [
+// ============================================================================
+// PERSONA 3: Aisha Patel
+// Product Manager at Lazada, India (with Singapore expansion)
+// Career Path: Business Analyst (2020) → Associate PM (2021) → PM (2024) → Senior PM (2025)
+// Salary Growth: INR 15L/year → INR 25L/year → INR 35L/year → INR 45L/year
+// Key Success Factor: Market analysis + product strategy (Year 3 inflection point)
+// Market Context: PM roles are competitive but high-reward (3-5% YoY growth)
+// ============================================================================
+
+const aishaEvidence: Evidence[] = [
   {
-    id: 'portfolio_003',
-    type: 'portfolio',
-    title: 'Task Management Mobile App',
+    id: 'aisha_analyst_2020',
+    type: 'internship',
+    title: 'Business Analyst — Flipkart, India (2020-2021)',
     description:
-      'Built a full-stack mobile app for task management using React Native, Django, and PostgreSQL. Features include task prioritization, recurring reminders, team collaboration, and cloud sync. Deployed on Google Play Store and App Store with 200+ downloads. Integrated Firebase for push notifications. Implemented complex state management using Redux.',
-    technologies: 'React Native, Django, PostgreSQL, Redux, Firebase, JavaScript, Python',
-    link: 'https://github.com/ahmadrazif/task-mate-app',
-    outcome: 'Live on both stores. 200+ downloads. 4.5★ rating.',
+      'Analyzed user behavior on Flipkart\'s e-commerce platform using SQL and Tableau. Tracked KPIs across fashion category: DAU, conversion rate, cart abandonment. Identified category trend: 40% of users abandoned due to poor search filters. Recommended and documented solution for PM team. Strong foundation in data-driven decision making and stakeholder communication.',
+    technologies: 'SQL, Tableau, Excel, User Research',
+    duration: '12 months (2020-2021)',
+    outcome: 'Transitioned to Associate PM. Salary: INR 15L/year.',
   },
   {
-    id: 'portfolio_004',
-    type: 'portfolio',
-    title: 'E-Learning Platform',
+    id: 'aisha_associate_pm_2021',
+    type: 'internship',
+    title: 'Associate PM — Amazon India (2021-2023)',
     description:
-      'Developed a web-based e-learning platform with video streaming, quiz system, and progress tracking. Built with React frontend and Node.js/Express backend. Integrated Stripe for payment processing and YouTube API for video delivery. Supports 50+ concurrent users. Database optimized with PostgreSQL indexing.',
-    technologies: 'React, Node.js, Express, PostgreSQL, Stripe API, YouTube API',
-    link: 'https://github.com/ahmadrazif/elearning-platform',
-    outcome: 'Live platform. 50 concurrent users. Payment processing working.',
+      'Owned search experience for fashion category on Amazon India. Led discovery research (20+ user interviews) identifying key pain points in existing filters. Proposed new faceted search redesign based on market analysis of top performers. Worked with engineers and design on implementation. Launched redesign increasing conversion by 8% (estimated INR 5Cr+ annual impact). Collaborated with brand partnerships on category expansion.',
+    technologies: 'Product Strategy, User Research, Data Analysis, Stakeholder Management',
+    duration: '24 months (2021-2023)',
+    outcome: 'Promoted to PM at Lazada. Salary: INR 25L/year.',
   },
   {
-    id: 'hackathon_002',
-    type: 'hackathon',
-    title: 'KLIKHACK 2024 — Smart City Solutions',
+    id: 'aisha_pm_2024',
+    type: 'internship',
+    title: 'Product Manager — Lazada, Singapore (2024-2025)',
     description:
-      'Built an IoT data visualization dashboard in 48 hours with 2 teammates. Real-time data from 50+ sensors across Kuala Lumpur. Uses Flutter for mobile UI and Node.js backend. Maps sensor locations and alerts for anomalies (temperature, humidity, pollution). Presented to 10 corporate judges.',
-    technologies: 'Flutter, Node.js, MongoDB, AWS IoT, Real-time Data Processing',
-    teamSize: 3,
-    yourRole: 'Full-stack developer',
-    outcome: 'Completed and presented. Positive feedback from judges.',
-    link: 'https://github.com/ahmadrazif/smartcity-iot',
+      'PM for Lazada\'s cross-border commerce initiative connecting Indian sellers to Southeast Asian buyers. Led market research across 4 countries identifying category gaps. Built business case for new marketplace vertical targeting INR 1000Cr opportunity. Coordinated with finance (P&L modeling), logistics, and seller onboarding teams. Launched platform in 6 months to 100K+ sellers. Current GMV: INR 500Cr+ annual run rate.',
+    technologies: 'Product Strategy, Market Analysis, P&L Modeling, Team Leadership',
+    duration: '14 months (2024-2025)',
+    outcome: 'Senior PM promotion track. Salary: INR 40-45L/year (with Sg expatriate bonus).',
+    link: 'https://www.lazada.com',
   },
   {
-    id: 'portfolio_005',
-    type: 'portfolio',
-    title: 'API Testing Automation Suite',
+    id: 'aisha_skill_market_strategy',
+    type: 'certificate',
+    title: 'Market Analysis & Product Strategy',
+    issuer: 'Amazon + Lazada Experience',
     description:
-      'Created an automated testing suite for REST APIs using Postman and JavaScript (Newman). Tests cover 40+ endpoints with 95% coverage. Integrated with GitHub Actions for CI/CD pipeline. Tests run on every PR and alert team of failures.',
-    technologies: 'Postman, JavaScript, GitHub Actions, CI/CD',
-    link: 'https://github.com/ahmadrazif/api-test-suite',
-    outcome: '40+ endpoints tested. 95% coverage. CI/CD integrated.',
+      'Developed deep expertise in market analysis, competitive intelligence, and product strategy during 2024. Comfortable analyzing TAM/SAM/SOM, competitive positioning, and multi-country market dynamics. This skill (geographic expansion, market entry strategy) is highly valued in Asia tech. Key differentiator for PM progression to Senior/Group PM roles.',
+    technologies: 'Product Strategy, Market Analysis, Financial Modeling, Cross-Functional Leadership',
+    verified: true,
+    outcome: 'Unique for Asia PM market. Salary impact: +40-50% premium for this skill at senior PM level.',
   },
 ];
 
-export const ahmadRazifProfile: StudentProfile = {
-  id: 'student_003',
-  name: 'Ahmad Razif',
-  university: 'Universiti Malaya (UM)',
-  year: 2,
-  major: 'Computer Science',
-  targetRole: 'Full-Stack Engineer',
-  evidence: ahmadRazifEvidence,
+export const aishaPatelProfile: StudentProfile = {
+  id: 'student_aisha_003',
+  name: 'Aisha Patel',
+  university: 'BITS Pilani, India',
+  year: 4,
+  major: 'Computer Science & Economics',
+  targetRole: 'Product Manager',
+  evidence: aishaEvidence,
 };

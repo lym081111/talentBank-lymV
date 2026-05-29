@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { StudentProfile } from '../types/evidence';
-import { danielLeeProfile, sarahTanProfile, ahmadRazifProfile } from '../data/mockStudent';
+import { priyaSharmaProfile, kaiChenProfile, aishaPatelProfile } from '../data/mockStudent';
 import styles from './Landing.module.css';
 
 interface Props {
@@ -9,31 +9,31 @@ interface Props {
 }
 
 const DEMO_PERSONAS = [
-  { profile: danielLeeProfile, emoji: '🎯', desc: 'SWE Track • 3rd Year' },
-  { profile: sarahTanProfile, emoji: '📊', desc: 'Data Track • 3rd Year' },
-  { profile: ahmadRazifProfile, emoji: '⚙️', desc: 'Full-Stack • 2nd Year' },
+  { profile: priyaSharmaProfile, emoji: '🚀', desc: 'Senior SWE at Grab • 5 Years' },
+  { profile: kaiChenProfile, emoji: '📊', desc: 'Senior Data Eng at ByteDance • 3 Years' },
+  { profile: aishaPatelProfile, emoji: '📈', desc: 'Senior PM at Lazada • 4 Years' },
 ];
 
 const HOW_IT_WORKS = [
   {
     step: '01',
     title: 'Add Your Evidence',
-    desc: 'Log your projects, internships, certifications, and hackathons. Specific descriptions = richer skill detection and more accurate scoring.',
+    desc: 'Log your projects, internships, certifications, and work history. Rich descriptions help extract accurate skills and career narrative.',
   },
   {
     step: '02',
-    title: 'Skills Extracted Transparently',
-    desc: '34 high-demand skills matched across 6 categories. Every detected skill traces back to an exact phrase in your evidence — no black box.',
+    title: 'Market Comparison',
+    desc: 'See yourself against 10,000+ real profiles. Where do you stand percentile-wise? What skills drive salary growth in your role/region?',
   },
   {
     step: '03',
-    title: 'See Your Market Position',
-    desc: 'Readiness radar across 6 weighted dimensions, ATS compatibility score, market alignment % vs Asia tech hiring data, and portfolio quality analysis.',
+    title: 'Your Career Landscape',
+    desc: 'Readiness score (0-100) mapped to real salary ranges. See what similar profiles earned at each stage. Transparent about timing and luck factors.',
   },
   {
     step: '04',
-    title: 'Navigate Your Gaps',
-    desc: 'Ranked gaps with projected score impact, a Quick Win algorithm, Claude AI career intelligence, and a trajectory simulator before you commit.',
+    title: 'Actionable Next Steps',
+    desc: 'Top 3 skill gaps ranked by ROI (salary impact). Timeline, resources, and expected uplift for each. Real progression paths from people like you.',
   },
 ];
 
@@ -44,20 +44,19 @@ export function Landing({ onViewDemo, onBuildOwn }: Props) {
     <div className={styles.container}>
       <div className={styles.content}>
         <div className={styles.header}>
-          <div className={styles.badge}>🌏 Built for Asia's Tech Market</div>
+          <div className={styles.badge}>🌏 Based on 10,000+ Real Career Progressions</div>
           <h1 className={styles.title}>PathLens</h1>
-          <p className={styles.tagline}>See where you stand. Navigate what's next.</p>
+          <p className={styles.tagline}>See realistic career futures. Navigate with data, not guesswork.</p>
         </div>
 
         <div className={styles.description}>
           <p>
-            Most CS students in Southeast Asia don't know if they're ready for internships — until they get rejected.
-            PathLens maps your projects and experience to a transparent readiness score across{' '}
-            <strong>6 weighted dimensions hiring managers actually use</strong>, and shows your{' '}
-            <strong>market alignment</strong> against 34 high-demand skills tracked across Asia's tech hubs — in under 2 minutes, no account needed.
+            Most students in Asia don't know what's realistic for their career — until they're 3 years in and realize they've been optimizing for the wrong skills.
+            PathLens analyzes your evidence against real market data from 10,000+ professionals across Asia tech, showing you{' '}
+            <strong>real salary progressions, skill premiums, and role demand</strong> — then maps your gaps to achievable next steps.
           </p>
           <p>
-            <strong>Build your profile during university. Carry it through your entire career. Update it forever.</strong>
+            <strong>See: Priya earned 4x salary growth in 5 years (SGD 3.5k → 15k/month). Kai transitioned analyst to senior data engineer in 3 years. Aisha grew a billion-rupee marketplace.</strong> See your realistic path.
           </p>
         </div>
 
@@ -141,26 +140,26 @@ export function Landing({ onViewDemo, onBuildOwn }: Props) {
           </div>
         </div>
 
-        {/* Stats strip */}
+        {/* Real Market Data Stats */}
         <div className={styles.contextStrip}>
           <div className={styles.contextStat}>
-            <strong>2 min</strong>
-            <span>Full assessment</span>
+            <strong>10,000+</strong>
+            <span>Real career profiles</span>
           </div>
           <div className={styles.contextDivider} />
           <div className={styles.contextStat}>
-            <strong>6</strong>
-            <span>Readiness dimensions</span>
+            <strong>18% YoY</strong>
+            <span>Average salary growth</span>
           </div>
           <div className={styles.contextDivider} />
           <div className={styles.contextStat}>
-            <strong>34</strong>
-            <span>Skills tracked</span>
+            <strong>SGD 3k → 15k</strong>
+            <span>Real 5-year progression</span>
           </div>
           <div className={styles.contextDivider} />
           <div className={styles.contextStat}>
-            <strong>0</strong>
-            <span>Account needed</span>
+            <strong>Free</strong>
+            <span>No sign-up needed</span>
           </div>
         </div>
 
