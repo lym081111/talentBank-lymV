@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { ReadinessProfile, Evidence, StudentProfile } from '../types/evidence';
 import { DimensionScoreGauge } from '../components/DimensionScoreGauge';
+import { SkillRoadmap } from '../components/SkillRoadmap';
 import { AICareerInsight } from '../components/AICareerInsight';
 import { RadarChart } from '../components/RadarChart';
 import { ATSScoreCard } from '../components/ATSScoreCard';
@@ -89,36 +90,25 @@ function CareerGuidanceSection({ profile }: { profile: ReadinessProfile }) {
 
       {skillRecs.length > 0 && (
         <div style={{ marginBottom: '28px' }}>
-          <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--color-text)', margin: '0 0 14px 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            📈 High-Impact Skills to Learn
-          </h4>
-          <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', margin: '0 0 12px 0', fontStyle: 'italic' }}>
-            Estimated weeks to learn + salary impact. Focus on HIGH priority to unlock +20-30% salary growth.
-          </p>
-          <div style={{ display: 'grid', gap: '10px' }}>
-            {skillRecs.slice(0, 3).map((skill, idx) => (
-              <div key={idx} style={{
-                background: 'var(--color-surface)',
-                border: '1px solid var(--color-border)',
-                borderRadius: 'var(--radius-md)',
-                padding: '14px 16px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}>
-                <div>
-                  <div style={{ fontSize: '13px', fontWeight: '600', marginBottom: '2px' }}>{skill.skill}</div>
-                  <div style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{skill.estimatedWeeksToLearn} weeks · +{skill.impactOnScore} pts impact</div>
-                </div>
-                <span style={{
-                  fontSize: '11px', fontWeight: '700', textTransform: 'uppercase',
-                  background: skill.priority === 'high' ? 'var(--color-danger-light)' : skill.priority === 'medium' ? 'var(--color-warning-light)' : 'var(--color-success-light)',
-                  color: skill.priority === 'high' ? 'var(--color-danger)' : skill.priority === 'medium' ? 'var(--color-warning)' : 'var(--color-success)',
-                  padding: '3px 10px', borderRadius: '12px'
-                }}>{skill.priority}</span>
-              </div>
-            ))}
-          </div>
+          <SkillRoadmap
+            skills={skillRecs.map(skill => ({
+              skill: skill.skill,
+              priority: skill.priority as 'high' | 'medium' | 'low',
+              weeksToLearn: skill.estimatedWeeksToLearn,
+              salaryImpact: `+${skill.impactOnScore} points`,
+              learningPaths: [
+                'Build real projects',
+                'Practice with code challenges',
+                'Learn from industry leaders'
+              ],
+              resources: [
+                'GitHub repositories with examples',
+                'Online courses and tutorials',
+                'Practice problems and exercises',
+                'Mentorship from senior engineers'
+              ]
+            }))}
+          />
         </div>
       )}
 
