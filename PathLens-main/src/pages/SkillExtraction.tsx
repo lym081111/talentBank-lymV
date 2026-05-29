@@ -148,27 +148,6 @@ export function SkillExtraction({ evidence, extractedSkills, onContinue }: Props
           </div>
         </div>
 
-        {highDemandCount > 0 && (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            background: 'var(--color-success-light)',
-            border: '1px solid var(--color-success)',
-            borderRadius: 'var(--radius-md)',
-            padding: '12px 16px',
-            marginBottom: '20px',
-            fontSize: '13px',
-          }}>
-            <span style={{ fontSize: '18px' }}>🔥</span>
-            <span>
-              <strong style={{ color: 'var(--color-success)' }}>{highDemandCount} high-demand skill{highDemandCount !== 1 ? 's' : ''}</strong>
-              {' '}detected — Python, React, Cloud, and similar skills are among the most requested by Asia tech employers right now.
-              {highDemandCount >= 4 && ' Strong market alignment!'}
-            </span>
-          </div>
-        )}
-
         {/* Grouped Skills by Demand */}
         <div style={{
           background: 'var(--color-surface)',

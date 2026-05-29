@@ -49,16 +49,16 @@ function CareerGuidanceSection({ profile }: { profile: ReadinessProfile }) {
 
   return (
     <div style={{ marginBottom: '32px' }}>
-      <h3 style={{ margin: '0 0 4px 0', fontSize: '18px', fontWeight: '700', color: 'var(--color-text)' }}>
-        🗂️ Your Career Path
+      <h3 style={{ margin: '0 0 12px 0', fontSize: '24px', fontWeight: '900', color: 'var(--color-text)', letterSpacing: '-0.5px' }}>
+        🧭 Your Career Path Forward
       </h3>
-      <p style={{ margin: '0 0 20px 0', fontSize: '13px', color: 'var(--color-text-secondary)' }}>
-        Based on 10,000+ real career progressions: realistic roles, high-impact skills (with salary ROI), and proven interview strategies.
+      <p style={{ margin: '0 0 24px 0', fontSize: '15px', color: 'var(--color-text-secondary)', lineHeight: '1.7', fontWeight: '500' }}>
+        Personalized career roadmap based on <strong style={{ color: 'var(--color-accent)' }}>10,000+ real career progressions</strong>. See which roles fit your score, which high-ROI skills to develop next, and how to ace interviews.
       </p>
 
       {jobRecs.length > 0 && (
-        <div style={{ marginBottom: '20px' }}>
-          <h4 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-text)', margin: '0 0 12px 0' }}>
+        <div style={{ marginBottom: '28px' }}>
+          <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--color-text)', margin: '0 0 14px 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             💼 Role Matches
           </h4>
           <div style={{ display: 'grid', gap: '12px' }}>
@@ -67,19 +67,19 @@ function CareerGuidanceSection({ profile }: { profile: ReadinessProfile }) {
                 background: 'var(--color-surface)',
                 border: '1px solid var(--color-border)',
                 borderRadius: 'var(--radius-lg)',
-                padding: '16px'
+                padding: '18px'
               }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <strong style={{ fontSize: '14px' }}>{job.title}</strong>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                  <strong style={{ fontSize: '15px', fontWeight: '800', color: 'var(--color-text)' }}>{job.title}</strong>
                   <span style={{
-                    fontSize: '12px', fontWeight: '700',
+                    fontSize: '12px', fontWeight: '800',
                     background: 'var(--color-success-light)', color: 'var(--color-success)',
-                    padding: '2px 10px', borderRadius: '12px'
+                    padding: '4px 12px', borderRadius: '20px', textTransform: 'uppercase', letterSpacing: '0.03em'
                   }}>{Math.round(job.matchPercentage)}% match</span>
                 </div>
-                <p style={{ margin: '0 0 6px 0', fontSize: '13px', color: 'var(--color-text-secondary)' }}>{job.description}</p>
-                <p style={{ margin: 0, fontSize: '12px', color: 'var(--color-text-muted)' }}>
-                  <strong>Why you qualify:</strong> {job.whyYouQualify}
+                <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: '1.5' }}>{job.description}</p>
+                <p style={{ margin: 0, fontSize: '12px', color: 'var(--color-text-secondary)', fontWeight: '600' }}>
+                  ✓ <strong>Why you qualify:</strong> {job.whyYouQualify}
                 </p>
               </div>
             ))}
@@ -88,10 +88,13 @@ function CareerGuidanceSection({ profile }: { profile: ReadinessProfile }) {
       )}
 
       {skillRecs.length > 0 && (
-        <div style={{ marginBottom: '20px' }}>
-          <h4 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-text)', margin: '0 0 12px 0' }}>
-            📈 Skills to Develop
+        <div style={{ marginBottom: '28px' }}>
+          <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--color-text)', margin: '0 0 14px 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            📈 High-Impact Skills to Learn
           </h4>
+          <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', margin: '0 0 12px 0', fontStyle: 'italic' }}>
+            Estimated weeks to learn + salary impact. Focus on HIGH priority to unlock +20-30% salary growth.
+          </p>
           <div style={{ display: 'grid', gap: '10px' }}>
             {skillRecs.slice(0, 3).map((skill, idx) => (
               <div key={idx} style={{
@@ -121,29 +124,32 @@ function CareerGuidanceSection({ profile }: { profile: ReadinessProfile }) {
 
       {interviewAreas.length > 0 && (
         <div>
-          <h4 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-text)', margin: '0 0 12px 0' }}>
-            🎤 Interview Preparation
+          <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--color-text)', margin: '0 0 14px 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            🎤 Interview Success Plan
           </h4>
+          <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', margin: '0 0 12px 0', fontStyle: 'italic' }}>
+            Practice scenarios and key talking points for your weak dimensions. Be ready to discuss specific projects.
+          </p>
           <div style={{ display: 'grid', gap: '12px' }}>
             {interviewAreas.slice(0, 2).map((area, idx) => (
               <div key={idx} style={{
                 background: 'var(--color-surface)',
                 border: '1px solid var(--color-border)',
                 borderRadius: 'var(--radius-lg)',
-                padding: '16px'
+                padding: '18px'
               }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                  <strong style={{ fontSize: '13px' }}>{area.dimension}</strong>
-                  <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>
-                    {area.currentScore} → <strong style={{ color: 'var(--color-success)' }}>{area.targetScore}</strong>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <strong style={{ fontSize: '14px', fontWeight: '800', color: 'var(--color-text)' }}>{area.dimension}</strong>
+                  <span style={{ fontSize: '11px', color: 'var(--color-text-muted)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                    {area.currentScore} → <strong style={{ color: 'var(--color-accent)', fontSize: '12px' }}>{area.targetScore}</strong>
                   </span>
                 </div>
-                <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', fontStyle: 'italic', marginBottom: '8px' }}>
-                  "{area.practiceScenario}"
+                <div style={{ fontSize: '13px', color: 'var(--color-accent)', fontStyle: 'italic', marginBottom: '10px', fontWeight: '500', background: 'var(--color-primary-light)', padding: '8px 12px', borderRadius: 'var(--radius-md)' }}>
+                  💡 {area.practiceScenario}
                 </div>
-                <ul style={{ margin: 0, paddingLeft: '16px' }}>
+                <ul style={{ margin: 0, paddingLeft: '20px' }}>
                   {area.topTips.slice(0, 2).map((tip, tidx) => (
-                    <li key={tidx} style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: '4px' }}>{tip}</li>
+                    <li key={tidx} style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: '5px', lineHeight: '1.5', fontWeight: '500' }}>{tip}</li>
                   ))}
                 </ul>
               </div>
@@ -283,8 +289,8 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
             <div style={{ marginTop: '10px', fontSize: '11px', color: 'rgba(255,255,255,0.6)', fontStyle: 'italic' }}>
               Weighted across 6 dimensions · Technical & Portfolio each 20%
             </div>
-            <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.2)', fontSize: '13px', color: 'rgba(255,255,255,0.8)' }}>
-              💡 <strong>Tip:</strong> See where you stand vs your university cohort — click "See University Cohort" from the Gaps page
+            <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.2)', fontSize: '12px', color: 'rgba(255,255,255,0.9)', lineHeight: '1.6' }}>
+              <strong style={{ fontSize: '13px' }}>💡 Pro Tip:</strong><br/>See where you stand vs your university cohort — click "See University Cohort" from the Paths page to benchmark yourself.
             </div>
           </div>
 
@@ -324,19 +330,19 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
                 background: 'var(--color-surface)',
                 border: `2px solid ${range.color}`,
                 borderRadius: 'var(--radius-lg)',
-                padding: '16px',
+                padding: '20px 16px',
                 textAlign: 'center',
-                opacity: profile.overall >= (idx === 3 ? 0 : idx === 2 ? 30 : idx === 1 ? 55 : 75) ? 1 : 0.6,
+                opacity: profile.overall >= (idx === 3 ? 0 : idx === 2 ? 30 : idx === 1 ? 55 : 75) ? 1 : 0.5,
               }}
             >
-              <div style={{ fontSize: '28px', marginBottom: '4px' }}>{range.emoji}</div>
-              <div style={{ fontSize: '14px', fontWeight: '700', color: range.color, marginBottom: '2px' }}>
+              <div style={{ fontSize: '32px', marginBottom: '8px' }}>{range.emoji}</div>
+              <div style={{ fontSize: '16px', fontWeight: '900', color: range.color, marginBottom: '4px', letterSpacing: '-0.5px' }}>
                 {range.label}
               </div>
-              <div style={{ fontSize: '11px', fontWeight: '600', color: 'var(--color-text)', marginBottom: '4px' }}>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '6px', letterSpacing: '0.02em' }}>
                 {range.desc}
               </div>
-              <div style={{ fontSize: '10px', color: 'var(--color-text-muted)' }}>
+              <div style={{ fontSize: '11px', fontWeight: '600', color: range.color, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 {range.salary}
               </div>
             </div>
@@ -496,9 +502,9 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
         })()}
 
         <div className={styles.dimensionsSection}>
-          <h3>📊 Your 6 Dimensions</h3>
-          <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginBottom: '16px' }}>
-            Visual breakdown of your career readiness across key dimensions.
+          <h3 style={{ fontSize: '22px', fontWeight: '800', marginBottom: '8px' }}>📊 Your 6 Dimensions</h3>
+          <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)', marginBottom: '20px', lineHeight: '1.6', fontWeight: '500' }}>
+            Career readiness broken down into 6 key dimensions. <strong style={{ color: 'var(--color-accent)' }}>Target 75+ in each</strong> to stay competitive in the job market.
           </p>
           <div className={styles.dimensionsGrid}>
             {profile.dimensions.map((dimension, idx) => (
