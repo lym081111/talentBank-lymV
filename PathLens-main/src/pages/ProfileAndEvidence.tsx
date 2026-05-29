@@ -1,9 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Evidence, StudentProfile } from '../types/evidence';
 import { EvidenceCard } from '../components/EvidenceCard';
 import { EvidenceForm } from '../components/EvidenceForm';
+import { SkillsByDemandVisualization } from '../components/SkillsByDemandVisualization';
 import { exportEvidenceToPDF } from '../utils/pdfExport';
 import { exportProfileToJSON } from '../utils/profileExport';
+import { extractSkillsFromEvidence } from '../utils/skillExtraction';
 import styles from './ProfileAndEvidence.module.css';
 
 interface Props {
@@ -392,16 +394,57 @@ export function ProfileAndEvidence({
               </div>
             </div>
           ) : (
-            <div className={styles.evidenceList}>
-              {evidence.map(item => (
-                <EvidenceCard
-                  key={item.id}
-                  evidence={item}
-                  onEdit={e => setFormMode({ editing: e })}
-                  onDelete={onDeleteEvidence}
-                />
-              ))}
-            </div>
+            <>
+              <div className={styles.evidenceList}>
+                {evidence.map(item => (
+                  <EvidenceCard
+                    key={item.id}
+                    evidence={item}
+                    onEdit={e => setFormMode({ editing: e })}
+                    onDelete={onDeleteEvidence}
+                  />
+                ))}
+              </div>
+
+              {/* Skills Grouped by Demand */}
+              {(() => {
+                const allExtractedSkills = useMemo(() => {
+                  const skills: Array<{ skill: string; confidence: 'high' | 'medium' | 'low' }> = [];
+                  evidence.forEach(item => {
+                    if (item.technologies) {
+                      item.technologies.split(',').forEach(tech => {
+                        const trimmed = tech.trim();
+                        if (trimmed) {
+                          skills.push({
+                            skill: trimmed,
+                            confidence: 'high',
+                          });
+                        }
+                      });
+                    }
+                  });
+                  return skills;
+                }, [evidence]);
+
+                if (allExtractedSkills.length === 0) return null;
+
+                return (
+                  <div style={{
+                    background: 'var(--color-surface)',
+                    border: '1px solid var(--color-border)',
+                    borderRadius: 'var(--radius-lg)',
+                    padding: '24px',
+                    marginTop: '32px',
+                    marginBottom: '20px',
+                  }}>
+                    <h3 style={{ margin: '0 0 20px 0', fontSize: '16px', fontWeight: '700', color: 'var(--color-text)' }}>
+                      📊 Skills Summary (by Demand Level)
+                    </h3>
+                    <SkillsByDemandVisualization extractedSkills={allExtractedSkills} />
+                  </div>
+                );
+              })()}
+            </>
           )}
 
           <div className={styles.actionButtons}>
