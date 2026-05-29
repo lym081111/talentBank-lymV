@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { ReadinessProfile, Evidence, StudentProfile } from '../types/evidence';
 import { DimensionScoreGauge } from '../components/DimensionScoreGauge';
-import { SkillRoadmap } from '../components/SkillRoadmap';
+import { SkillProgressionRoad } from '../components/SkillProgressionRoad';
 import { AICareerInsight } from '../components/AICareerInsight';
 import { RadarChart } from '../components/RadarChart';
 import { ATSScoreCard } from '../components/ATSScoreCard';
@@ -90,22 +90,17 @@ function CareerGuidanceSection({ profile }: { profile: ReadinessProfile }) {
 
       {skillRecs.length > 0 && (
         <div style={{ marginBottom: '28px' }}>
-          <SkillRoadmap
+          <SkillProgressionRoad
             skills={skillRecs.map(skill => ({
               skill: skill.skill,
               priority: skill.priority as 'high' | 'medium' | 'low',
               weeksToLearn: skill.estimatedWeeksToLearn,
               salaryImpact: `+${skill.impactOnScore} points`,
-              learningPaths: [
+              resources: [
                 'Build real projects',
                 'Practice with code challenges',
-                'Learn from industry leaders'
-              ],
-              resources: [
-                'GitHub repositories with examples',
-                'Online courses and tutorials',
-                'Practice problems and exercises',
-                'Mentorship from senior engineers'
+                'Learn from industry leaders',
+                'GitHub repositories with examples'
               ]
             }))}
           />
