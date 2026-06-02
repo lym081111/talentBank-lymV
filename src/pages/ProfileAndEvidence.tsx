@@ -384,7 +384,10 @@ export function ProfileAndEvidence({
                   <button
                     key={tmpl.data.type}
                     className={styles.templateCard}
-                    onClick={() => setFormMode({ template: tmpl.data })}
+                    onClick={() => {
+                      setIsEditingProfile(false);
+                      setFormMode({ template: tmpl.data });
+                    }}
                   >
                     <span className={styles.templateEmoji}>{tmpl.emoji}</span>
                     <span className={styles.templateLabel}>{tmpl.label}</span>
@@ -453,7 +456,10 @@ export function ProfileAndEvidence({
             {evidence.length > 0 && formMode === 'closed' && (
               <button
                 className={styles.exportButton}
-                onClick={() => setFormMode('add')}
+                onClick={() => {
+                  setIsEditingProfile(false);
+                  setFormMode('add');
+                }}
               >
                 + Add More Evidence
               </button>
