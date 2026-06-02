@@ -384,10 +384,15 @@ export function ProfileAndEvidence({
                   <button
                     key={tmpl.data.type}
                     className={styles.templateCard}
+                    disabled={isEditingProfile}
+                    title={isEditingProfile ? "Please save your profile first" : ""}
                     onClick={() => {
-                      setIsEditingProfile(false);
-                      setFormMode({ template: tmpl.data });
+                      if (!isEditingProfile) {
+                        setIsEditingProfile(false);
+                        setFormMode({ template: tmpl.data });
+                      }
                     }}
+                    style={isEditingProfile ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
                   >
                     <span className={styles.templateEmoji}>{tmpl.emoji}</span>
                     <span className={styles.templateLabel}>{tmpl.label}</span>
