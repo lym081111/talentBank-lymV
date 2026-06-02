@@ -11,7 +11,17 @@ function loadProfile(): StudentProfile {
   } catch {
     // ignore parse errors
   }
-  return priyaSharmaProfile;
+  // Return an empty profile if no saved profile exists
+  // This allows users to build their own from scratch
+  return {
+    id: 'user_' + Date.now(),
+    name: 'Your Name',
+    university: '',
+    year: 1,
+    major: 'Your Major',
+    targetRole: 'Target Role',
+    evidence: [],
+  };
 }
 
 function saveProfile(profile: StudentProfile): void {
