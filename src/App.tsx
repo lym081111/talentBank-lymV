@@ -75,19 +75,8 @@ function App() {
   };
 
   const handleBuildOwn = () => {
-    // Clear all evidence
+    // Clear all evidence - this will trigger the profile edit form in ProfileAndEvidence
     clearAll();
-    // Set a blank profile for the user to fill in
-    const blankProfile: StudentProfile = {
-      id: 'user_custom_' + Date.now(),
-      name: 'Your Name',
-      university: '',
-      year: 1,
-      major: 'Your Major',
-      targetRole: 'Your Target Role',
-      evidence: [],
-    };
-    updateProfile(blankProfile);
     handleNavigate('profile');
   };
 
