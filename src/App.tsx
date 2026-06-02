@@ -37,7 +37,7 @@ function App() {
   const { isDark, toggle: toggleDarkMode } = useDarkMode();
 
   const { evidence, addEvidence, updateEvidence, deleteEvidence, resetToDemo, clearAll, setEvidence } = useEvidence();
-  const { profile: studentProfile, updateProfile, resetProfile, isDemoProfile } = useStudentProfile();
+  const { profile: studentProfile, updateProfile, isDemoProfile } = useStudentProfile();
 
   const readinessProfile = useMemo(() => {
     return calculateReadinessProfile(evidence);
