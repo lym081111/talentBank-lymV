@@ -80,11 +80,11 @@ function App() {
     // Set a blank profile for the user to fill in
     const blankProfile: StudentProfile = {
       id: 'user_custom_' + Date.now(),
-      name: '',
+      name: 'Your Name',
       university: '',
       year: 1,
-      major: '',
-      targetRole: '',
+      major: 'Your Major',
+      targetRole: 'Your Target Role',
       evidence: [],
     };
     updateProfile(blankProfile);
