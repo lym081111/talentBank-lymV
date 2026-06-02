@@ -169,7 +169,7 @@ export function ProfileAndEvidence({
         )}
 
         <div className={styles.profileCard}>
-          {isEditingProfile ? (
+          {isEditingProfile && formMode === 'closed' ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <h3 style={{ margin: '0 0 8px 0' }}>Edit Your Profile</h3>
               <div>
