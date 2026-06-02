@@ -37,7 +37,7 @@ function App() {
   const { isDark, toggle: toggleDarkMode } = useDarkMode();
 
   const { evidence, addEvidence, updateEvidence, deleteEvidence, resetToDemo, clearAll, setEvidence } = useEvidence();
-  const { profile: studentProfile, updateProfile, isDemoProfile } = useStudentProfile();
+  const { profile: studentProfile, updateProfile, resetProfile, isDemoProfile } = useStudentProfile();
 
   const readinessProfile = useMemo(() => {
     return calculateReadinessProfile(evidence);
@@ -75,7 +75,19 @@ function App() {
   };
 
   const handleBuildOwn = () => {
+    // Clear all evidence
     clearAll();
+    // Set a blank profile for the user to fill in
+    const blankProfile: StudentProfile = {
+      id: 'user_custom_' + Date.now(),
+      name: '',
+      university: '',
+      year: 1,
+      major: '',
+      targetRole: '',
+      evidence: [],
+    };
+    updateProfile(blankProfile);
     handleNavigate('profile');
   };
 
