@@ -104,15 +104,27 @@ export function ProfileAndEvidence({
     }
   }, [showSuccess]);
 
+  // Keep editForm in sync with profile when not editing
+  useEffect(() => {
+    if (!isEditingProfile) {
+      setEditForm(profile);
+    }
+  }, [profile, isEditingProfile]);
+
 
   function handleSave(data: Omit<Evidence, 'id'>) {
-    if (formMode === 'add' || (typeof formMode === 'object' && 'template' in formMode)) {
-      onAddEvidence(data);
-      setShowSuccess(true);
-    } else if (typeof formMode === 'object' && 'editing' in formMode) {
-      onUpdateEvidence(formMode.editing.id, data);
+    try {
+      if (formMode === 'add' || (typeof formMode === 'object' && 'template' in formMode)) {
+        onAddEvidence(data);
+        setShowSuccess(true);
+      } else if (typeof formMode === 'object' && 'editing' in formMode) {
+        onUpdateEvidence(formMode.editing.id, data);
+      }
+      setFormMode('closed');
+    } catch (error) {
+      console.error('Error saving evidence:', error);
+      setFormMode('closed');
     }
-    setFormMode('closed');
   }
 
   const handleSaveProfile = () => {
