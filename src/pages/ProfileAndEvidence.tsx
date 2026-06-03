@@ -97,6 +97,27 @@ export function ProfileAndEvidence({
   const [editForm, setEditForm] = useState(profile);
   const formRef = useRef<HTMLDivElement>(null);
 
+  // Must be at top level - cannot be inside JSX
+  const allExtractedSkills = useMemo<ExtractedSkill[]>(() => {
+    const skills: ExtractedSkill[] = [];
+    evidence.forEach(item => {
+      if (item.technologies) {
+        item.technologies.split(',').forEach(tech => {
+          const trimmed = tech.trim();
+          if (trimmed) {
+            skills.push({
+              skill: trimmed,
+              confidence: 'high',
+              sourceEvidenceId: item.id,
+              sourcePhrase: item.technologies || '',
+            });
+          }
+        });
+      }
+    });
+    return skills;
+  }, [evidence]);
+
   useEffect(() => {
     if (showSuccess) {
       const timer = setTimeout(() => setShowSuccess(false), 4000);
@@ -427,45 +448,21 @@ export function ProfileAndEvidence({
               </div>
 
               {/* Skills Grouped by Demand */}
-              {(() => {
-                const allExtractedSkills = useMemo(() => {
-                  const skills: ExtractedSkill[] = [];
-                  evidence.forEach(item => {
-                    if (item.technologies) {
-                      item.technologies.split(',').forEach(tech => {
-                        const trimmed = tech.trim();
-                        if (trimmed) {
-                          skills.push({
-                            skill: trimmed,
-                            confidence: 'high',
-                            sourceEvidenceId: item.id,
-                            sourcePhrase: item.technologies || '',
-                          });
-                        }
-                      });
-                    }
-                  });
-                  return skills;
-                }, [evidence]);
-
-                if (allExtractedSkills.length === 0) return null;
-
-                return (
-                  <div style={{
-                    background: 'var(--color-surface)',
-                    border: '1px solid var(--color-border)',
-                    borderRadius: 'var(--radius-lg)',
-                    padding: '24px',
-                    marginTop: '32px',
-                    marginBottom: '20px',
-                  }}>
-                    <h3 style={{ margin: '0 0 20px 0', fontSize: '16px', fontWeight: '700', color: 'var(--color-text)' }}>
-                      📊 Skills Summary (by Demand Level)
-                    </h3>
-                    <SkillsByDemandVisualization extractedSkills={allExtractedSkills} />
-                  </div>
-                );
-              })()}
+              {allExtractedSkills.length > 0 && (
+                <div style={{
+                  background: 'var(--color-surface)',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: 'var(--radius-lg)',
+                  padding: '24px',
+                  marginTop: '32px',
+                  marginBottom: '20px',
+                }}>
+                  <h3 style={{ margin: '0 0 20px 0', fontSize: '16px', fontWeight: '700', color: 'var(--color-text)' }}>
+                    📊 Skills Summary (by Demand Level)
+                  </h3>
+                  <SkillsByDemandVisualization extractedSkills={allExtractedSkills} />
+                </div>
+              )}
             </>
           )}
 
