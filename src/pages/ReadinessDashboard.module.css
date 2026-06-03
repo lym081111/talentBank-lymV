@@ -65,7 +65,8 @@
   margin: 0;
   font-size: 16px;
   line-height: 1.7;
-  color: var(--color-text-secondary);
+  color: var(--color-text);
+  font-weight: 500;
   max-width: 600px;
   margin: 0 auto;
 }

@@ -31,7 +31,7 @@ function PortfolioQualitySection({ evidence }: { evidence: Evidence[] }) {
       <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: 'var(--color-text-secondary)' }}>
         Each project scored on: <strong>Documentation</strong> (how well you explain), <strong>Complexity</strong> (technical depth), <strong>Impact</strong> (real users), and <strong>Deployment</strong> (production readiness).
       </p>
-      <p style={{ margin: '0 0 20px 0', fontSize: '12px', color: 'var(--color-text-muted)', fontStyle: 'italic' }}>
+      <p style={{ margin: '0 0 20px 0', fontSize: '12px', color: 'var(--color-text-secondary)', fontStyle: 'italic' }}>
         Portfolio quality at 75+ helps you compete for internships with 3-5x salary premium. Below 50? Focus on one project with real users and clean deployment.
       </p>
       <div style={{ display: 'grid', gap: '16px' }}>
@@ -125,7 +125,7 @@ function CareerGuidanceSection({ profile }: { profile: ReadinessProfile }) {
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                   <strong style={{ fontSize: '14px', fontWeight: '800', color: 'var(--color-text)' }}>{area.dimension}</strong>
-                  <span style={{ fontSize: '11px', color: 'var(--color-text-muted)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--color-text)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
                     {area.currentScore} → <strong style={{ color: 'var(--color-accent)', fontSize: '12px' }}>{area.targetScore}</strong>
                   </span>
                 </div>
@@ -271,7 +271,7 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
             <div className={styles.overallScore}>{displayScore}/100</div>
             <div className={styles.overallLevel}>{profile.level}</div>
             <p className={styles.overallInterpretation}>{profile.interpretation}</p>
-            <div style={{ marginTop: '10px', fontSize: '11px', color: 'rgba(255,255,255,0.6)', fontStyle: 'italic' }}>
+            <div style={{ marginTop: '10px', fontSize: '11px', color: 'var(--color-text-secondary)', fontStyle: 'italic' }}>
               Weighted across 6 dimensions · Technical & Portfolio each 20%
             </div>
             <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.2)', fontSize: '12px', color: 'rgba(255,255,255,0.9)', lineHeight: '1.6' }}>
@@ -290,7 +290,7 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
             >
               📝 Update Evidence →
             </button>
-            <span style={{ fontSize: '12px', color: 'var(--color-text-muted)', fontStyle: 'italic' }}>
+            <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)', fontStyle: 'italic' }}>
               This profile travels with you — update it after every role, project, or certification.
             </span>
           </div>
@@ -409,13 +409,13 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginBottom: '20px' }}>
                 <div>
-                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: 'var(--color-text-muted)' }}>Current Role</p>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: 'var(--color-text-secondary)', fontWeight: '600' }}>Current Role</p>
                   <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: 'var(--color-text)' }}>
                     {story.role} @ {story.company}
                   </p>
                 </div>
                 <div>
-                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: 'var(--color-text-muted)' }}>Current Score</p>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: 'var(--color-text-secondary)', fontWeight: '600' }}>Current Score</p>
                   <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: 'var(--color-primary)' }}>
                     {story.currentScore}/100 ({story.yearsExperience} yrs)
                   </p>
@@ -459,7 +459,7 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
                 <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: 'var(--color-text)' }}>
                   🔍 {uniqueSkills.length} Skills Detected from Your Evidence
                 </h3>
-                <span style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
+                <span style={{ fontSize: '11px', color: 'var(--color-text-secondary)' }}>
                   Keyword-extracted · every skill traceable to source
                 </span>
               </div>
@@ -469,7 +469,7 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
                   const demand = entry?.demand ?? 'medium';
                   const demandEmoji = demand === 'high' ? '🔥' : demand === 'medium' ? '📈' : '⚠️';
                   const bg = demand === 'high' ? 'var(--color-success-light)' : demand === 'medium' ? 'var(--color-warning-light)' : 'var(--color-surface-hover)';
-                  const color = demand === 'high' ? 'var(--color-success)' : demand === 'medium' ? 'var(--color-warning)' : 'var(--color-text-muted)';
+                  const color = demand === 'high' ? 'var(--color-success)' : demand === 'medium' ? 'var(--color-warning)' : 'var(--color-text-secondary)';
                   return (
                     <span key={s.skill} style={{
                       display: 'inline-flex', alignItems: 'center', gap: '4px',
