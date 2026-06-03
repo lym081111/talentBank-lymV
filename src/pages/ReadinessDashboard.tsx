@@ -28,11 +28,8 @@ function PortfolioQualitySection({ evidence }: { evidence: Evidence[] }) {
       <h3 style={{ margin: '0 0 12px 0', fontSize: '18px', fontWeight: '700', color: 'var(--color-text)' }}>
         💼 Your Portfolio Quality: <span style={{ color: 'var(--color-primary)', fontSize: '24px' }}>{averageScore}/100</span>
       </h3>
-      <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: 'var(--color-text-secondary)' }}>
-        Each project scored on: <strong>Documentation</strong> (how well you explain), <strong>Complexity</strong> (technical depth), <strong>Impact</strong> (real users), and <strong>Deployment</strong> (production readiness).
-      </p>
-      <p style={{ margin: '0 0 20px 0', fontSize: '12px', color: 'var(--color-text-secondary)', fontStyle: 'italic' }}>
-        Portfolio quality at 75+ helps you compete for internships with 3-5x salary premium. Below 50? Focus on one project with real users and clean deployment.
+      <p style={{ margin: '0 0 16px 0', fontSize: '13px', color: 'var(--color-text-secondary)', fontWeight: '700' }}>
+        Scored on Documentation · Complexity · Impact · Deployment. <strong style={{ color: 'var(--color-accent)' }}>75+</strong> = internship-competitive.
       </p>
       <div style={{ display: 'grid', gap: '16px' }}>
         {portfolioScores.map(score => (
@@ -53,8 +50,8 @@ function CareerGuidanceSection({ profile }: { profile: ReadinessProfile }) {
       <h3 style={{ margin: '0 0 12px 0', fontSize: '24px', fontWeight: '900', color: 'var(--color-text)', letterSpacing: '-0.5px' }}>
         🧭 Your Career Path Forward
       </h3>
-      <p style={{ margin: '0 0 24px 0', fontSize: '15px', color: 'var(--color-text-secondary)', lineHeight: '1.7', fontWeight: '500' }}>
-        Personalized career roadmap based on <strong style={{ color: 'var(--color-accent)' }}>10,000+ real career progressions</strong>. See which roles fit your score, which high-ROI skills to develop next, and how to ace interviews.
+      <p style={{ margin: '0 0 20px 0', fontSize: '13px', color: 'var(--color-text-secondary)', fontWeight: '700' }}>
+        Based on <strong style={{ color: 'var(--color-accent)' }}>10,000+ real career progressions</strong> — roles, skills, and interview focus areas matched to your score.
       </p>
 
       {jobRecs.length > 0 && (
@@ -112,8 +109,8 @@ function CareerGuidanceSection({ profile }: { profile: ReadinessProfile }) {
           <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--color-text)', margin: '0 0 14px 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             🎤 Interview Success Plan
           </h4>
-          <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', margin: '0 0 12px 0', fontStyle: 'italic' }}>
-            Practice scenarios and key talking points for your weak dimensions. Be ready to discuss specific projects.
+          <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', margin: '0 0 12px 0', fontWeight: '700' }}>
+            Practice talking points for your weakest dimensions.
           </p>
           <div style={{ display: 'grid', gap: '12px' }}>
             {interviewAreas.slice(0, 2).map((area, idx) => (
@@ -274,8 +271,8 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
             <div style={{ marginTop: '10px', fontSize: '11px', color: 'var(--color-text-secondary)', fontStyle: 'italic' }}>
               Weighted across 6 dimensions · Technical & Portfolio each 20%
             </div>
-            <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.2)', fontSize: '12px', color: 'rgba(255,255,255,0.9)', lineHeight: '1.6' }}>
-              <strong style={{ fontSize: '13px' }}>💡 Pro Tip:</strong><br/>See where you stand vs your university cohort — click "See University Cohort" from the Paths page to benchmark yourself.
+            <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.2)', fontSize: '12px', color: 'rgba(255,255,255,0.9)', fontWeight: '700' }}>
+              💡 Check Paths Forward to benchmark vs your cohort.
             </div>
           </div>
 
@@ -346,42 +343,39 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
             💰 What This Score Means for Your Career
           </h3>
           {profile.overall >= 75 && (
-            <div style={{ fontSize: '14px', color: 'var(--color-text-secondary)', lineHeight: '1.6' }}>
-              <p style={{ margin: '0 0 8px 0' }}>
-                <strong style={{ color: 'var(--color-success)' }}>You're market-ready for senior roles.</strong> Similar to Priya Sharma (Senior SWE at Grab with score 88/100).
+            <div>
+              <p style={{ margin: '0 0 14px 0', fontSize: '14px', fontWeight: '700', color: 'var(--color-text)' }}>
+                Market-ready for senior roles. Next: system design or leadership to unlock Staff Engineer track.
               </p>
-              <p style={{ margin: '0 0 8px 0' }}>
-                Expected salary range (Asia tech): <strong>SGD 180k-250k/year</strong> (Singapore), <strong>INR 40L-80L/year</strong> (India), with equity/RSU packages.
-              </p>
-              <p style={{ margin: 0 }}>
-                Next: Focus on system design, leadership, or specialized domains to unlock Staff Engineer trajectory (+30-50% salary).
-              </p>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <span style={{ padding: '6px 14px', background: 'var(--color-success-light)', color: 'var(--color-success)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>SGD 180k–250k/yr</span>
+                <span style={{ padding: '6px 14px', background: 'var(--color-success-light)', color: 'var(--color-success)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>INR 40L–80L/yr</span>
+                <span style={{ padding: '6px 14px', background: 'var(--color-primary-light)', color: 'var(--color-primary)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>+30–50% Staff uplift</span>
+              </div>
             </div>
           )}
           {profile.overall >= 55 && profile.overall < 75 && (
-            <div style={{ fontSize: '14px', color: 'var(--color-text-secondary)', lineHeight: '1.6' }}>
-              <p style={{ margin: '0 0 8px 0' }}>
-                <strong style={{ color: 'var(--color-warning)' }}>You're on a good trajectory.</strong> Similar to Kai Chen (3 years in, score 70/100 → Data Engineer at ByteDance).
+            <div>
+              <p style={{ margin: '0 0 14px 0', fontSize: '14px', fontWeight: '700', color: 'var(--color-text)' }}>
+                Good trajectory. Close 1–2 skill gaps for a +20–30% salary uplift.
               </p>
-              <p style={{ margin: '0 0 8px 0' }}>
-                Expected salary range: <strong>SGD 120k-160k/year</strong> (Singapore), <strong>INR 25L-40L/year</strong> (India).
-              </p>
-              <p style={{ margin: 0 }}>
-                <strong>Quick wins:</strong> Closing 1-2 skill gaps can unlock +20-30% salary uplift (SGD 24-48k additional). See "Skills to Develop" below for estimated timelines and ROI.
-              </p>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <span style={{ padding: '6px 14px', background: 'var(--color-warning-light)', color: 'var(--color-warning)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>SGD 120k–160k/yr</span>
+                <span style={{ padding: '6px 14px', background: 'var(--color-warning-light)', color: 'var(--color-warning)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>INR 25L–40L/yr</span>
+                <span style={{ padding: '6px 14px', background: 'var(--color-success-light)', color: 'var(--color-success)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>+SGD 24–48k with gap close</span>
+              </div>
             </div>
           )}
           {profile.overall < 55 && (
-            <div style={{ fontSize: '14px', color: 'var(--color-text-secondary)', lineHeight: '1.6' }}>
-              <p style={{ margin: '0 0 8px 0' }}>
-                <strong style={{ color: 'var(--color-text-secondary)' }}>You're building your foundation.</strong> This is where 95% of students start.
+            <div>
+              <p style={{ margin: '0 0 14px 0', fontSize: '14px', fontWeight: '700', color: 'var(--color-text)' }}>
+                Building your foundation — 95% of students start here. 1–2 strong projects = 55+ in 3–6 months.
               </p>
-              <p style={{ margin: '0 0 8px 0' }}>
-                Entry-level salary expectations: <strong>SGD 48-72k/year</strong> (internship/junior), <strong>INR 12L-18L/year</strong> (India).
-              </p>
-              <p style={{ margin: 0 }}>
-                <strong>Strategy:</strong> 1-2 solid projects + 1 high-impact skill = 55+ score in 3-6 months. Priya went from 45 → 88 in 4 years (18% YoY growth).
-              </p>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <span style={{ padding: '6px 14px', background: 'var(--color-surface-hover)', color: 'var(--color-text-secondary)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>SGD 48–72k/yr</span>
+                <span style={{ padding: '6px 14px', background: 'var(--color-surface-hover)', color: 'var(--color-text-secondary)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>INR 12L–18L/yr</span>
+                <span style={{ padding: '6px 14px', background: 'var(--color-primary-light)', color: 'var(--color-primary)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>3–6 months to 55+</span>
+              </div>
             </div>
           )}
         </div>
@@ -398,48 +392,28 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
               background: 'var(--color-surface)',
               border: '2px solid var(--color-accent)',
               borderRadius: 'var(--radius-xl)',
-              padding: '28px',
+              padding: '20px 24px',
               marginBottom: '32px'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-                <span style={{ fontSize: '24px' }}>🚀</span>
-                <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: 'var(--color-text)' }}>
-                  Real Career Example: {story.name}
-                </h3>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                <span style={{ fontSize: '20px' }}>🚀</span>
+                <strong style={{ fontSize: '15px', fontWeight: '800', color: 'var(--color-text)' }}>
+                  {story.name} — {story.role} @ {story.company}
+                </strong>
+                <span style={{ marginLeft: 'auto', padding: '3px 10px', background: 'var(--color-primary-light)', color: 'var(--color-primary)', borderRadius: '12px', fontSize: '12px', fontWeight: '800' }}>
+                  {story.currentScore}/100 · {story.yearsExperience} yrs
+                </span>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginBottom: '20px' }}>
-                <div>
-                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: 'var(--color-text-secondary)', fontWeight: '600' }}>Current Role</p>
-                  <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: 'var(--color-text)' }}>
-                    {story.role} @ {story.company}
-                  </p>
-                </div>
-                <div>
-                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: 'var(--color-text-secondary)', fontWeight: '600' }}>Current Score</p>
-                  <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: 'var(--color-primary)' }}>
-                    {story.currentScore}/100 ({story.yearsExperience} yrs)
-                  </p>
-                </div>
-              </div>
-              <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: 'var(--color-text-secondary)', fontStyle: 'italic' }}>
+              <p style={{ margin: '0 0 12px 0', fontSize: '13px', fontWeight: '700', color: 'var(--color-text-secondary)', fontStyle: 'italic' }}>
                 "{story.keyLearning}"
               </p>
-              <div style={{ background: 'var(--color-bg)', padding: '16px', borderRadius: 'var(--radius-lg)', marginBottom: '16px' }}>
-                <p style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: '600', color: 'var(--color-text)' }}>Salary Journey:</p>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                 {story.salaryJourney.map((s, idx) => (
-                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: idx < story.salaryJourney.length - 1 ? '6px' : 0 }}>
-                    <span><strong>Year {s.year}</strong> ({s.role})</span>
-                    <span style={{ color: 'var(--color-accent)', fontWeight: '600' }}>{s.salary}</span>
+                  <div key={idx} style={{ padding: '6px 12px', background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: '10px', fontSize: '12px', fontWeight: '700', color: 'var(--color-text)' }}>
+                    Yr {s.year} <span style={{ color: 'var(--color-accent)', fontWeight: '800' }}>{s.salary}</span>
                   </div>
                 ))}
               </div>
-              <p style={{ margin: '0 0 12px 0', fontSize: '12px', fontWeight: '600', color: 'var(--color-text)' }}>Key Skill Inflection Points:</p>
-              {story.keySkillInflectionPoints.map((point, idx) => (
-                <div key={idx} style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: idx < story.keySkillInflectionPoints.length - 1 ? '8px' : 0 }}>
-                  <span style={{ color: 'var(--color-success)', fontWeight: '600' }}>Year {point.year}:</span> {point.skill}
-                  <div style={{ marginTop: '2px', fontSize: '11px', color: 'var(--color-primary)' }}>Salary impact: {point.salaryImpact}</div>
-                </div>
-              ))}
             </div>
           );
         })()}
@@ -488,8 +462,8 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
 
         <div className={styles.dimensionsSection}>
           <h3 style={{ fontSize: '22px', fontWeight: '800', marginBottom: '8px' }}>📊 Your 6 Dimensions</h3>
-          <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)', marginBottom: '20px', lineHeight: '1.6', fontWeight: '500' }}>
-            Career readiness broken down into 6 key dimensions. <strong style={{ color: 'var(--color-accent)' }}>Target 75+ in each</strong> to stay competitive in the job market.
+          <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginBottom: '20px', fontWeight: '700' }}>
+            Target <strong style={{ color: 'var(--color-accent)' }}>75+</strong> in each dimension to stay competitive.
           </p>
           <div className={styles.dimensionsGrid}>
             {profile.dimensions.map((dimension, idx) => (

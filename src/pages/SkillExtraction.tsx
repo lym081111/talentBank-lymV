@@ -35,15 +35,15 @@ export function SkillExtraction({ evidence, extractedSkills, onContinue }: Props
       <div className={styles.inner}>
         <div className={styles.header}>
           <h2>We Found Your Skills</h2>
-          <p>We analyzed your evidence and extracted the real skills you demonstrated. Here's the breakdown:</p>
+          <p>Real skills extracted from your evidence — organized by market demand.</p>
         </div>
 
         <div className={styles.summary}>
           <div className={styles.summaryCard} style={{ gridColumn: '1 / -1' }}>
             <div className={styles.summaryValue}>{skillCounts.size}</div>
             <div className={styles.summaryLabel}>Unique Skills Identified</div>
-            <p style={{ margin: '12px 0 0 0', fontSize: '13px', color: 'var(--color-text-secondary)' }}>
-              You've demonstrated {skillCounts.size} distinct technical competencies across your evidence
+            <p style={{ margin: '8px 0 0 0', fontSize: '12px', fontWeight: '700', color: 'var(--color-text-secondary)' }}>
+              Distinct competencies across your evidence
             </p>
           </div>
           <div className={styles.summaryCard}>
@@ -185,16 +185,18 @@ export function SkillExtraction({ evidence, extractedSkills, onContinue }: Props
           background: 'linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-accent-light) 100%)',
           border: '2px solid var(--color-primary)',
           borderRadius: 'var(--radius-lg)',
-          padding: '28px',
+          padding: '24px',
           marginBottom: '24px',
           textAlign: 'center',
         }}>
-          <h3 style={{ margin: '0 0 12px 0', fontSize: '18px', fontWeight: '700', color: 'var(--color-text)' }}>
+          <h3 style={{ margin: '0 0 10px 0', fontSize: '18px', fontWeight: '800', color: 'var(--color-text)' }}>
             Ready to See Your Readiness?
           </h3>
-          <p style={{ margin: '0 0 20px 0', fontSize: '14px', color: 'var(--color-text-secondary)', maxWidth: '500px', marginLeft: 'auto', marginRight: 'auto' }}>
-            Your skills map to 6 dimensions that matter: <strong>Technical Depth</strong> • <strong>Portfolio Strength</strong> • <strong>Work Readiness</strong> • <strong>Communication</strong> • <strong>Production Mindset</strong> • <strong>Role Fit</strong>
-          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center', marginBottom: '18px' }}>
+            {['Technical Depth', 'Portfolio Strength', 'Work Readiness', 'Communication', 'Production Mindset', 'Role Fit'].map(d => (
+              <span key={d} style={{ padding: '4px 12px', background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: '14px', fontSize: '12px', fontWeight: '700', color: 'var(--color-text)' }}>{d}</span>
+            ))}
+          </div>
           <button className={styles.continueButton} onClick={onContinue}>
             See Your Readiness Score →
           </button>

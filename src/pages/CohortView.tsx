@@ -103,7 +103,7 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack }:
       <div className={styles.inner}>
         <div className={styles.header}>
           <h2>University Cohort Dashboard</h2>
-          <p>See how your readiness compares, and how universities use PathLens to support students early.</p>
+          <p>See how your readiness compares across student, university, and employer views.</p>
         </div>
 
         {/* Perspective Toggle */}
@@ -193,7 +193,7 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack }:
 
             <div className={styles.submitSection}>
               <h3>Contribute Your Score</h3>
-              <p>Add your anonymous readiness scores to the live cohort — no personal data, only dimension scores. Helps future students see realistic benchmarks.</p>
+              <p>Share anonymous dimension scores to help future students benchmark realistically.</p>
               {submitState === 'idle' && (
                 <button className={styles.submitBtn} onClick={handleSubmit}>
                   Submit to Cohort (Anonymous)
@@ -217,13 +217,7 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack }:
           <div id="cohort-panel" role="tabpanel" aria-label="University perspective">
             <div className={styles.context}>
               <h3>Why Universities Care About Readiness</h3>
-              <p>
-                Career services typically engage students in their final semester — far too late to close meaningful gaps.
-                PathLens makes readiness visible at Year 2–3, when there's still time to intervene.
-              </p>
-              <p>
-                Cohort-level patterns reveal systemic gaps: if 60% of Year 2s lack production experience, that's not a student problem — it's a curriculum signal.
-              </p>
+              <p>PathLens surfaces readiness gaps at Year 2–3 — early enough to act, not after the first rejection.</p>
             </div>
 
             <CohortInsightCard cohort={cohort} />
@@ -235,22 +229,22 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack }:
                   {
                     n: '1',
                     title: 'Identify Priority Gaps',
-                    body: "When 64% of students lack Production Practices evidence, that's a signal to invest in testing & deployment workshops — not a generic 'career readiness' talk.",
+                    body: '64% lack Production Practices? That\'s a curriculum signal, not a student problem.',
                   },
                   {
                     n: '2',
                     title: 'Targeted Interventions',
-                    body: 'Instead of one-size-fits-all workshops, universities can offer specific programs like "GitHub Actions for Year 3s" based on what the cohort data shows.',
+                    body: 'Offer specific workshops (e.g. "GitHub Actions for Year 3s") based on cohort data.',
                   },
                   {
                     n: '3',
                     title: 'Track Impact Over Time',
-                    body: 'Re-run the analysis after an intervention. See how dimension scores shift. Prove the workshop worked with data, not just student feedback forms.',
+                    body: 'Re-run after an intervention — prove the workshop worked with dimension score shifts.',
                   },
                   {
                     n: '4',
                     title: 'Early Proactive Support',
-                    body: 'Advisors can proactively reach out to Year 2 students with low Portfolio scores — before the internship application season, not after the first rejection.',
+                    body: 'Reach out to Year 2s with low Portfolio scores before internship season begins.',
                   },
                 ].map((item) => (
                   <div key={item.n} className={styles.action}>
@@ -266,14 +260,11 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack }:
 
             <div className={styles.endSection}>
               <h3>PathLens as a Career OS</h3>
-              <p>
-                PathLens is built as a Career Readiness Operating System — making student readiness visible at every layer:
-              </p>
-              <ul>
-                <li><strong>Students:</strong> See your readiness landscape, find gaps, navigate your path.</li>
-                <li><strong>Universities:</strong> Identify cohort patterns and intervene before graduation.</li>
-                <li><strong>Employers:</strong> See evidence-backed candidates instead of generic resumes.</li>
-              </ul>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '10px' }}>
+                <span style={{ padding: '6px 14px', background: 'var(--color-primary-light)', color: 'var(--color-primary)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>🎓 Students — see & close gaps</span>
+                <span style={{ padding: '6px 14px', background: 'var(--color-warning-light)', color: 'var(--color-warning)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>🏫 Universities — intervene early</span>
+                <span style={{ padding: '6px 14px', background: 'var(--color-success-light)', color: 'var(--color-success)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>🏢 Employers — evidence-backed hiring</span>
+              </div>
             </div>
           </div>
         )}
@@ -282,10 +273,7 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack }:
         {viewMode === 'employer' && (
           <div id="cohort-panel" role="tabpanel" aria-label="Employer perspective" className={styles.employerView}>
             <div className={styles.employerIntro}>
-              <p>
-                This is what a recruiter sees when a student shares their PathLens profile.
-                Evidence-backed, score-verified, and transparent — not a self-rated skills list.
-              </p>
+              <p>Evidence-backed, score-verified — not a self-rated skills list.</p>
             </div>
 
             {/* Recruiter Card */}
@@ -390,8 +378,7 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack }:
             </div>
 
             <div className={styles.employerDisclaimer}>
-              This view simulates how employers can use PathLens for structured candidate evaluation.
-              Module 04 (Internship Marketplace) integrates this profile directly into job matching.
+              Simulation of employer view. Module 04 integrates this directly into job matching.
             </div>
           </div>
         )}

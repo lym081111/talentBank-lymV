@@ -49,7 +49,7 @@ export function Gaps({ gaps, onViewCohort, onUpdateEvidence }: Props) {
       <div className={styles.inner}>
         <div className={styles.header}>
           <h2>Your Paths Forward</h2>
-          <p>Here's where your landscape has room to grow. Each dimension includes concrete actions for the next 30–90 days — pick one and start navigating.</p>
+          <p>Pick one gap, take one action, re-check your score.</p>
         </div>
 
         {/* Quick Win Highlight */}
@@ -107,18 +107,10 @@ export function Gaps({ gaps, onViewCohort, onUpdateEvidence }: Props) {
         <div className={styles.reflection}>
           <h3>How to Navigate This</h3>
           <ol>
-            <li>
-              <strong>Pick one gap.</strong> Start with the highest-impact dimension. Don't try to move everything at once.
-            </li>
-            <li>
-              <strong>Choose an action.</strong> Pick what fits your timeline and excites you. <em style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>(Timelines are estimates; some actions can run in parallel)</em>
-            </li>
-            <li>
-              <strong>Build and ship it.</strong> Add the result as new evidence — a deployed project, a certificate, a role description.
-            </li>
-            <li>
-              <strong>Re-check your landscape.</strong> Go back to "Update Evidence" and add your new items to see your dimensions shift.
-            </li>
+            <li><strong>Pick one gap.</strong> Highest-impact dimension first.</li>
+            <li><strong>Choose an action.</strong> Fit your timeline — some run in parallel.</li>
+            <li><strong>Build and ship it.</strong> Add the result as new evidence.</li>
+            <li><strong>Re-check your landscape.</strong> Watch your dimensions shift.</li>
           </ol>
         </div>
 
@@ -126,7 +118,7 @@ export function Gaps({ gaps, onViewCohort, onUpdateEvidence }: Props) {
         <div className={styles.careerOsSection}>
           <div className={styles.careerOsLabel}>🌏 Asia's Career OS — What Comes Next</div>
           <p className={styles.careerOsDesc}>
-            Your PathLens profile feeds directly into the rest of the Career OS. Close your gaps here, and these modules unlock.
+            Close your gaps here to unlock the next modules.
           </p>
           <div className={styles.careerOsFlow}>
             <div className={`${styles.careerOsModule} ${styles.careerOsModuleCurrent}`}>
@@ -141,7 +133,7 @@ export function Gaps({ gaps, onViewCohort, onUpdateEvidence }: Props) {
             <div className={`${styles.careerOsModule} ${styles.careerOsModuleNext}`}>
               <div className={styles.careerOsModuleNum}>04</div>
               <div className={styles.careerOsModuleTitle}>Internship Marketplace</div>
-              <div className={styles.careerOsModuleDesc}>Your score surfaces you to employers seeking your exact skill profile — no cold applications</div>
+              <div className={styles.careerOsModuleDesc}>Score-matched employer discovery — no cold applications</div>
             </div>
 
             <div className={styles.careerOsArrow}>→</div>
@@ -149,7 +141,7 @@ export function Gaps({ gaps, onViewCohort, onUpdateEvidence }: Props) {
             <div className={`${styles.careerOsModule} ${styles.careerOsModuleNext}`}>
               <div className={styles.careerOsModuleNum}>05</div>
               <div className={styles.careerOsModuleTitle}>Lifelong Learning Wallet</div>
-              <div className={styles.careerOsModuleDesc}>Your evidence becomes a verifiable credential — portable across Asia, updated forever</div>
+              <div className={styles.careerOsModuleDesc}>Verifiable credential — portable across Asia</div>
             </div>
           </div>
         </div>
