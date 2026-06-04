@@ -39,12 +39,12 @@ const DIM_MYR: Record<string, string> = {
 
 // one-sentence plain-English explanation of why each dimension matters
 const DIM_PLAIN: Record<string, string> = {
-  'Technical Depth':    'Employers screen for this in every technical interview. Without it, you get filtered before the first call.',
-  'Portfolio Strength': 'Recruiters check GitHub before they read your CV. No deployed projects = no shortlist.',
-  'Work Readiness':     'Companies want proof you've worked in a real team. Internship experience is the fastest way to show this.',
-  'Communication':      'Strong communicators get promoted faster and earn more. Your writing and documentation signal this.',
-  'Production Mindset': 'CI/CD and testing are table-stakes at any tech company. Missing this blocks you at the first technical screen.',
-  'Role Fit':           'If your skills don't match the role's stack, you won't pass automated filtering — even with a great portfolio.',
+  'Technical Depth':    "Employers screen for this in every technical interview. Without it, you get filtered before the first call.",
+  'Portfolio Strength': "Recruiters check GitHub before they read your CV. No deployed projects = no shortlist.",
+  'Work Readiness':     "Companies want proof you've worked in a real team. Internship experience is the fastest way to show this.",
+  'Communication':      "Strong communicators get promoted faster and earn more. Your writing and documentation signal this.",
+  'Production Mindset': "CI/CD and testing are table-stakes at any tech company. Missing this blocks you at the first technical screen.",
+  'Role Fit':           "If your skills don't match the role's stack, you won't pass automated filtering — even with a great portfolio.",
 };
 
 // ─── sub-components ──────────────────────────────────────────────────────────
