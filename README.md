@@ -1,96 +1,159 @@
-# PathLens
+# PathLens — Career OS · Universities Module 03
 
-**Navigate your career. Do not just predict it.**
+**Navigate your career. Not predict it.**
 
-**Live demo:** https://talentbank-lymv-career-os.vercel.app  
-**Hackathon:** Talentbank Tech Hackathon 2026 - Build Asia's Career OS  
-**Module:** Adaptive Readiness Profile - Universities Track, with a Career Marketplace bridge
+**Live Demo:** https://talentbank-lymv-career-os.vercel.app
+**Hackathon:** Talentbank Tech Hackathon 2026 — Build Asia's Career OS
+**Track:** Universities
+**Module:** 03 — Adaptive Readiness Profile + Career Marketplace Bridge
 
-PathLens turns a student's actual evidence into a transparent readiness profile. Students add projects, internships, certificates, hackathons, or FYPs; PathLens extracts skills, scores readiness across six weighted dimensions, identifies gaps, and previews how the profile could feed Career OS marketplace matching.
+---
 
-## Why It Exists
+## What PathLens Does
 
-Many students do not know whether they are internship-ready until rejection makes the gaps obvious. PathLens makes those gaps visible earlier, while students and universities still have time to act.
+PathLens turns a student's actual evidence (projects, internships, certificates, hackathons, FYPs) into a transparent career readiness profile — then bridges directly into Career OS marketplace matching so employers can find candidates at the right moment, before applications.
 
-The product principle is simple: **navigation, not prediction**. PathLens does not declare a permanent outcome. It shows the student's current landscape, realistic paths, blockers, and next evidence to build.
+**Design Principle:** Navigation, not prediction. PathLens shows where you stand and what paths exist — it never declares a permanent outcome. Careers are too complex for deterministic claims.
 
-## Core Features
+---
 
-| Feature | What it does |
+## Judge Quickstart (Under 5 Minutes)
+
+1. Open https://talentbank-lymv-career-os.vercel.app
+2. Click **✨ See a Live Demo**
+3. Choose a persona: **Priya Sharma** (Senior SWE), **Kai Chen** (Data Eng), or **Aisha Patel** (PM)
+4. Click through Evidence → Skills → Readiness Dashboard
+5. On the Dashboard: see Radar Chart, 6 Dimension Scores, Career Marketplace Bridge, AI Insight, Learning Road
+6. Click **View Paths Forward** for gap actions
+7. Click **University Cohort View** for student / university / employer perspectives
+
+---
+
+## Career OS Architecture
+
+```
+Student Evidence
+      │
+      ▼
+┌─────────────────────────────────┐
+│  PathLens: Adaptive Readiness   │
+│  Profile (Universities Module)  │
+│                                 │
+│  • Skill Extraction (34 skills) │
+│  • 6-Dimension Scoring          │
+│  • Portfolio Quality Analysis   │
+│  • ATS Compatibility Check      │
+│  • Gap Action Plan              │
+└──────────────┬──────────────────┘
+               │
+               ▼
+┌─────────────────────────────────┐
+│  Career OS Marketplace Bridge   │
+│                                 │
+│  Candidate ◄──────► Employer   │
+│  • Match tier visibility        │
+│  • Employer network (10,000+)   │
+│  • Pre-application discovery    │
+│  • Gap-to-unlock signals        │
+└─────────────────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────┐
+│  University Cohort Dashboard    │
+│                                 │
+│  Student / University /         │
+│  Employer perspective toggle    │
+│  • Cohort benchmarking          │
+│  • Shortlist signal             │
+│  • Outcome tracking             │
+└─────────────────────────────────┘
+```
+
+---
+
+## Feature Map
+
+| Feature | Description |
 |---|---|
-| Evidence profile | Collects projects, internships, certificates, hackathons, and final-year projects |
-| Transparent skill extraction | Maps evidence text to 34 skills with source phrases |
-| Six-dimension readiness score | Scores Technical, Portfolio, Work Readiness, Communication, Production, and Role Fit |
-| Claude career insight | Generates narrative coaching, key gap, and next step only |
-| Deterministic scoring | Keeps scores, skills, ATS analysis, and marketplace matching explainable |
-| Gap action plan | Shows priority gaps, quick win, projected impact, timeline, and effort |
-| Career Marketplace preview | Uses mock roles to show match fit, blockers, and next move |
-| University cohort view | Shows Student, University, and Employer perspectives |
-| Export tools | Supports PDF, JSON, and copyable profile summaries |
+| Evidence Profile | Projects, internships, certificates, hackathons, FYPs |
+| Skill Extraction | Maps evidence to 34 skills with demand levels (High / Growing / Niche) |
+| 6-Dimension Scoring | Technical, Portfolio, Work Readiness, Communication, Production, Role Fit |
+| Radar Chart | Visual comparison across all 6 dimensions |
+| Career Marketplace Bridge | Shows employer visibility by tier (Unicorns → MNCs → Startups → Grad Programs) |
+| AI Career Insight | Claude-generated narrative, key gap, and next step |
+| Learning Road | Visual SVG road showing skill priority: main road (high) → branches (medium) |
+| Portfolio Quality | Per-project scoring: Documentation × Complexity × Impact × Deployment |
+| ATS Compatibility | Resume keyword and structure analysis |
+| Gap Action Plan | Priority gaps with projected score impact and timeline |
+| Trajectory Simulator | What-if scoring based on adding new skills |
+| University Cohort View | Student / University / Employer perspective toggle |
+| PDF & JSON Export | Portable career proof for applications and career services |
 
-## Judge Flow
+---
 
-1. Open the live demo or run locally.
-2. Click **See a Live Demo**.
-3. Choose a student persona.
-4. Review evidence and continue to skill extraction.
-5. Open the dashboard for readiness, AI insight, ATS, and portfolio quality.
-6. Visit **Paths Forward** for gaps and the Career Marketplace bridge.
-7. Open **University Cohort View** to see university and employer perspectives.
+## AI Tooling Disclosure
+
+> Required by Talentbank Tech Hackathon 2026 rules. Submitting wholly AI-generated work without disclosure = disqualification.
+
+| Tool | Provider | How Used | Why |
+|---|---|---|---|
+| **Claude claude-haiku-4-5** | Anthropic | Live career insight generation: narrative, key gap, next step | Best structured JSON output with low latency; streaming token-by-token rendering |
+| **Claude Sonnet (Claude Code)** | Anthropic | Development: component scaffolding, TypeScript fixes, refactoring, UI iteration | Accelerated 28-day build phase significantly |
+| **Deterministic Scoring Engine** | Custom | All 6-dimension scoring, ATS, portfolio quality, skill taxonomy | Explainable without trusting AI output; aligns with navigation-not-prediction principle |
+| **Skill Taxonomy (34 skills)** | Custom dataset | Maps evidence text to market-demand categories for SE Asia tech hiring | Grounds extraction in real Asia market data |
+
+**Design decision:** Scoring is 100% deterministic and rule-based. Claude is used only for narrative generation. Every score can be verified by a judge without trusting any AI output.
+
+---
 
 ## Local Setup
 
 ```bash
+git clone https://github.com/lym081111/talentBank-lymV
+cd talentBank-lymV
 npm install
 npm run dev
 ```
 
-Open `http://localhost:5173`.
+Open http://localhost:5173
 
-For optional live Claude calls, create `.env`:
-
+**Optional — Live Claude AI insights:**
 ```bash
+# Create .env file
 VITE_ANTHROPIC_API_KEY=your_key_here
 ```
 
-Without an API key, the app uses deterministic fallback insights.
+Without a key, the app uses deterministic fallback insights. Demo personas use pre-generated insights for zero-latency judge evaluation.
 
-## Verification
+---
+
+## Deployment
+
+Deployed on Vercel. Auto-deploys on push to `main`.
+
+Build command: `npm run build`  
+Output directory: `dist`
+
+---
+
+## Test Coverage
 
 ```bash
-npm test
-npm run build
+npm run test
 ```
 
-On Windows PowerShell with restricted script execution, use:
+Tests cover: `readinessScoring`, `skillExtraction`, `portfolioQuality`, `atsScoring`, `aiRecommendations`, `marketInsights`, `nextActions`
 
-```bash
-npm.cmd test
-npm.cmd run build
-```
+---
 
-## Architecture
+## Module Selection Rationale
 
-- React 19 + TypeScript + Vite.
-- CSS Modules with custom properties.
-- localStorage persistence for prototype evidence and cohort submissions.
-- Deterministic utilities for scoring, skill extraction, ATS, portfolio quality, recommendations, and marketplace matching.
-- Claude `claude-haiku-4-5` is used only for narrative career insight.
-- Production path: move evidence, cohort, and marketplace data from local/static sources to backend APIs.
+**Primary:** Universities Track — Module 03: Adaptive Readiness Profile
 
-## Important Files
+**Why:** Most Malaysian/SEA university students don't know if they're internship-ready until rejection. PathLens surfaces that gap while universities and students still have time to act.
 
-- `PROPOSAL.md` - concise concept brief.
-- `ARCHITECTURE.md` - technical design notes.
-- `JUDGE_QUICKSTART.md` - demo walkthrough.
-- `docs/FEATURES.md` - detailed feature guide.
-- `src/utils/marketplaceMatching.ts` - Module 04 marketplace bridge logic.
+**Career OS Connection:** The Marketplace Bridge directly implements the Career OS mandate — candidates discoverable at right moments; employers find talent pre-application. The Cohort View gives universities the employer-facing signal to validate curriculum against real hiring outcomes.
 
-## Career OS Handoff
+---
 
-PathLens produces a profile that future modules can consume:
-
-- Module 04 Career Marketplace: `overall`, `dimensions`, `allExtractedSkills`, target role, and blockers.
-- Module 05 Learning Wallet: evidence items, score snapshots, and timestamps.
-
-The current marketplace roles are mock data, clearly marked in-product.
+Built for Talentbank Tech Hackathon 2026.

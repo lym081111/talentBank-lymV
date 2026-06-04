@@ -6,6 +6,8 @@ import { AICareerInsight } from '../components/AICareerInsight';
 import { RadarChart } from '../components/RadarChart';
 import { ATSScoreCard } from '../components/ATSScoreCard';
 import { PortfolioQualityCard } from '../components/PortfolioQualityCard';
+import { AIDisclosure } from '../components/AIDisclosure';
+import { CareerMarketplaceBridge } from '../components/CareerMarketplaceBridge';
 // pdfExport (~940 KB) is loaded on demand — only when the user clicks Export PDF
 type ExportFn = typeof import('../utils/pdfExport').exportProfileToPDF;
 import { analyzePortfolioQuality } from '../utils/portfolioQuality';
@@ -476,7 +478,11 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
 
         <PortfolioQualitySection evidence={evidence} />
 
+        <CareerMarketplaceBridge profile={profile} />
+
         <CareerGuidanceSection profile={profile} />
+
+        <AIDisclosure />
 
         <div className={styles.nextSection}>
           <div className={styles.buttonGroup}>

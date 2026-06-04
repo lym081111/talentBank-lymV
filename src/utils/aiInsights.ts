@@ -10,33 +10,33 @@ export interface CareerInsight {
 
 // Pre-generated insights for demo personas — instant load for judges, no API latency
 export const DEMO_INSIGHTS = {
-  'Daniel Lee': {
+  'Priya Sharma': {
     narrative:
-      "Daniel has built a strong technical foundation across Python, JavaScript, and React — skills that align with 78% of Malaysian SWE internship postings. His evidence shows consistent delivery: a deployed FYP, a real internship, and a hackathon finalist result. However, across all 5 projects, there is no mention of automated testing, CI/CD pipelines, or deployment monitoring — the exact gap that separates shortlisted candidates from those who get filtered out at the technical screening stage.",
+      "Priya has built a rare senior-level profile — 4+ years of compounding evidence from SWE intern at Grab through to Senior SWE leading 40+ microservices for 8M+ daily users. Her system design mastery (Raft consensus, distributed ledgers, 99.99% uptime SLA) is the exact inflection point that drives SGD 15,000/month compensation in Singapore's market. The landscape from here is Staff Engineer or engineering management — both paths require cross-org influence evidence she is already accumulating.",
     keyGap:
-      "Production Practices — no evidence of automated testing, CI/CD pipelines, or deployment monitoring across any of the 5 projects. This is the #1 screening filter at tech companies in KL and Singapore.",
+      "Cross-Organisation Leadership — while Priya owns critical platform systems, her evidence shows team-of-2 management. Staff Engineer trajectory at Grab/SEA unicorns typically requires evidence of influencing 3+ teams on architectural decisions, not just owning them.",
     nextStep:
-      "Add a GitHub Actions CI pipeline to the AI Governance Classifier (FYP) this week — configure it to run pytest on every push. This single addition demonstrates production mindset, takes under 3 hours, and can be added directly to an existing project rather than starting something new.",
+      "Document one RFC (Request for Comments) process you led or contributed to — write a 1-page case study showing the technical trade-off, who you aligned, and the outcome. This single artifact is the most common differentiator between Senior SWE and Staff Engineer candidates in Singapore.",
   } as CareerInsight,
-  'Sarah Tan': {
+  'Kai Chen': {
     narrative:
-      "Sarah demonstrates exceptional focus in data engineering and analytics, with three technical projects showing clear progression from learning (data analysis coursework) to applied work (weather prediction model) to deployment (real-time metrics dashboard). Her evidence reveals a student ready for data-focused roles, with strong Python fundamentals and experience in ML workflows. The main gap isn't technical—it's visibility into her contributions and the scale of impact she's achieved.",
+      "Kai has executed a textbook analyst-to-engineer transition — DBS Bank SQL foundation → ByteDance real-time pipeline architecture serving 500M events/day. His sub-second latency expertise and Kafka/Flink mastery place him in the top 5% of data engineers in Southeast Asia where this skill combination has 15% YoY demand growth. The landscape ahead has two clear forks: Staff Data Engineer (deeper infrastructure ownership) or Data Engineering Manager (team scaling and platform strategy).",
     keyGap:
-      "Communication & Portfolio Impact — while her technical skills are solid, there's limited evidence of how her work affected business or user outcomes. Data engineers at Grab and Shopee in SG/MY look for stories of scale: 'improved query performance by X%' or 'reduced processing time by Y hours'.",
+      "ML Platform Integration — Kai's pipelines feed recommendation systems but his evidence shows limited ownership of the ML training/serving interface. Data engineering roles at ByteDance's next level (L6+) expect pipeline engineers who can own feature stores and model serving infrastructure.",
     nextStep:
-      "Quantify one project: take your weather prediction model and add metrics like 'achieved 87% accuracy' or 'processes 10K predictions/day'. Then write a 2-minute technical blog post explaining the data pipeline. Deploy the blog to Medium or a GitHub Pages site. This single artifact—public, quantified, searchable—makes you visible to data hiring managers across Southeast Asia.",
+      "Build a feature store prototype connecting one of your existing Kafka pipelines to a simple ML model serving endpoint. Document the latency trade-offs and consistency guarantees. This closes the pipeline-to-ML gap that separates senior data engineers from staff-level platform engineers.",
   } as CareerInsight,
-  'Ahmad Razif': {
+  'Aisha Patel': {
     narrative:
-      "Ahmad is building a generalist technical profile with front-end, back-end, and mobile development experience across 4 distinct projects. His evidence shows adaptability and breadth—valuable in startups—but lacks the depth hiring managers typically see in candidates ready for senior internships at tier-1 tech companies. The challenge isn't capability, it's clarity: what is your specialization? Where do you want to go deeper?",
+      "Aisha has built a high-conviction PM profile across three market tiers — Flipkart analyst foundation, Amazon India product ownership (8% conversion uplift = INR 5Cr+ impact), and Lazada cross-border marketplace launch (100K+ sellers, INR 500Cr GMV run rate). Her geographic expansion expertise is rare in Asia's PM market where most candidates lack multi-country launch evidence. The landscape ahead is Group PM or Director of Product roles focused on international expansion.",
     keyGap:
-      "Depth & Production Maturity — multiple projects across different stacks (React, Django, Flutter) is impressive for learning, but doesn't signal readiness for a senior engineering team that expects you to own and deploy production systems. One project with CI/CD, monitoring, and documented production lessons is worth more than three half-finished portfolio pieces.",
+      "Technical PM Depth — Aisha's evidence shows strong market analysis and stakeholder management but limited evidence of technical architecture involvement. Senior/Group PM roles at SEA unicorns (Grab, Shopee, GoTo) increasingly expect PMs who can engage meaningfully in system design trade-off discussions.",
     nextStep:
-      "Choose your strongest project and take it to production completeness this month: (1) Deploy it to a live URL (Vercel/Railway), (2) add simple Sentry error tracking, (3) write a 'Lessons Learned' section on GitHub documenting one technical decision and its tradeoff. Production experience, even self-taught, separates internship-ready from early-stage students.",
+      "Write a 1-page technical deep-dive on one architectural decision from the Lazada cross-border platform — pick one: data consistency across 4 markets, seller onboarding API design, or GMV calculation methodology. Publishing this on LinkedIn positions you as a technical PM and opens Group PM roles that most product managers cannot access.",
   } as CareerInsight,
 };
 
-export const DANIEL_LEE_DEMO_INSIGHT = DEMO_INSIGHTS['Daniel Lee'];
+export const PRIYA_SHARMA_DEMO_INSIGHT = DEMO_INSIGHTS['Priya Sharma'];
 
 // Rule-based fallback when API is unavailable
 function generateFallbackInsight(
