@@ -318,11 +318,52 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
         <SectionHeader number="2" title="Skill Radar & Dimensions" />
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', alignItems: 'start' }}>
+          {/* Left: Radar */}
           <RadarChart dimensions={profile.dimensions} />
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            {profile.dimensions.map((dimension, idx) => (
-              <DimensionScoreGauge key={idx} dimension={dimension} />
-            ))}
+
+          {/* Right: Single grouped card */}
+          <div style={{
+            background: 'var(--color-surface)',
+            border: '1px solid var(--color-border)',
+            borderRadius: 'var(--radius-lg)',
+            padding: '20px',
+          }}>
+            {/* Legend */}
+            <div style={{ display: 'flex', gap: '16px', marginBottom: '16px', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: '700', color: 'var(--color-text-secondary)' }}>
+                <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'var(--color-success)', display: 'inline-block' }} />
+                Strong (75+)
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: '700', color: 'var(--color-text-secondary)' }}>
+                <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'var(--color-warning)', display: 'inline-block' }} />
+                Developing (30–74)
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: '700', color: 'var(--color-text-secondary)' }}>
+                <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'var(--color-danger)', display: 'inline-block' }} />
+                Needs Work (&lt;30)
+              </div>
+            </div>
+            {/* Dimension rows */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {profile.dimensions.map((d) => {
+                const color = d.score >= 75 ? 'var(--color-success)' : d.score >= 30 ? 'var(--color-warning)' : 'var(--color-danger)';
+                return (
+                  <div key={d.dimension}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                      <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-text)' }}>{d.dimension}</span>
+                      <span style={{ fontSize: '13px', fontWeight: '900', color }}>{d.score}</span>
+                    </div>
+                    <div style={{ height: '6px', background: 'var(--color-bg)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${d.score}%`, background: color, borderRadius: '3px', transition: 'width 0.8s ease' }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {/* Target note */}
+            <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid var(--color-border)', fontSize: '11px', color: 'var(--color-text-muted)', fontWeight: '600', textAlign: 'center' }}>
+              Target: <strong style={{ color: 'var(--color-accent)' }}>75+</strong> in every dimension to be internship-competitive
+            </div>
           </div>
         </div>
 
@@ -417,10 +458,13 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
         {/* ── SECTION 6 — PORTFOLIO & ATS ── */}
         <SectionHeader number="6" title="Portfolio & ATS" />
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', alignItems: 'start' }}>
+        {/* ATS on top — quick pass/fail signal */}
+        <div style={{ marginBottom: '16px' }}>
           <ATSScoreCard profile={profile} evidence={evidence} />
-          <PortfolioQualitySection evidence={evidence} />
         </div>
+
+        {/* Portfolio quality below — per-project detail */}
+        <PortfolioQualitySection evidence={evidence} />
 
         {/* ── SECTION 7 — YOUR LEARNING ROAD ── */}
         <SectionHeader number="7" title="Your Learning Road" />

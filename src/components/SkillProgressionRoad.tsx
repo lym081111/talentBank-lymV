@@ -335,22 +335,28 @@ export function SkillProgressionRoad({ skills }: Props) {
               🏁 MASTERY ACHIEVED
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Strategic Tip */}
-      <div style={{
-        background: 'var(--color-bg)',
-        border: '2px dashed var(--color-accent)',
-        borderRadius: 'var(--radius-lg)',
-        padding: '20px',
-        marginTop: '24px',
-        textAlign: 'center',
-        fontSize: '13px',
-        color: 'var(--color-text-secondary)',
-        fontWeight: '500'
-      }}>
-        💡 Follow the main road first (high priority) to reach mastery quickly. Then explore optional branches (medium priority) to specialize.
+          {/* Tip box — inside the road so users can see it in context */}
+          <div style={{
+            background: 'rgba(255,255,255,0.8)',
+            border: '2px dashed var(--color-accent)',
+            borderRadius: 'var(--radius-lg)',
+            padding: '14px 20px',
+            marginTop: '32px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            fontSize: '12px',
+            color: 'var(--color-text-secondary)',
+            fontWeight: '600',
+          }}>
+            <span style={{ fontSize: '18px', flexShrink: 0 }}>💡</span>
+            <div>
+              <strong style={{ color: 'var(--color-text)', display: 'block', marginBottom: '2px' }}>How to read this map:</strong>
+              Follow the <strong style={{ color: '#dc2626' }}>main road</strong> (numbered milestones) first — these are high-priority skills with the biggest score impact. Then explore the <strong style={{ color: '#ea580c' }}>optional branch</strong> for medium-priority specializations.
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
