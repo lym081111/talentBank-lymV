@@ -222,36 +222,47 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack }:
 
             <CohortInsightCard cohort={cohort} />
 
-            <div className={styles.actionList}>
-              <h3>What Universities Do With This Data</h3>
-              <div className={styles.actionGrid}>
+            <div style={{
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+              borderRadius: 'var(--radius-lg)',
+              padding: '24px',
+              marginBottom: '24px',
+            }}>
+              <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '700', color: 'var(--color-text)' }}>
+                What Universities Do With This Data
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
                 {[
-                  {
-                    n: '1',
-                    title: 'Identify Priority Gaps',
-                    body: '64% lack Production Practices? That\'s a curriculum signal, not a student problem.',
-                  },
-                  {
-                    n: '2',
-                    title: 'Targeted Interventions',
-                    body: 'Offer specific workshops (e.g. "GitHub Actions for Year 3s") based on cohort data.',
-                  },
-                  {
-                    n: '3',
-                    title: 'Track Impact Over Time',
-                    body: 'Re-run after an intervention — prove the workshop worked with dimension score shifts.',
-                  },
-                  {
-                    n: '4',
-                    title: 'Early Proactive Support',
-                    body: 'Reach out to Year 2s with low Portfolio scores before internship season begins.',
-                  },
+                  { n: '1', icon: '🔍', title: 'Identify Priority Gaps', body: '64% lack Production Practices? That\'s a curriculum signal, not a student problem.' },
+                  { n: '2', icon: '🎯', title: 'Targeted Interventions', body: 'Offer specific workshops (e.g. "GitHub Actions for Year 3s") based on cohort data.' },
+                  { n: '3', icon: '📈', title: 'Track Impact Over Time', body: 'Re-run after an intervention — prove the workshop worked with dimension score shifts.' },
+                  { n: '4', icon: '🤝', title: 'Early Proactive Support', body: 'Reach out to Year 2s with low Portfolio scores before internship season begins.' },
                 ].map((item) => (
-                  <div key={item.n} className={styles.action}>
-                    <div className={styles.actionNum}>{item.n}</div>
+                  <div key={item.n} style={{
+                    background: 'var(--color-bg)',
+                    border: '1px solid var(--color-border)',
+                    borderRadius: 'var(--radius-md)',
+                    padding: '14px 16px',
+                    display: 'flex',
+                    gap: '12px',
+                    alignItems: 'flex-start',
+                  }}>
+                    <div style={{
+                      width: '28px', height: '28px', borderRadius: '50%', flexShrink: 0,
+                      background: 'var(--color-primary-light)', color: 'var(--color-primary)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: '13px', fontWeight: '900',
+                    }}>
+                      {item.n}
+                    </div>
                     <div>
-                      <strong>{item.title}</strong>
-                      <p>{item.body}</p>
+                      <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '4px' }}>
+                        {item.icon} {item.title}
+                      </div>
+                      <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', lineHeight: '1.5' }}>
+                        {item.body}
+                      </div>
                     </div>
                   </div>
                 ))}
