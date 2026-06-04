@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from 'react';
 import { ReadinessProfile, Evidence, StudentProfile } from '../types/evidence';
-import { DimensionScoreGauge } from '../components/DimensionScoreGauge';
+// DimensionScoreGauge replaced with inline grouped card
 import { SkillProgressionRoad } from '../components/SkillProgressionRoad';
 import { AICareerInsight } from '../components/AICareerInsight';
 import { RadarChart } from '../components/RadarChart';
