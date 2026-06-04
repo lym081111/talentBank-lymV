@@ -264,7 +264,7 @@ export function Landing({ onViewDemo, onBuildOwn }: Props) {
               Your next move isn't obvious.
               <span className="block text-emerald-400">Neither should our advice be.</span>
             </h2>
-            <p className="text-white/40 max-w-xl mx-auto text-lg">
+            <p className="text-white/40 max-w-xl mx-auto text-lg text-center">
               Every path has real trade-offs. We name them honestly — so you can choose with eyes open.
             </p>
           </div>
@@ -516,7 +516,7 @@ export function Landing({ onViewDemo, onBuildOwn }: Props) {
               Not a job board. Not an ATS.
               <span className="block text-white/30">The connective tissue between them.</span>
             </h2>
-            <p className="text-white/40 text-lg leading-relaxed">
+            <p className="text-white/40 text-lg leading-relaxed text-center">
               Career OS is the layer existing tools were never designed to be:
               continuous, bilateral, and intelligent across a 40-year horizon.
             </p>
@@ -638,7 +638,7 @@ export function Landing({ onViewDemo, onBuildOwn }: Props) {
               🏆 Talentbank Tech Hackathon 2026 · Universities Track · Module 03
             </div>
             <h3 className="text-3xl font-black text-white mb-4">See it working on a real profile</h3>
-            <p className="text-white/40 mb-8 max-w-md mx-auto">
+            <p className="text-white/40 mb-8 max-w-md mx-auto text-center">
               Three real Malaysian professionals. Real MYR salary journeys. Real trade-offs. No prediction — just navigation.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
