@@ -377,36 +377,36 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
 
         <CareerMarketplaceBridge profile={profile} />
 
-        {/* Market impact salary badges — no paragraphs */}
+        {/* Market impact salary badges */}
         <div style={{
-          background: 'linear-gradient(135deg, #ecfdf5 0%, #eff6ff 100%)',
-          border: '1px solid var(--color-accent)',
+          background: 'rgba(16,185,129,0.08)',
+          border: '1px solid rgba(16,185,129,0.25)',
           borderRadius: 'var(--radius-lg)',
           padding: '20px 24px',
           marginTop: '20px',
         }}>
-          <h3 style={{ margin: '0 0 12px 0', fontSize: '15px', fontWeight: '700', color: 'var(--color-text)' }}>
+          <h3 style={{ margin: '0 0 12px 0', fontSize: '15px', fontWeight: '700', color: '#ffffff' }}>
             💰 Salary Position
           </h3>
           {profile.overall >= 75 && (
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <span style={{ padding: '6px 14px', background: 'var(--color-success-light)', color: 'var(--color-success)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>SGD 180k–250k/yr</span>
-              <span style={{ padding: '6px 14px', background: 'var(--color-success-light)', color: 'var(--color-success)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>INR 40L–80L/yr</span>
-              <span style={{ padding: '6px 14px', background: 'var(--color-primary-light)', color: 'var(--color-primary)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>+30–50% Staff uplift</span>
+              <span style={{ padding: '6px 14px', background: 'rgba(52,211,153,0.15)', color: '#34d399', border: '1px solid rgba(52,211,153,0.3)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>SGD 180k–250k/yr</span>
+              <span style={{ padding: '6px 14px', background: 'rgba(52,211,153,0.15)', color: '#34d399', border: '1px solid rgba(52,211,153,0.3)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>INR 40L–80L/yr</span>
+              <span style={{ padding: '6px 14px', background: 'rgba(96,165,250,0.15)', color: '#60a5fa', border: '1px solid rgba(96,165,250,0.3)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>+30–50% Staff uplift</span>
             </div>
           )}
           {profile.overall >= 55 && profile.overall < 75 && (
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <span style={{ padding: '6px 14px', background: 'var(--color-warning-light)', color: 'var(--color-warning)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>SGD 120k–160k/yr</span>
-              <span style={{ padding: '6px 14px', background: 'var(--color-warning-light)', color: 'var(--color-warning)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>INR 25L–40L/yr</span>
-              <span style={{ padding: '6px 14px', background: 'var(--color-success-light)', color: 'var(--color-success)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>+SGD 24–48k with gap close</span>
+              <span style={{ padding: '6px 14px', background: 'rgba(251,191,36,0.15)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>SGD 120k–160k/yr</span>
+              <span style={{ padding: '6px 14px', background: 'rgba(251,191,36,0.15)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>INR 25L–40L/yr</span>
+              <span style={{ padding: '6px 14px', background: 'rgba(52,211,153,0.15)', color: '#34d399', border: '1px solid rgba(52,211,153,0.3)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>+SGD 24–48k with gap close</span>
             </div>
           )}
           {profile.overall < 55 && (
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <span style={{ padding: '6px 14px', background: 'var(--color-surface-hover)', color: 'var(--color-text-secondary)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>SGD 48–72k/yr</span>
-              <span style={{ padding: '6px 14px', background: 'var(--color-surface-hover)', color: 'var(--color-text-secondary)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>INR 12L–18L/yr</span>
-              <span style={{ padding: '6px 14px', background: 'var(--color-primary-light)', color: 'var(--color-primary)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>3–6 months to 55+</span>
+              <span style={{ padding: '6px 14px', background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>SGD 48–72k/yr</span>
+              <span style={{ padding: '6px 14px', background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>INR 12L–18L/yr</span>
+              <span style={{ padding: '6px 14px', background: 'rgba(96,165,250,0.15)', color: '#60a5fa', border: '1px solid rgba(96,165,250,0.3)', borderRadius: '20px', fontSize: '13px', fontWeight: '800' }}>3–6 months to 55+</span>
             </div>
           )}
         </div>

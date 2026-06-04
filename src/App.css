@@ -1,44 +1,49 @@
 @import "tailwindcss";
 
-/* Design tokens - Professional enterprise platform for Asia tech careers */
+/* ═══════════════════════════════════════════════════════
+   CAREER OS DARK DESIGN SYSTEM
+   All pages inherit this — matches Landing page aesthetic
+   Background family: #0a0f1e / #0d1117 / #060b14 / #080d18
+   ═══════════════════════════════════════════════════════ */
 :root {
-  /* Primary color: Deep Blue for trust & professional authority */
-  --color-primary: #1e40af;
-  --color-primary-dark: #1e3a8a;
-  --color-primary-light: #eff6ff;
+  /* Primary: Blue */
+  --color-primary: #60a5fa;
+  --color-primary-dark: #3b82f6;
+  --color-primary-light: rgba(96, 165, 250, 0.12);
 
-  /* Accent: Vibrant Green for growth & success */
-  --color-accent: #10b981;
-  --color-accent-light: #ecfdf5;
-  --color-accent-dark: #059669;
+  /* Accent: Emerald */
+  --color-accent: #34d399;
+  --color-accent-light: rgba(52, 211, 153, 0.12);
+  --color-accent-dark: #10b981;
 
-  /* Secondary: Slate blue for supporting elements */
-  --color-secondary: #475569;
-  --color-secondary-light: #f1f5f9;
+  /* Secondary */
+  --color-secondary: #94a3b8;
+  --color-secondary-light: rgba(148, 163, 184, 0.12);
 
-  /* Success: Fresh green for positive progress */
-  --color-success: #10b981;
-  --color-success-light: #ecfdf5;
+  /* Status */
+  --color-success: #34d399;
+  --color-success-light: rgba(52, 211, 153, 0.12);
+  --color-warning: #fbbf24;
+  --color-warning-light: rgba(251, 191, 36, 0.12);
+  --color-danger: #f87171;
+  --color-danger-light: rgba(248, 113, 113, 0.12);
 
-  /* Warning: Golden amber for attention needed */
-  --color-warning: #f59e0b;
-  --color-warning-light: #fffbeb;
+  /* Dark backgrounds — Landing page family */
+  --color-bg:           #0a0f1e;
+  --color-bg-alt:       #0d1117;
+  --color-bg-deep:      #060b14;
+  --color-bg-deeper:    #080d18;
+  --color-surface:      rgba(255,255,255,0.05);
+  --color-surface-hover:rgba(255,255,255,0.08);
 
-  /* Danger: Rose for destructive actions */
-  --color-danger: #ef4444;
-  --color-danger-light: #fee2e2;
+  /* Text */
+  --color-text:           #ffffff;
+  --color-text-secondary: rgba(255,255,255,0.6);
+  --color-text-muted:     rgba(255,255,255,0.3);
 
-  /* Neutral grays - professional clean palette */
-  --color-text: #1f2937;
-  --color-text-secondary: #6b7280;
-  --color-text-muted: #9ca3af;
-  --color-border: #e5e7eb;
-  --color-divider: #d1d5db;
-
-  --color-bg: #f3f4f6;
-  --color-bg-alt: #eff2f5;
-  --color-surface: #ffffff;
-  --color-surface-hover: #f9fafb;
+  /* Borders */
+  --color-border:   rgba(255,255,255,0.1);
+  --color-divider:  rgba(255,255,255,0.07);
 
   /* Shadows - refined for depth */
   --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
@@ -74,62 +79,23 @@
   --font-weight-extrabold: 800;
 }
 
-/* ── Dark Mode ─────────────────────────────── */
+/* Dark mode kept for compatibility — already default now */
 :root.dark-mode {
-  --color-text: #f3f4f6;
-  --color-text-secondary: #d1d5db;
-  --color-text-muted: #9ca3af;
-  --color-border: #374151;
-  --color-divider: #4b5563;
-
-  --color-bg: #111827;
-  --color-bg-alt: #1f2937;
-  --color-surface: #1f2937;
-  --color-surface-hover: #374151;
-
-  /* Keep primary/accent vivid in dark mode - professional blues and greens */
-  --color-primary: #60a5fa;
-  --color-primary-dark: #93c5fd;
-  --color-primary-light: rgba(96, 165, 250, 0.12);
-  --color-accent: #34d399;
-  --color-accent-light: rgba(52, 211, 153, 0.12);
-  --color-secondary: #94a3b8;
-  --color-secondary-light: rgba(148, 163, 184, 0.12);
-  --color-success: #34d399;
-  --color-success-light: rgba(52, 211, 153, 0.12);
-  --color-warning: #fbbf24;
-  --color-warning-light: rgba(251, 191, 36, 0.12);
-  --color-danger: #f87171;
-  --color-danger-light: rgba(248, 113, 113, 0.12);
-
-  /* Shadows for dark mode */
-  --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.3);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.3);
-  --shadow-lg: 0 12px 32px rgba(0,0,0,0.7), 0 4px 8px rgba(0,0,0,0.3);
-  --shadow-xl: 0 20px 48px rgba(0,0,0,0.8), 0 4px 12px rgba(0,0,0,0.4);
+  --color-bg:   #0a0f1e;
+  --color-surface: rgba(255,255,255,0.05);
 }
 
-/* Force all form elements to follow dark mode */
-:root.dark-mode input,
-:root.dark-mode textarea,
-:root.dark-mode select {
-  background: #1f2937;
-  color: #f3f4f6;
-  border-color: #374151;
+/* Global form inputs — dark design system */
+input, textarea, select {
+  background: rgba(255,255,255,0.05);
+  color: #ffffff;
+  border-color: rgba(255,255,255,0.15);
   color-scheme: dark;
 }
-
-:root.dark-mode input::placeholder,
-:root.dark-mode textarea::placeholder {
-  color: #9ca3af;
-}
-
-:root.dark-mode input:focus,
-:root.dark-mode textarea:focus,
-:root.dark-mode select:focus {
-  border-color: #60a5fa;
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.25); }
+input:focus, textarea:focus, select:focus {
+  border-color: rgba(96,165,250,0.5);
+  box-shadow: 0 0 0 3px rgba(96,165,250,0.1);
 }
 
 * {
