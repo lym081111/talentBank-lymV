@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { StudentProfile } from '../types/evidence';
+import { useMemo, useState } from 'react';
+import { StudentProfile, Evidence } from '../types/evidence';
 import { priyaSharmaProfile, kaiChenProfile, aishaPatelProfile } from '../data/mockStudent';
 
 interface Props {
@@ -8,241 +8,517 @@ interface Props {
   onBack: () => void;
 }
 
+type CandidatePage = 'snapshot' | 'resume' | 'skills' | 'trajectory' | 'matches';
+
 const DEMO_PERSONAS = [
-  { profile: priyaSharmaProfile, emoji: '🚀', role: 'Senior SWE', company: 'Grab · KL', salary: 'MYR 45,000/mo' },
-  { profile: kaiChenProfile,     emoji: '📊', role: 'Senior Data Eng', company: 'ByteDance · SG', salary: 'MYR 38,000/mo' },
-  { profile: aishaPatelProfile,  emoji: '📈', role: 'Senior PM', company: 'Lazada · Malaysia', salary: 'MYR 28,000/mo' },
-];
-
-const MODULES = [
   {
-    num: '01',
-    title: 'Career Path Navigator',
-    tagline: 'What would it take to see your realistic next moves, without guessing?',
-    description:
-      "Looks at what you've done and what the job market actually looks like right now, and shows you a handful of routes you could realistically take from here. It doesn't predict which one is best. It just gives you something more than gut feel to work with.",
+    profile: priyaSharmaProfile,
+    label: 'Priya Sharma',
+    role: 'Platform SWE',
+    location: 'Grab, Singapore',
+    accent: 'from-cyan-400 to-emerald-300',
+    summary:
+      'Backend engineer with repeated proof of production ownership, distributed systems depth, and senior-level platform responsibility.',
   },
   {
-    num: '02',
-    title: 'Living Portfolio',
-    tagline: 'What if your CV updated itself, and was actually true?',
-    description:
-      "CVs are usually written from memory, the night before applying, by someone tired and stressed. This module keeps a running record of what you actually did and shared: projects, decisions, and things you led, so it's already there when you need it. Switching fields becomes less terrifying because the proof of what you can do is compiled by the platform.",
+    profile: kaiChenProfile,
+    label: 'Kai Chen',
+    role: 'Data Engineer',
+    location: 'ByteDance, Singapore',
+    accent: 'from-violet-400 to-cyan-300',
+    summary:
+      'Data infrastructure candidate with a clear analyst-to-engineer transition and hard evidence in real-time streaming systems.',
   },
   {
-    num: '03',
-    title: 'AI Career Coach',
-    tagline: 'What if a senior mentor was watching your back, quietly, for decades?',
-    description:
-      "Senior mentors are useful but most people don't have access to one. This module is meant to do some of what a mentor does: paying attention to your career over the long run and flagging things you might've missed, like when you're underpaid for what you do, or when a role you'd be good at opens up somewhere.",
-  },
-  {
-    num: '04',
-    title: 'Fair Pay Engine',
-    tagline: "Are you paid what you're worth, or just what you accepted?",
-    description:
-      "Most people find out they're underpaid by accident, or never knew how to push back when their boss said no. This module checks your pay against what people in similar roles are actually earning, tells you if there's a gap, and helps you figure out how to bring it up before your next scheduled performance review.",
-  },
-  {
-    num: '05',
-    title: 'Life Chapter Designer',
-    tagline: 'What if life had room for more than work?',
-    description:
-      "Career planning usually assumes you just keep working straight through. Real life isn't like that. People take time off for family, for health, to start something, to study again, and then come back. This module helps you plan around those breaks instead of pretending they won't happen.",
-  },
-  {
-    num: '06',
-    title: 'Your Own Track',
-    tagline: "Candidates have problems we haven't named.",
-    description: '',
-    isWildcard: true,
+    profile: aishaPatelProfile,
+    label: 'Aisha Patel',
+    role: 'Product Manager',
+    location: 'Lazada, Southeast Asia',
+    accent: 'from-amber-300 to-rose-300',
+    summary:
+      'Product operator with market-entry evidence, commercial thinking, and cross-functional delivery across India and Southeast Asia.',
   },
 ];
 
-function ModuleCard({
-  mod,
-  expanded,
-  onToggle,
+const PAGE_NAV: { id: CandidatePage; title: string; helper: string }[] = [
+  { id: 'snapshot', title: 'Profile', helper: 'what the resume says' },
+  { id: 'resume', title: 'Evidence', helper: 'proof, not claims' },
+  { id: 'skills', title: 'Skills', helper: 'extracted from work' },
+  { id: 'trajectory', title: 'Trajectory', helper: 'career movement' },
+  { id: 'matches', title: 'Matches', helper: 'roles this profile can explain' },
+];
+
+function splitTechnologies(profile: StudentProfile) {
+  const skills = profile.evidence.flatMap(item =>
+    (item.technologies ?? '')
+      .split(',')
+      .map(skill => skill.trim())
+      .filter(Boolean)
+  );
+
+  return Array.from(new Set(skills)).slice(0, 14);
+}
+
+function getSalarySignals(profile: StudentProfile) {
+  const text = profile.evidence.map(item => item.outcome ?? '').join(' ');
+  const matches = text.match(/(?:SGD|MYR|INR)\s?[\d,.]+[KkLl]?(?:\/month|\/year)?/g);
+  return matches ? Array.from(new Set(matches)).slice(0, 4) : [];
+}
+
+function getImpactSignals(profile: StudentProfile) {
+  const text = profile.evidence.map(item => `${item.description} ${item.outcome ?? ''}`).join(' ');
+  const matches = text.match(/\d+(?:\.\d+)?%|\d+(?:,\d{3})?\+?\s?(?:users|events\/day|requests\/day|transactions|stakeholders|PRs|countries|sellers|GMV|QPS)/gi);
+  return matches ? Array.from(new Set(matches)).slice(0, 6) : [];
+}
+
+function getEvidenceKind(item: Evidence) {
+  if (item.title.toLowerCase().includes('skill') || item.type === 'certificate') return 'Skill proof';
+  if (item.title.toLowerCase().includes('senior')) return 'Senior proof';
+  if (item.title.toLowerCase().includes('intern')) return 'Early proof';
+  return 'Role proof';
+}
+
+function buildMarketMatches(profile: StudentProfile, skills: string[]) {
+  const lowerRole = profile.targetRole.toLowerCase();
+
+  if (lowerRole.includes('data')) {
+    return [
+      {
+        title: 'Senior Data Engineer - Streaming Platform',
+        fit: '91%',
+        why: 'Kafka, Flink, Spark, ClickHouse, and 500M events/day evidence already sit in the resume.',
+        blocker: 'Needs one public architecture write-up to make the system design proof easier for recruiters to verify.',
+      },
+      {
+        title: 'Analytics Platform Lead',
+        fit: '84%',
+        why: 'The DBS analyst foundation plus ByteDance infrastructure work explains both business metrics and pipeline execution.',
+        blocker: 'Leadership proof is present, but team size is still small. Add mentorship outcomes.',
+      },
+    ];
+  }
+
+  if (lowerRole.includes('product')) {
+    return [
+      {
+        title: 'Senior Product Manager - Marketplace Expansion',
+        fit: '88%',
+        why: 'Cross-border commerce, seller onboarding, P&L modeling, and multi-country research are directly aligned.',
+        blocker: 'Engineering fluency is implied through collaboration. Add more technical decision examples.',
+      },
+      {
+        title: 'Growth PM - Search and Discovery',
+        fit: '82%',
+        why: 'Search redesign, conversion lift, and category analysis are strong proof for discovery-led growth work.',
+        blocker: 'Needs clearer before/after funnel metrics for every launch.',
+      },
+    ];
+  }
+
+  return [
+    {
+      title: 'Senior Backend Engineer - Marketplace Systems',
+      fit: '93%',
+      why: `The resume shows ${skills.slice(0, 4).join(', ')} plus ownership of high-scale matching and payment systems.`,
+      blocker: 'Strong private-company evidence. Add one sanitized public design case study for external trust.',
+    },
+    {
+      title: 'Platform Engineer - Reliability and Distributed Systems',
+      fit: '86%',
+      why: '99.99% reliability work, microservices ownership, and distributed systems training support the match.',
+      blocker: 'ML exposure exists, but the resume should separate production ML work from backend platform work.',
+    },
+  ];
+}
+
+function CandidateSelector({
+  selectedId,
+  onSelect,
 }: {
-  mod: typeof MODULES[0];
-  expanded: boolean;
-  onToggle: () => void;
+  selectedId: string;
+  onSelect: (profile: StudentProfile) => void;
 }) {
   return (
-    <div
-      className={`bg-white rounded-xl border p-6 flex flex-col ${
-        mod.isWildcard ? 'border-amber-200' : 'border-stone-200'
-      }`}
-    >
-      {/* Card top row */}
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex-1 pr-3">
-          <div className={`text-xs font-semibold mb-1 ${mod.isWildcard ? 'text-amber-500' : 'text-stone-400'}`}>
-            {mod.num}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      {DEMO_PERSONAS.map(candidate => {
+        const active = candidate.profile.id === selectedId;
+        return (
+          <button
+            key={candidate.profile.id}
+            onClick={() => onSelect(candidate.profile)}
+            className={`text-left rounded-2xl border p-4 transition-all duration-300 hover:-translate-y-1 ${
+              active
+                ? 'border-cyan-300/60 bg-cyan-300/10 shadow-[0_0_30px_rgba(34,211,238,0.14)]'
+                : 'border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.06]'
+            }`}
+          >
+            <div className={`h-1.5 rounded-full bg-gradient-to-r ${candidate.accent} mb-4`} />
+            <div className="text-white font-black text-sm">{candidate.label}</div>
+            <div className="text-white/45 text-xs mt-1">{candidate.role}</div>
+            <div className="text-white/30 text-xs mt-1">{candidate.location}</div>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function PageTabs({
+  page,
+  onChange,
+}: {
+  page: CandidatePage;
+  onChange: (page: CandidatePage) => void;
+}) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-2 grid grid-cols-2 md:grid-cols-5 gap-2">
+      {PAGE_NAV.map(item => {
+        const active = item.id === page;
+        return (
+          <button
+            key={item.id}
+            onClick={() => onChange(item.id)}
+            className={`rounded-xl px-3 py-3 text-left transition-all duration-300 ${
+              active
+                ? 'bg-white text-slate-950 shadow-lg'
+                : 'text-white/50 hover:text-white hover:bg-white/[0.06]'
+            }`}
+          >
+            <div className="text-sm font-black">{item.title}</div>
+            <div className={`text-[11px] mt-0.5 ${active ? 'text-slate-500' : 'text-white/25'}`}>{item.helper}</div>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function MetricCard({ label, value, note }: { label: string; value: string; note: string }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+      <div className="text-white/35 text-xs uppercase tracking-[0.18em] font-black">{label}</div>
+      <div className="text-3xl font-black text-white mt-3">{value}</div>
+      <div className="text-white/45 text-sm mt-2 leading-relaxed">{note}</div>
+    </div>
+  );
+}
+
+function EvidenceCard({ item, index }: { item: Evidence; index: number }) {
+  return (
+    <article className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/40 hover:shadow-[0_0_22px_rgba(34,211,238,0.12)]">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="text-cyan-200 text-xs font-black uppercase tracking-[0.18em]">
+            {String(index + 1).padStart(2, '0')} / {getEvidenceKind(item)}
           </div>
-          <h3 className={`font-bold text-[15px] leading-snug ${mod.isWildcard ? 'text-amber-600' : 'text-stone-900'}`}>
-            {mod.title}
-          </h3>
+          <h3 className="text-white font-black text-lg mt-2">{item.title}</h3>
         </div>
-        <button
-          onClick={onToggle}
-          aria-label={expanded ? 'Collapse' : 'Expand'}
-          className="flex-shrink-0 w-7 h-7 flex items-center justify-center bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-600 rounded-md text-xs font-black transition-colors"
-        >
-          {expanded ? '∧' : '∨'}
-        </button>
+        {item.verified && (
+          <span className="rounded-full border border-emerald-300/30 bg-emerald-300/10 px-3 py-1 text-xs font-black text-emerald-200">
+            verified
+          </span>
+        )}
+      </div>
+      <p className="text-white/55 text-sm leading-relaxed mt-4">{item.description}</p>
+      {item.technologies && <p className="text-white/35 text-xs mt-4">Stack: {item.technologies}</p>}
+      {item.outcome && (
+        <div className="mt-4 rounded-xl border border-amber-300/20 bg-amber-300/10 p-3 text-sm text-amber-100">
+          {item.outcome}
+        </div>
+      )}
+    </article>
+  );
+}
+
+function SnapshotPage({
+  profile,
+  skills,
+  salarySignals,
+  impactSignals,
+}: {
+  profile: StudentProfile;
+  skills: string[];
+  salarySignals: string[];
+  impactSignals: string[];
+}) {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 animate-[fadeIn_0.25s_ease-out]">
+      <div className="lg:col-span-2 rounded-3xl border border-white/10 bg-white/[0.04] p-7">
+        <div className="text-cyan-200 text-xs font-black uppercase tracking-[0.22em]">Resume interpretation</div>
+        <h2 className="text-3xl md:text-5xl font-black text-white mt-4 leading-tight">
+          {profile.name} is not a template profile. The evidence tells a specific story.
+        </h2>
+        <p className="text-white/55 text-base leading-relaxed mt-5">
+          {DEMO_PERSONAS.find(item => item.profile.id === profile.id)?.summary}
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-7">
+          <MetricCard label="Evidence" value={String(profile.evidence.length)} note="resume items parsed into proof blocks" />
+          <MetricCard label="Skills" value={String(skills.length)} note="unique tools and capabilities extracted" />
+          <MetricCard label="Target" value={profile.targetRole} note="current role direction from the resume" />
+        </div>
       </div>
 
-      {/* Tagline row */}
-      <div className="border-t border-b border-stone-100 py-3 mb-3">
-        <p className={`text-[13px] italic leading-relaxed ${mod.isWildcard ? 'text-amber-600' : 'text-stone-500'}`}>
-          {mod.tagline}
+      <aside className="rounded-3xl border border-white/10 bg-slate-950/70 p-6">
+        <div className="text-white/35 text-xs font-black uppercase tracking-[0.18em]">Candidate record</div>
+        <div className="mt-5 space-y-4">
+          <div>
+            <div className="text-white/35 text-xs">Education</div>
+            <div className="text-white font-bold mt-1">{profile.university ?? 'Not provided'}</div>
+          </div>
+          <div>
+            <div className="text-white/35 text-xs">Major</div>
+            <div className="text-white font-bold mt-1">{profile.major}</div>
+          </div>
+          <div>
+            <div className="text-white/35 text-xs">Salary signals</div>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {(salarySignals.length ? salarySignals : ['No explicit salary evidence']).map(signal => (
+                <span key={signal} className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-xs text-emerald-100">
+                  {signal}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="text-white/35 text-xs">Hard impact signals</div>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {(impactSignals.length ? impactSignals : ['Impact not quantified yet']).map(signal => (
+                <span key={signal} className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs text-cyan-100">
+                  {signal}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  );
+}
+
+function ResumePage({ profile }: { profile: StudentProfile }) {
+  return (
+    <div className="space-y-4 animate-[fadeIn_0.25s_ease-out]">
+      <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
+        <div className="text-cyan-200 text-xs font-black uppercase tracking-[0.22em]">Resume evidence pages</div>
+        <h2 className="text-3xl font-black text-white mt-3">Every page is built from what the candidate actually wrote.</h2>
+        <p className="text-white/50 mt-3 max-w-3xl">
+          This is where the Career OS should start: parse each role, project, certification, and outcome, then turn it into a readable candidate story.
         </p>
       </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {profile.evidence.map((item, index) => (
+          <EvidenceCard key={item.id} item={item} index={index} />
+        ))}
+      </div>
+    </div>
+  );
+}
 
-      {/* Description (shown when expanded) */}
-      {expanded && mod.description && (
-        <p className="text-[13px] text-stone-600 leading-relaxed">{mod.description}</p>
-      )}
+function SkillsPage({ skills, profile }: { skills: string[]; profile: StudentProfile }) {
+  const primary = skills.slice(0, 6);
+  const secondary = skills.slice(6);
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-5 animate-[fadeIn_0.25s_ease-out]">
+      <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-7">
+        <div className="text-cyan-200 text-xs font-black uppercase tracking-[0.22em]">Skill extraction</div>
+        <h2 className="text-3xl font-black text-white mt-3">Skills are pulled from evidence, not typed into a checklist.</h2>
+        <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-3">
+          {primary.map(skill => (
+            <div key={skill} className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 p-4">
+              <div className="text-white font-black">{skill}</div>
+              <div className="text-cyan-100/55 text-xs mt-2">Appears in resume evidence</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="rounded-3xl border border-white/10 bg-slate-950/70 p-7">
+        <div className="text-white/35 text-xs font-black uppercase tracking-[0.18em]">Skill coverage</div>
+        <div className="mt-5 space-y-3">
+          {profile.evidence.map(item => (
+            <div key={item.id} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+              <div className="text-white font-bold text-sm">{item.title}</div>
+              <div className="text-white/35 text-xs mt-2">{item.technologies || 'No stack listed. Candidate should add tools used.'}</div>
+            </div>
+          ))}
+        </div>
+        {secondary.length > 0 && (
+          <div className="mt-5">
+            <div className="text-white/35 text-xs mb-2">More extracted skills</div>
+            <div className="flex flex-wrap gap-2">
+              {secondary.map(skill => (
+                <span key={skill} className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-white/60">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function TrajectoryPage({ profile, salarySignals }: { profile: StudentProfile; salarySignals: string[] }) {
+  return (
+    <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-7 animate-[fadeIn_0.25s_ease-out]">
+      <div className="text-cyan-200 text-xs font-black uppercase tracking-[0.22em]">Career movement</div>
+      <h2 className="text-3xl font-black text-white mt-3">The resume becomes a career timeline, not a wall of text.</h2>
+      <div className="mt-8 relative">
+        <div className="absolute left-4 top-0 bottom-0 w-px bg-white/10" />
+        <div className="space-y-5">
+          {profile.evidence.map((item, index) => (
+            <div key={item.id} className="relative pl-12">
+              <div className="absolute left-0 top-1 h-8 w-8 rounded-full border border-cyan-300/40 bg-cyan-300/10 flex items-center justify-center text-xs font-black text-cyan-100">
+                {index + 1}
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-5">
+                <div className="text-white font-black">{item.title}</div>
+                {item.duration && <div className="text-white/35 text-xs mt-1">{item.duration}</div>}
+                <div className="text-white/55 text-sm leading-relaxed mt-3">{item.outcome ?? item.description}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mt-8 rounded-2xl border border-emerald-300/20 bg-emerald-300/10 p-5">
+        <div className="text-emerald-100 font-black">Compensation movement detected</div>
+        <p className="text-emerald-100/65 text-sm mt-2">
+          {salarySignals.length
+            ? salarySignals.join(' -> ')
+            : 'No explicit salary movement was found. The candidate should add salary range or level changes if they want Fair Pay analysis.'}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function MatchesPage({ profile, skills }: { profile: StudentProfile; skills: string[] }) {
+  const matches = buildMarketMatches(profile, skills);
+  return (
+    <div className="space-y-4 animate-[fadeIn_0.25s_ease-out]">
+      <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
+        <div className="text-cyan-200 text-xs font-black uppercase tracking-[0.22em]">Marketplace preview</div>
+        <h2 className="text-3xl font-black text-white mt-3">Jobs should match the candidate's proof, not keyword stuffing.</h2>
+        <p className="text-white/50 mt-3 max-w-3xl">
+          These are mock marketplace matches generated from the resume evidence. They show why the profile fits and what still blocks a cleaner match.
+        </p>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {matches.map(match => (
+          <div key={match.title} className="rounded-3xl border border-white/10 bg-slate-950/70 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-300/35">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <div className="text-white font-black text-xl">{match.title}</div>
+                <div className="text-white/35 text-sm mt-1">Target role: {profile.targetRole}</div>
+              </div>
+              <div className="rounded-2xl border border-emerald-300/30 bg-emerald-300/10 px-4 py-2 text-emerald-100 font-black">
+                {match.fit}
+              </div>
+            </div>
+            <div className="mt-6 space-y-3">
+              <div className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 p-4">
+                <div className="text-cyan-100 font-black text-sm">Why matched</div>
+                <p className="text-cyan-100/65 text-sm mt-2">{match.why}</p>
+              </div>
+              <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4">
+                <div className="text-amber-100 font-black text-sm">What blocks a stronger match</div>
+                <p className="text-amber-100/70 text-sm mt-2">{match.blocker}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
 export function TalentPortal({ onViewDemo, onBuildOwn, onBack }: Props) {
-  const [expanded, setExpanded] = useState<boolean[]>(MODULES.map(m => !m.isWildcard));
-  const [showPersonas, setShowPersonas] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState<StudentProfile>(priyaSharmaProfile);
+  const [page, setPage] = useState<CandidatePage>('snapshot');
 
-  const toggle = (i: number) => setExpanded(prev => prev.map((v, j) => (j === i ? !v : v)));
+  const skills = useMemo(() => splitTechnologies(selectedProfile), [selectedProfile]);
+  const salarySignals = useMemo(() => getSalarySignals(selectedProfile), [selectedProfile]);
+  const impactSignals = useMemo(() => getImpactSignals(selectedProfile), [selectedProfile]);
 
   return (
-    <div className="min-h-screen overflow-x-hidden">
+    <div className="min-h-screen overflow-x-hidden bg-[#070b13] text-white">
+      <style>
+        {`
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+        `}
+      </style>
 
-      {/* ── Dark header ──────────────────────────────────────────── */}
-      <div className="bg-[#06090f] border-b border-white/8">
-        <div className="max-w-5xl mx-auto px-6 py-5 flex items-center gap-5">
+      <div className="border-b border-white/10 bg-[#050810]/95">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-wrap items-center gap-5">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 text-white/40 hover:text-white text-sm font-bold transition-colors duration-200"
+            className="text-white/45 hover:text-white text-sm font-bold transition-colors"
           >
-            ← Home
+            Back to home
           </button>
           <div className="h-4 w-px bg-white/15" />
-          <div className="flex items-center gap-3">
-            <span className="text-xl">🧑‍💻</span>
-            <div>
-              <div className="text-xs text-emerald-400 font-black uppercase tracking-widest leading-none mb-0.5">
-                Talent OS
-              </div>
-              <div className="text-white font-black text-sm leading-none">Career Intelligence for Candidates</div>
-            </div>
+          <div>
+            <div className="text-xs text-cyan-300 font-black uppercase tracking-[0.22em]">Talent OS</div>
+            <div className="text-white font-black text-sm">Resume-driven candidate intelligence</div>
           </div>
-          <div className="ml-auto">
-            <span className="text-xs bg-emerald-400/10 text-emerald-400 border border-emerald-400/20 px-3 py-1 rounded-full font-bold">
-              Malaysia &amp; Asia Pacific
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Module showcase (light) ──────────────────────────────── */}
-      <div className="bg-[#f5f4f0]">
-        <div className="max-w-5xl mx-auto px-6 pt-14 pb-6">
-          <div className="flex items-center justify-between mb-7">
-            <span className="text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full bg-violet-100 text-violet-700 border border-violet-200">
-              For Candidates
-            </span>
-            <span className="text-xs text-stone-400 font-bold uppercase tracking-widest">
-              5 Modules + 1 Wildcard
-            </span>
-          </div>
-          <h2 className="text-3xl lg:text-4xl font-black text-stone-900 leading-tight">
-            Five modules built around the candidate journey.
-          </h2>
-        </div>
-
-        <div className="max-w-5xl mx-auto px-6 pb-14">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {MODULES.map((mod, i) => (
-              <ModuleCard
-                key={mod.num}
-                mod={mod}
-                expanded={expanded[i]}
-                onToggle={() => toggle(i)}
-              />
-            ))}
+          <div className="ml-auto flex items-center gap-3">
+            <button
+              onClick={onBuildOwn}
+              className="rounded-full border border-white/15 px-4 py-2 text-xs font-black text-white/70 transition-all hover:border-cyan-300/50 hover:text-white hover:bg-white/[0.05]"
+            >
+              Build my own profile
+            </button>
+            <button
+              onClick={() => onViewDemo(selectedProfile)}
+              className="rounded-full bg-white px-4 py-2 text-xs font-black text-slate-950 transition-all hover:-translate-y-0.5"
+            >
+              Open full OS demo
+            </button>
           </div>
         </div>
       </div>
 
-      {/* ── CTA + Live Demo ─────────────────────────────────────── */}
-      <div className="bg-[#0a0f1e] py-20 px-6">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="border border-white/10 rounded-2xl p-10 bg-white/[0.02]">
-            <div className="text-xs text-white/30 font-black uppercase tracking-widest mb-4">
-              🏆 Talentbank Tech Hackathon 2026 · Universities Track
+      <main className="max-w-7xl mx-auto px-6 py-10">
+        <section className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 items-end">
+          <div>
+            <div className="inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-black text-cyan-100 uppercase tracking-[0.18em]">
+              Candidate pages, not starter-kit cards
             </div>
-            <h3 className="text-3xl font-black text-white mb-4">See it on a real profile</h3>
-            <p className="text-white/40 mb-8">
-              Three real Malaysian professionals. Real MYR journeys. Real trade-offs.
+            <h1 className="text-4xl md:text-6xl font-black leading-[0.95] mt-5">
+              Show what the resume actually proves.
+            </h1>
+            <p className="text-white/55 text-lg leading-relaxed mt-5 max-w-2xl">
+              Pick a candidate. PathLens turns their resume into separate pages for profile summary, evidence, skills, trajectory, and marketplace fit.
             </p>
-
-            {!showPersonas ? (
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button
-                  onClick={() => setShowPersonas(true)}
-                  className="px-10 py-4 bg-gradient-to-r from-fuchsia-500 to-cyan-400 text-black font-black text-sm rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-fuchsia-500/25 active:scale-95"
-                >
-                  🎓 View Live Demo →
-                </button>
-                <button
-                  onClick={onBuildOwn}
-                  className="px-10 py-4 border border-white/20 hover:border-fuchsia-400/40 text-white font-bold text-sm rounded-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/5"
-                >
-                  Build My Own Profile →
-                </button>
-              </div>
-            ) : (
-              <div>
-                <p className="text-sm text-white/50 font-bold mb-5 uppercase tracking-wider">
-                  Choose a real career profile:
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
-                  {DEMO_PERSONAS.map(({ profile, emoji, role, company, salary }) => (
-                    <button
-                      key={profile.id}
-                      onClick={() => onViewDemo(profile)}
-                      className="bg-white/5 hover:bg-fuchsia-500/10 border border-white/10 hover:border-fuchsia-400/40 rounded-xl p-4 text-left transition-all duration-300 hover:-translate-y-1 group"
-                    >
-                      <div className="text-2xl mb-2">{emoji}</div>
-                      <div className="text-white font-black text-sm group-hover:text-fuchsia-400 transition-colors">
-                        {profile.name}
-                      </div>
-                      <div className="text-white/40 text-xs mt-1">{role} · {company}</div>
-                      <div className="text-emerald-400 text-xs font-bold mt-2">{salary}</div>
-                    </button>
-                  ))}
-                </div>
-                <div className="flex items-center justify-center gap-4">
-                  <button
-                    onClick={() => setShowPersonas(false)}
-                    className="text-xs text-white/30 hover:text-white/60 transition-colors"
-                  >
-                    ← Back
-                  </button>
-                  <button
-                    onClick={onBuildOwn}
-                    className="text-xs text-fuchsia-400 hover:text-fuchsia-300 font-bold transition-colors"
-                  >
-                    Or build your own profile →
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <p className="text-xs text-white/20 mt-6">No account needed · Free · Powered by Claude AI</p>
           </div>
-        </div>
-      </div>
+          <CandidateSelector selectedId={selectedProfile.id} onSelect={profile => {
+            setSelectedProfile(profile);
+            setPage('snapshot');
+          }} />
+        </section>
+
+        <section className="mt-8">
+          <PageTabs page={page} onChange={setPage} />
+        </section>
+
+        <section className="mt-6">
+          {page === 'snapshot' && (
+            <SnapshotPage
+              profile={selectedProfile}
+              skills={skills}
+              salarySignals={salarySignals}
+              impactSignals={impactSignals}
+            />
+          )}
+          {page === 'resume' && <ResumePage profile={selectedProfile} />}
+          {page === 'skills' && <SkillsPage profile={selectedProfile} skills={skills} />}
+          {page === 'trajectory' && <TrajectoryPage profile={selectedProfile} salarySignals={salarySignals} />}
+          {page === 'matches' && <MatchesPage profile={selectedProfile} skills={skills} />}
+        </section>
+      </main>
     </div>
   );
 }
