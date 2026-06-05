@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Design tokens - Professional enterprise platform for Asia tech careers */
 :root {
   /* Primary color: Deep Blue for trust & professional authority */
