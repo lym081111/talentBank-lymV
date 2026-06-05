@@ -512,9 +512,10 @@ export function EmployerPortal({ onBuildOwn, onBack }: Props) {
           <div className="ml-auto">
             <button
               onClick={onBuildOwn}
+              title="Add a new candidate resume/profile to test against the employer workspace"
               className="rounded-full border border-white/15 px-4 py-2 text-xs font-black text-white/70 transition-all hover:border-blue-300/50 hover:text-white hover:bg-white/[0.05]"
             >
-              Start scouting brief
+              Add candidate resume
             </button>
           </div>
         </div>
