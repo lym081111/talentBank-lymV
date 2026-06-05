@@ -7,23 +7,13 @@ interface Props {
   onBuildOwn: () => void;
 }
 
-// ── Design System Tokens (Fix #8 — unified across all sections) ──────────────
-// bg-[#0a0f1e]  = page base
-// bg-[#0d1117]  = section alt
-// bg-[#060b14]  = section dark
-// bg-[#080d18]  = section deeper
-// emerald-400/500 = primary accent
-// blue-400/500    = secondary accent
-// purple-400      = infra accent
-// border-white/10 = default card border
-// rounded-2xl     = card radius
-// font-black      = headlines
-// transition-all duration-300 hover:-translate-y-1 hover:shadow-xl = card hover (Fix #7)
+type ActiveMode = 'talent' | 'employer';
 
+// ── Personas ─────────────────────────────────────────────────────────────────
 const DEMO_PERSONAS = [
-  { profile: priyaSharmaProfile, emoji: '🚀', role: 'Senior SWE', company: 'Grab · KL / Singapore', salary: 'MYR 45,000/mo' },
-  { profile: kaiChenProfile,    emoji: '📊', role: 'Senior Data Eng', company: 'ByteDance · Singapore', salary: 'MYR 38,000/mo' },
-  { profile: aishaPatelProfile, emoji: '📈', role: 'Senior PM', company: 'Lazada · Malaysia', salary: 'MYR 28,000/mo' },
+  { profile: priyaSharmaProfile, emoji: '🚀', role: 'Senior SWE', company: 'Grab · KL', salary: 'MYR 45,000/mo' },
+  { profile: kaiChenProfile,     emoji: '📊', role: 'Senior Data Eng', company: 'ByteDance · SG', salary: 'MYR 38,000/mo' },
+  { profile: aishaPatelProfile,  emoji: '📈', role: 'Senior PM', company: 'Lazada · Malaysia', salary: 'MYR 28,000/mo' },
 ];
 
 const MILESTONES = [
@@ -33,33 +23,32 @@ const MILESTONES = [
   { year: 'Year 7', role: 'Staff Engineer', salary: 'MYR 22,000+/mo', skill: '+ Cross-team influence' },
 ];
 
-// Fix #3 — Enriched path data with clearer specialisation vs ownership framing
-const TRADEOFFS = {
+// ── Career Path data (Talent) ─────────────────────────────────────────────────
+const PATHS = {
   corporate: {
     badge: '🏢 Specialisation & Scale',
     label: 'Large Company Path',
     tagline: 'Go deep. Move predictably. Own a domain.',
     route: 'Junior SWE → Senior SWE → Tech Lead → Staff',
     timeline: '5–8 years',
-    color: 'blue',
-    why: 'Production Practices gap (36/100) closes 2× faster inside a large org with structured on-call rotations, code review culture, and mentorship programmes.',
+    why: "Production Practices gap (36/100) closes 2x faster inside a large org with structured on-call rotations, code review culture, and mentorship programmes.",
     evidence: '1,240 profiles on this path — 68% reached Senior SWE by year 5.',
     pros: [
-      { label: 'Technical depth', desc: 'Become a domain expert in one stack — highly valued by recruiters' },
-      { label: 'Predictable growth', desc: 'Clear levelling rubrics (L3→L4→L5) with transparent salary bands' },
-      { label: 'Team infrastructure', desc: 'Work with dedicated QA, DevOps, design — you ship without wearing every hat' },
-      { label: 'Brand on CV', desc: 'Grab/Shopee/DBS on your résumé opens doors for 10+ years' },
+      { label: 'Technical depth', desc: 'Domain expert in one stack — highly valued at MNCs and GLCs' },
+      { label: 'Predictable growth', desc: 'Clear L3→L4→L5 levelling with transparent MYR salary bands' },
+      { label: 'Team infrastructure', desc: 'Dedicated QA, DevOps, design — ship without wearing every hat' },
+      { label: 'Brand on CV', desc: 'Grab / Shopee / DBS on your resume opens doors for 10+ years' },
     ],
     cons: [
       { label: 'Stack lock-in', desc: 'Go/Java dominant — Python/TypeScript skills may stagnate' },
       { label: 'Slow yr 1–3 pay', desc: 'Graduate bands compressed vs startup; equity minimal' },
-      { label: 'Process overhead', desc: 'Sprints, approvals, and meetings before shipping anything meaningful' },
+      { label: 'Process overhead', desc: 'Sprints, approvals, meetings before shipping anything meaningful' },
     ],
     salaryRows: [
-      { yr: 'Yr 1', sal: 'MYR 60,000–84,000/yr', note: 'Intern → Junior', w: '30%' },
-      { yr: 'Yr 3', sal: 'MYR 108,000–156,000/yr', note: 'Mid SWE', w: '55%' },
-      { yr: 'Yr 5', sal: 'MYR 144,000–192,000/yr', note: 'Senior SWE', w: '75%' },
-      { yr: 'Yr 7', sal: 'MYR 180,000–250,000/yr', note: 'Tech Lead / Staff', w: '100%' },
+      { yr: 'Yr 1', sal: 'MYR 4,500–7,000/mo', note: 'Intern → Junior', w: '30%' },
+      { yr: 'Yr 3', sal: 'MYR 9,000–13,000/mo', note: 'Mid SWE', w: '55%' },
+      { yr: 'Yr 5', sal: 'MYR 12,000–16,000/mo', note: 'Senior SWE', w: '75%' },
+      { yr: 'Yr 7', sal: 'MYR 18,000–25,000/mo', note: 'Tech Lead / Staff', w: '100%' },
     ],
   },
   startup: {
@@ -68,65 +57,578 @@ const TRADEOFFS = {
     tagline: 'Own everything. Move fast. Build equity.',
     route: 'Full-Stack → Founding Eng → CTO Track',
     timeline: '3–5 years (high variance)',
-    color: 'emerald',
-    why: 'Communication score (80/100) is unusually high for this level. Startups reward cross-functional communication immediately — large orgs won\'t deploy it until year 5+.',
-    evidence: '847 profiles on this path — 40% equity event within 5 years, 35% company failure.',
+    why: "Communication score (80/100) is unusually high for this level. Startups reward cross-functional communication immediately — large orgs won't deploy it until year 5+.",
+    evidence: '847 profiles on this path — 40% equity event within 5 years, 35% company failure rate.',
     pros: [
-      { label: 'Full ownership', desc: 'You own the infra, the product, the roadmap — from day one' },
+      { label: 'Full ownership', desc: 'Own the infra, product, roadmap — from day one' },
       { label: 'Equity upside', desc: 'CTO/Founding Eng title + equity accessible in 3–4 years' },
-      { label: 'Skill breadth', desc: 'Ship across frontend, backend, data, infra — CV becomes generalist-strong' },
+      { label: 'Skill breadth', desc: 'Ship across frontend, backend, data, infra — generalist-strong CV' },
       { label: 'Fast feedback', desc: 'User feedback in hours, not sprint cycles' },
     ],
     cons: [
-      { label: 'No safety net', desc: 'No structured mentorship — you learn by breaking production things' },
+      { label: 'No safety net', desc: 'No structured mentorship — learn by breaking production things' },
       { label: 'Resume risk', desc: 'Thin evidence if startup fails at year 2–3 with nothing shipped' },
       { label: 'High burn rate', desc: 'Erratic hours, no dedicated QA or DevOps support' },
     ],
     salaryRows: [
-      { yr: 'Yr 1', sal: 'MYR 48,000–72,000/yr', note: 'Early employee', w: '25%' },
-      { yr: 'Yr 2', sal: 'MYR 84,000–120,000/yr', note: 'Founding Eng', w: '45%' },
-      { yr: 'Yr 4', sal: 'MYR 120,000–180,000/yr + equity', note: 'CTO Track', w: '70%' },
-      { yr: 'Yr 5', sal: 'MYR 200,000–400,000+ exit', note: 'Equity event (40%)', w: '100%' },
+      { yr: 'Yr 1', sal: 'MYR 3,500–6,000/mo', note: 'Early employee', w: '25%' },
+      { yr: 'Yr 2', sal: 'MYR 7,000–10,000/mo', note: 'Founding Eng', w: '45%' },
+      { yr: 'Yr 4', sal: 'MYR 10,000–15,000/mo + equity', note: 'CTO Track', w: '70%' },
+      { yr: 'Yr 5', sal: 'MYR 15,000–35,000+ exit', note: 'Equity event (40%)', w: '100%' },
     ],
   },
 };
 
-export function Landing({ onViewDemo, onBuildOwn }: Props) {
-  const [showPersonas, setShowPersonas] = useState(false);
-  const [activePath, setActivePath] = useState<'corporate' | 'startup'>('corporate');
-  const [scoutQuery, setScoutQuery] = useState(''); // Fix #2
-  const [showDemoModal, setShowDemoModal] = useState(false); // Fix #6
+// ── Shared card wrapper ───────────────────────────────────────────────────────
+function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`bg-white/5 border border-white/10 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-white/20 ${className}`}>
+      {children}
+    </div>
+  );
+}
 
-  // Refs for smooth scroll (Fix #1 & #6)
+function SectionLabel({ color, children }: { color: string; children: React.ReactNode }) {
+  return (
+    <span className={`text-xs font-black uppercase tracking-widest border px-3 py-1 rounded-full ${color}`}>
+      {children}
+    </span>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TALENT SECTIONS
+// ══════════════════════════════════════════════════════════════════════════════
+function TalentSections({ onViewDemo, onBuildOwn }: { onViewDemo: (p: StudentProfile) => void; onBuildOwn: () => void }) {
+  const [activePath, setActivePath] = useState<'corporate' | 'startup'>('corporate');
+  const [showPersonas, setShowPersonas] = useState(false);
+  const path = PATHS[activePath];
+
+  return (
+    <>
+      {/* ── T1: TRAJECTORY OVERVIEW ─────────────────────────────── */}
+      <section className="py-20 px-6 bg-[#0d1117]">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <SectionLabel color="text-emerald-400 border-emerald-400/30">For Candidates & Students</SectionLabel>
+            <h2 className="text-4xl lg:text-5xl font-black text-white mt-5 mb-4 leading-tight">
+              See your realistic MYR trajectory.
+              <span className="block text-emerald-400">Before you commit to the wrong path.</span>
+            </h2>
+            <p className="text-white/40 max-w-xl mx-auto text-lg text-center">
+              Explore honest salary progressions based on 10,000+ real Malaysian tech profiles — not LinkedIn posts.
+            </p>
+          </div>
+
+          {/* MYR Trajectory Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            {/* Junior path */}
+            <Card className="p-7">
+              <div className="text-xs font-black text-emerald-400 uppercase tracking-widest mb-3">Junior / Student Track</div>
+              <div className="flex items-end gap-3 mb-4">
+                <div>
+                  <div className="text-white/40 text-xs mb-1">Starting</div>
+                  <div className="text-2xl font-black text-white">MYR 4,500<span className="text-white/30 text-sm font-bold">/mo</span></div>
+                </div>
+                <div className="text-emerald-400 font-black text-2xl mb-1">──›</div>
+                <div>
+                  <div className="text-emerald-400 text-xs mb-1">Year 2 target</div>
+                  <div className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">MYR 7,200<span className="text-emerald-400/50 text-sm font-bold">/mo</span></div>
+                </div>
+                <div className="ml-auto text-right">
+                  <div className="text-emerald-400 font-black text-sm">+60%</div>
+                  <div className="text-white/30 text-xs">growth</div>
+                </div>
+              </div>
+              <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                <div className="h-full w-[60%] bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full" />
+              </div>
+              <p className="text-white/30 text-xs mt-3">Intern → Junior SWE · KL tech market · verified offer data</p>
+            </Card>
+
+            {/* Mid-senior path */}
+            <Card className="p-7">
+              <div className="text-xs font-black text-blue-400 uppercase tracking-widest mb-3">Mid–Senior Enterprise Track</div>
+              <div className="flex items-end gap-3 mb-4">
+                <div>
+                  <div className="text-white/40 text-xs mb-1">Mid level</div>
+                  <div className="text-2xl font-black text-white">MYR 8,500<span className="text-white/30 text-sm font-bold">/mo</span></div>
+                </div>
+                <div className="text-blue-400 font-black text-2xl mb-1">──›</div>
+                <div>
+                  <div className="text-blue-400 text-xs mb-1">Senior / Staff</div>
+                  <div className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400">MYR 15,000<span className="text-blue-400/50 text-sm font-bold">/mo</span></div>
+                </div>
+                <div className="ml-auto text-right">
+                  <div className="text-blue-400 font-black text-sm">+76%</div>
+                  <div className="text-white/30 text-xs">uplift</div>
+                </div>
+              </div>
+              <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                <div className="h-full w-[76%] bg-gradient-to-r from-blue-500 to-fuchsia-400 rounded-full" />
+              </div>
+              <p className="text-white/30 text-xs mt-3">Mid SWE → Senior SWE · MNC/GLC track · Petaling Jaya / KL Sentral</p>
+            </Card>
+          </div>
+
+          {/* Path stability callout */}
+          <Card className="p-6">
+            <div className="flex flex-col md:flex-row gap-6 items-start">
+              <div className="flex-1">
+                <div className="text-xs font-black text-white/40 uppercase tracking-widest mb-2">Stability vs Agility</div>
+                <p className="text-white/70 text-sm leading-relaxed">
+                  Explore realistic Malaysian tech trajectories. Compare the stability of a{' '}
+                  <strong className="text-blue-400">Large Tech Enterprise in KL</strong>{' '}
+                  (high MYR base, low stack agility, clear levelling) versus a{' '}
+                  <strong className="text-emerald-400">High-Growth Startup</strong>{' '}
+                  (equity upside, broad ownership, higher market risk). Neither path is universally better — it depends on your risk tolerance and current skill gaps.
+                </p>
+              </div>
+              <div className="flex gap-2 flex-shrink-0">
+                <div className="text-center px-4 py-3 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+                  <div className="text-blue-400 font-black text-lg">MYR 18k</div>
+                  <div className="text-white/30 text-xs">Large Corp ceiling</div>
+                </div>
+                <div className="text-center px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                  <div className="text-emerald-400 font-black text-lg">MYR 35k+</div>
+                  <div className="text-white/30 text-xs">Startup exit upside</div>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </section>
+
+      {/* ── T2: TRADE-OFF NAVIGATOR ───────────────────────────────── */}
+      <section className="py-20 px-6 bg-[#0a0f1e]">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-10">
+            <SectionLabel color="text-fuchsia-400 border-fuchsia-400/30">Trade-off Navigator</SectionLabel>
+            <h2 className="text-3xl lg:text-4xl font-black text-white mt-5 mb-3 leading-tight">
+              Your next move isn't obvious.
+              <span className="block text-fuchsia-400">Neither should our advice be.</span>
+            </h2>
+            <p className="text-white/40 max-w-lg mx-auto text-center">
+              Every path has real trade-offs. We name them honestly — so you choose with eyes open.
+            </p>
+          </div>
+
+          {/* Toggle */}
+          <div className="flex justify-center gap-2 mb-8">
+            {(['corporate', 'startup'] as const).map((p) => (
+              <button key={p} onClick={() => setActivePath(p)}
+                className={`px-6 py-3 rounded-xl text-sm font-black transition-all duration-300 ${
+                  activePath === p
+                    ? 'bg-gradient-to-r from-fuchsia-500 to-cyan-400 text-black shadow-lg shadow-fuchsia-500/25 scale-105'
+                    : 'border border-white/20 text-white/50 hover:border-white/40 hover:text-white hover:-translate-y-0.5'
+                }`}>
+                {p === 'corporate' ? '🏢 Large Company Path' : '🚀 Startup Path'}
+              </button>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left: Path detail */}
+            <Card className="p-7">
+              <span className={`text-xs font-black px-3 py-1 rounded-full border mb-3 inline-block ${
+                activePath === 'corporate'
+                  ? 'bg-blue-400/10 text-blue-400 border-blue-400/30'
+                  : 'bg-emerald-400/10 text-emerald-400 border-emerald-400/30'
+              }`}>{path.badge}</span>
+              <div className="text-white font-black text-xl mb-1">{path.route}</div>
+              <div className="text-white/30 text-sm mb-1">⏱ {path.timeline}</div>
+              <div className="text-white/50 text-sm italic mb-5">"{path.tagline}"</div>
+
+              <div className="bg-emerald-400/8 border border-emerald-400/20 rounded-xl p-4 mb-5">
+                <p className="text-xs text-emerald-400 font-black uppercase mb-2">Why it fits your profile</p>
+                <p className="text-sm text-white/80 leading-relaxed">{path.why}</p>
+                <p className="text-xs text-white/30 mt-2 italic">— {path.evidence}</p>
+              </div>
+
+              <div className="mb-3">
+                <p className="text-xs text-emerald-400 font-black uppercase tracking-wider mb-2">✓ Advantages</p>
+                {path.pros.map((item) => (
+                  <div key={item.label} className="flex gap-3 py-1.5 border-b border-white/5">
+                    <span className="text-emerald-400 font-black text-sm flex-shrink-0">✓</span>
+                    <div>
+                      <span className="text-white/80 text-sm font-bold">{item.label}</span>
+                      <span className="text-white/30 text-xs block">{item.desc}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div>
+                <p className="text-xs text-rose-400/80 font-black uppercase tracking-wider mb-2">✗ Trade-offs</p>
+                {path.cons.map((item) => (
+                  <div key={item.label} className="flex gap-3 py-1.5 border-b border-white/5">
+                    <span className="text-rose-400 font-black text-sm flex-shrink-0">✗</span>
+                    <div>
+                      <span className="text-white/60 text-sm font-bold">{item.label}</span>
+                      <span className="text-white/30 text-xs block">{item.desc}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            {/* Right: Salary bars */}
+            <Card className="p-7 flex flex-col justify-between">
+              <div>
+                <p className="text-xs text-white/30 font-black uppercase tracking-wider mb-5">MYR Salary Progression · {activePath === 'corporate' ? 'Large Corp' : 'Startup'}</p>
+                {path.salaryRows.map((row) => (
+                  <div key={row.yr} className="mb-4">
+                    <div className="flex justify-between text-xs text-white/50 mb-1">
+                      <span className="font-bold">{row.yr} · <span className="text-white/30">{row.note}</span></span>
+                      <span className="font-black text-white">{row.sal}</span>
+                    </div>
+                    <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 rounded-full transition-all duration-700" style={{ width: row.w }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <button onClick={() => setShowPersonas(true)}
+                className="mt-5 w-full py-3 bg-fuchsia-500/10 hover:bg-fuchsia-500/20 border border-fuchsia-400/20 hover:border-fuchsia-400/40 text-fuchsia-400 font-black text-sm rounded-xl transition-all duration-300 hover:-translate-y-0.5">
+                See a real person who took this path →
+              </button>
+            </Card>
+          </div>
+
+          {/* Persona picker (if triggered) */}
+          {showPersonas && (
+            <div className="mt-6 bg-white/5 border border-white/10 rounded-2xl p-6">
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-sm font-black text-white/60 uppercase tracking-wider">Real Malaysian tech professionals:</p>
+                <button onClick={() => setShowPersonas(false)} className="text-white/30 hover:text-white/60 text-xl">×</button>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {DEMO_PERSONAS.map(({ profile, emoji, role, company, salary }) => (
+                  <button key={profile.id} onClick={() => onViewDemo(profile)}
+                    className="bg-white/5 hover:bg-fuchsia-500/10 border border-white/10 hover:border-fuchsia-400/40 rounded-xl p-4 text-left transition-all duration-300 hover:-translate-y-1 group">
+                    <div className="text-2xl mb-2">{emoji}</div>
+                    <div className="text-white font-black text-sm group-hover:text-fuchsia-400 transition-colors">{profile.name}</div>
+                    <div className="text-white/40 text-xs mt-1">{role} · {company}</div>
+                    <div className="text-emerald-400 text-xs font-bold mt-2">{salary}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ── T3: CAREER OS INFRASTRUCTURE ─────────────────────────── */}
+      <section className="py-20 px-6 bg-[#080d18]">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col items-center text-center mx-auto max-w-2xl mb-14">
+            <SectionLabel color="text-purple-400 border-purple-400/30">For Candidates · OS Infrastructure</SectionLabel>
+            <h2 className="text-4xl font-black text-white mt-5 mb-4 leading-tight">
+              Not a job board. Not an ATS.
+              <span className="block text-white/30">The connective tissue between them.</span>
+            </h2>
+            <p className="text-white/40 text-lg leading-relaxed text-center">
+              Career OS is the layer existing tools were never designed to be: continuous, bilateral, intelligent across a 40-year horizon.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {[
+              { icon: '⚡', sub: 'Living Portfolio Sync', title: 'Auto-Updating Career Evidence', body: 'GitHub commits, deployments, and certifications auto-logged. No manual updating.', badges: ['GitHub', 'Vercel', 'Coursera', 'AWS Certs'] },
+              { icon: '📅', sub: 'Calendar Intelligence', title: 'Career Moments, Not Job Alerts', body: 'Knows when your skills are becoming market-rare or when a pivot costs 3 years vs. 6 months.', badges: ['Google Calendar', 'Outlook', 'Workday'] },
+              { icon: '🔒', sub: 'Privacy Architecture', title: 'Stealth Mode — Looking While Employed', body: '84% of professionals explore opportunities silently. Your current employer is auto-blocked. Always.', badges: ['Zero data leaks', 'Per-company toggle', 'Instant delete'] },
+              { icon: '🎓', sub: 'University Outcome Loop', title: 'Real Graduate ROI — Not Survey Data', body: 'Cohort outcomes at 1, 3, and 10 years post-graduation. Actual trajectories — not LinkedIn titles.', badges: ['100+ institutions · Malaysia'] },
+            ].map((card) => (
+              <Card key={card.title} className="p-7 hover:border-purple-400/30">
+                <div className="text-3xl mb-3">{card.icon}</div>
+                <div className="text-xs text-purple-400 font-black uppercase tracking-widest mb-2">{card.sub}</div>
+                <h3 className="text-white font-black text-lg mb-2">{card.title}</h3>
+                <p className="text-white/40 text-sm leading-relaxed mb-4">{card.body}</p>
+                <div className="flex flex-wrap gap-2">
+                  {card.badges.map((b) => (
+                    <span key={b} className="text-xs px-2 py-1 bg-white/10 text-white/40 rounded-md font-semibold">{b}</span>
+                  ))}
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── T4: TALENT CTA ────────────────────────────────────────── */}
+      <section className="py-20 px-6 bg-[#0a0f1e]">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="border border-white/10 rounded-2xl p-10 bg-white/[0.02]">
+            <div className="text-xs text-white/30 font-black uppercase tracking-widest mb-4">
+              🏆 Talentbank Tech Hackathon 2026 · Universities Track
+            </div>
+            <h3 className="text-3xl font-black text-white mb-4">See it on a real profile</h3>
+            <p className="text-white/40 mb-8 text-center">Three real Malaysian professionals. Real MYR journeys. Real trade-offs.</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button onClick={() => setShowPersonas(true)}
+                className="px-10 py-4 bg-gradient-to-r from-fuchsia-500 to-cyan-400 text-black font-black text-sm rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-fuchsia-500/25 active:scale-95">
+                🎓 View Live Demo →
+              </button>
+              <button onClick={onBuildOwn}
+                className="px-10 py-4 border border-white/20 hover:border-fuchsia-400/40 text-white font-bold text-sm rounded-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/5">
+                Build My Own Profile →
+              </button>
+            </div>
+            <p className="text-xs text-white/20 mt-5">No account needed · Free · Powered by Claude AI</p>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// EMPLOYER SECTIONS
+// ══════════════════════════════════════════════════════════════════════════════
+function EmployerSections({ onBuildOwn }: { onBuildOwn: () => void }) {
+  const [scoutQuery, setScoutQuery] = useState('');
+
+  return (
+    <>
+      {/* ── E1: PAIN POINT + HERO ─────────────────────────────────── */}
+      <section className="py-20 px-6 bg-[#060b14]">
+        <div className="max-w-6xl mx-auto">
+
+          {/* Pain point banner */}
+          <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-5 mb-14 max-w-3xl mx-auto text-center">
+            <p className="text-rose-400 font-black text-xs uppercase tracking-widest mb-2">The Real Cost of Bad Hiring · Malaysia 2025</p>
+            <p className="text-white text-xl font-bold leading-relaxed">
+              "Your ATS was built to filter.
+              <span className="text-white/40"> Filtering optimises for CVs that game the ATS. This is how you end up interviewing candidates who can't actually code."</span>
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
+            <div>
+              <SectionLabel color="text-blue-400 border-blue-400/30">For Employers & HR Teams</SectionLabel>
+              <h2 className="text-4xl lg:text-5xl font-black text-white mt-5 mb-5 leading-tight">
+                Stop filtering noise.
+                <span className="block text-blue-400">Start spotting signal.</span>
+              </h2>
+              <p className="text-white/40 text-lg leading-relaxed mb-8">
+                Spot the top 15% of Malaysian tech talents passively — before they enter chaotic job boards. Stop paying for bloated database access.
+              </p>
+
+              {/* ROI Cards */}
+              <div className="grid grid-cols-2 gap-3 mb-8">
+                {[
+                  { label: 'Cost-per-hire', before: 'MYR 12,000', after: 'MYR 3,500', delta: '−71%', color: 'rose' },
+                  { label: 'Time-to-hire',  before: '45 days',    after: '11 days',    delta: '−76%', color: 'emerald' },
+                  { label: 'Signal ratio',  before: '1 in 847',   after: '1 in 12',    delta: '+12×',  color: 'blue' },
+                  { label: 'AI spam rate',  before: '62% of CVs', after: '0%',         delta: '−100%', color: 'fuchsia' },
+                ].map((r) => (
+                  <div key={r.label} className={`bg-white/5 border border-white/10 rounded-xl p-4 transition-all duration-300 hover:-translate-y-1 hover:border-${r.color}-400/30`}>
+                    <div className="text-white/30 text-xs font-bold mb-2">{r.label}</div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-white/30 text-xs line-through">{r.before}</span>
+                      <span className="text-white/20">→</span>
+                      <span className={`text-${r.color}-400 font-black text-sm`}>{r.after}</span>
+                    </div>
+                    <div className={`text-${r.color}-400 font-black text-lg`}>{r.delta}</div>
+                  </div>
+                ))}
+              </div>
+
+              <button onClick={onBuildOwn}
+                className="px-8 py-4 bg-blue-500 hover:bg-blue-400 text-white font-black text-sm rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/25">
+                Start Silent Scouting →
+              </button>
+            </div>
+
+            {/* Silent Scout demo */}
+            <Card className="p-6 hover:border-blue-400/30">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs text-blue-400 font-black uppercase tracking-widest">Silent Scouting · Live View</span>
+                <span className="text-xs bg-emerald-400/20 text-emerald-400 px-3 py-1 rounded-full font-bold border border-emerald-400/20">● Trajectory Match</span>
+              </div>
+
+              {/* Search input */}
+              <div className="relative mb-4">
+                <input
+                  type="text"
+                  value={scoutQuery}
+                  onChange={(e) => setScoutQuery(e.target.value)}
+                  placeholder="Search hidden tech talents in Malaysia..."
+                  className="w-full bg-white/5 border border-white/15 focus:border-blue-400/50 focus:outline-none text-white placeholder-white/25 text-sm rounded-xl px-4 py-3 pr-10 transition-all duration-300"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 text-sm">
+                  {scoutQuery ? <span className="text-blue-400 cursor-pointer" onClick={() => setScoutQuery('')}>✕</span> : '🔍'}
+                </span>
+              </div>
+
+              {/* Candidate preview card */}
+              <div className="bg-[#0a0f1e] rounded-xl p-5">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-emerald-400 flex items-center justify-center text-black font-black text-sm flex-shrink-0">
+                    {scoutQuery ? scoutQuery[0]?.toUpperCase() : 'P'}
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-white font-black text-sm">{scoutQuery || 'Priya S.'} · Kuala Lumpur</div>
+                    <div className="text-white/30 text-xs">UTM Computer Science · Year 4</div>
+                  </div>
+                  <div className="text-xs bg-white/5 text-white/30 border border-white/10 px-2 py-1 rounded">Not job-hunting yet</div>
+                </div>
+                {[
+                  { skill: 'System Design',    score: 82, delta: '+18 pts · 90d', color: 'bg-emerald-400' },
+                  { skill: 'Production CI/CD', score: 74, delta: '+31 pts · 90d', color: 'bg-emerald-400' },
+                  { skill: 'Distributed Sys',  score: 68, delta: '+22 pts · 90d', color: 'bg-blue-400' },
+                ].map((s) => (
+                  <div key={s.skill} className="mb-3">
+                    <div className="flex justify-between text-xs text-white/40 mb-1">
+                      <span>{s.skill}</span>
+                      <span className="text-emerald-400 font-bold">{s.delta}</span>
+                    </div>
+                    <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                      <div className={`h-full ${s.color} rounded-full`} style={{ width: `${s.score}%` }} />
+                    </div>
+                  </div>
+                ))}
+                <p className="text-xs text-white/20 italic mt-3">
+                  {scoutQuery ? `Scanning verified trajectories for "${scoutQuery}"...` : "Candidate hasn't applied. You're seeing their verified trajectory — not their pitch."}
+                </p>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* ── E2: HOW IT WORKS ─────────────────────────────────────── */}
+      <section className="py-20 px-6 bg-[#0d1117]">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <SectionLabel color="text-blue-400 border-blue-400/30">Zero-Noise Scout · How It Works</SectionLabel>
+            <h2 className="text-3xl font-black text-white mt-5 mb-3">Three steps. No cold outreach. No noise.</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[
+              { step: '01', title: 'Set a growth profile', sub: 'Not a job description', body: 'Define the skills trajectory you need — not keywords to keyword-match against.' },
+              { step: '02', title: 'We surface silently', sub: 'Zero spam in your inbox', body: 'Only aligned trajectories appear. Unqualified hundreds never reach your team.' },
+              { step: '03', title: 'Reach out first', sub: "Before they're Open to Work", body: "We flag alignment before they update LinkedIn — you're first, not 847th." },
+            ].map((item) => (
+              <Card key={item.step} className="p-7 hover:border-blue-400/30">
+                <div className="text-5xl font-black text-blue-400/20 mb-4">{item.step}</div>
+                <div className="font-black text-white text-lg mb-1">{item.title}</div>
+                <div className="text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">{item.sub}</div>
+                <p className="text-white/40 text-sm leading-relaxed">{item.body}</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── E3: ATS INTEGRATION + ROI ───────────────────────────── */}
+      <section className="py-20 px-6 bg-[#080d18]">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+
+            {/* ATS bridge */}
+            <div>
+              <SectionLabel color="text-purple-400 border-purple-400/30">Enterprise Integration</SectionLabel>
+              <h2 className="text-3xl font-black text-white mt-5 mb-4">Plays well with what you already use.</h2>
+              <p className="text-white/40 leading-relaxed mb-6">
+                Career OS feeds your existing ATS richer signal. Pre-qualified candidates arrive at Greenhouse or Workday with verified evidence scores — not just a PDF.
+                Time-to-hire drops from <strong className="text-white/70">45 days</strong> to <strong className="text-emerald-400">11 days</strong>.
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                {['Greenhouse', 'Lever', 'Workday', 'SAP SuccessFactors', 'Oracle HCM', 'BambooHR'].map((ats) => (
+                  <div key={ats} className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm font-bold text-white/50 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0" />
+                    {ats}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ROI calculator */}
+            <Card className="p-7 hover:border-emerald-400/30">
+              <div className="text-xs font-black text-emerald-400 uppercase tracking-widest mb-5">MYR ROI Calculator · Malaysia Market</div>
+              <div className="space-y-4">
+                {[
+                  { metric: 'Cost-per-hire (before)', val: 'MYR 12,000', sub: 'Traditional job board + ATS fees', color: 'text-rose-400' },
+                  { metric: 'Cost-per-hire (with Career OS)', val: 'MYR 3,500', sub: 'Automated pipeline spotting', color: 'text-emerald-400' },
+                  { metric: 'Savings per hire', val: 'MYR 8,500', sub: '71% reduction', color: 'text-cyan-400' },
+                  { metric: 'For 10 hires/year', val: 'MYR 85,000 saved', sub: 'Reallocated to engineering tools or salaries', color: 'text-fuchsia-400' },
+                ].map((row) => (
+                  <div key={row.metric} className="flex items-start justify-between py-3 border-b border-white/5">
+                    <div>
+                      <div className="text-white/60 text-sm font-bold">{row.metric}</div>
+                      <div className="text-white/30 text-xs">{row.sub}</div>
+                    </div>
+                    <div className={`font-black text-lg ${row.color}`}>{row.val}</div>
+                  </div>
+                ))}
+              </div>
+              <button onClick={onBuildOwn}
+                className="mt-5 w-full py-3 bg-gradient-to-r from-emerald-500/15 to-cyan-500/15 border border-emerald-400/25 hover:border-emerald-400/50 text-emerald-400 font-black text-sm rounded-xl transition-all duration-300 hover:-translate-y-0.5">
+                Request Enterprise Access →
+              </button>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* ── E4: EMPLOYER CTA ─────────────────────────────────────── */}
+      <section className="py-20 px-6 bg-[#0a0f1e]">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="border border-blue-500/20 rounded-2xl p-10 bg-blue-500/5">
+            <div className="text-xs text-white/30 font-black uppercase tracking-widest mb-4">
+              🏆 Talentbank Tech Hackathon 2026 · Employer Track
+            </div>
+            <h3 className="text-3xl font-black text-white mb-4">Ready to spot signal, not sort noise?</h3>
+            <p className="text-white/40 mb-8 text-center">
+              Join 10,000+ Malaysian employers already reducing cost-per-hire with trajectory-based scouting.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button onClick={onBuildOwn}
+                className="px-10 py-4 bg-blue-500 hover:bg-blue-400 text-white font-black text-sm rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/25">
+                🏢 Start Silent Scouting →
+              </button>
+              <button
+                className="px-10 py-4 border border-white/20 hover:border-blue-400/40 text-white font-bold text-sm rounded-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/5">
+                See Case Studies →
+              </button>
+            </div>
+            <p className="text-xs text-white/20 mt-5">10,000+ employers · PDPA compliant · Malaysia data residency</p>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MAIN LANDING — THE GREAT TOGGLE
+// ══════════════════════════════════════════════════════════════════════════════
+export function Landing({ onViewDemo, onBuildOwn }: Props) {
+  const [activeMode, setActiveMode] = useState<ActiveMode>('talent');
+  const [showPersonas, setShowPersonas] = useState(false);
   const section2Ref = useRef<HTMLElement>(null);
-  const scoutRef = useRef<HTMLElement>(null);
-  const scoutInputRef = useRef<HTMLInputElement>(null);
+  const toggleRef = useRef<HTMLDivElement>(null);
 
   const scrollToNext = () => section2Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  const scrollToScout = () => {
-    scoutRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    setTimeout(() => scoutInputRef.current?.focus(), 600);
-  };
 
-  const path = TRADEOFFS[activePath];
-
-  // Close modal on Escape
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setShowDemoModal(false); };
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setShowPersonas(false); };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, []);
 
+  const switchMode = (mode: ActiveMode) => {
+    setActiveMode(mode);
+    setTimeout(() => toggleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  };
+
   return (
     <div className="bg-[#0a0f1e] min-h-screen text-white overflow-x-hidden">
 
-      {/* ── SECTION 1: HERO ──────────────────────────────────────────── */}
+      {/* ── HERO ─────────────────────────────────────────────────── */}
       <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-
         {/* Grid bg */}
         <div className="absolute inset-0 opacity-[0.04]"
           style={{ backgroundImage: 'linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px)', backgroundSize: '60px 60px' }} />
-        {/* Orbs */}
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -138,33 +640,26 @@ export function Landing({ onViewDemo, onBuildOwn }: Props) {
               <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
               Career OS · Universities Module 03 · Malaysia &amp; Asia Pacific
             </span>
-
             <h1 className="text-5xl lg:text-6xl font-black leading-[1.05] tracking-tight mb-6">
               Most platforms
               <span className="block text-emerald-400">find you a job.</span>
               <span className="text-white/40">We navigate</span>
               <span className="block">your career.</span>
             </h1>
-
             <p className="text-lg text-white/50 leading-relaxed mb-10 max-w-lg">
               A living intelligence layer that maps <strong className="text-white/80">realistic trajectories</strong>,
-              explains every trade-off in plain language, and connects
-              the right people — before anyone sends a résumé.
+              explains every trade-off in plain language, and connects the right people — before anyone sends a résumé.
             </p>
 
-            {/* Dual CTA — Fix #7: hover lift on all buttons */}
+            {/* CTA pair */}
             {!showPersonas ? (
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <button
-                  onClick={() => setShowPersonas(true)}
-                  className="px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/25 active:scale-95"
-                >
+                <button onClick={() => { setActiveMode('talent'); setShowPersonas(true); }}
+                  className="px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/25 active:scale-95">
                   🎓 Map My Career Path →
                 </button>
-                <button
-                  onClick={scrollToScout}
-                  className="px-8 py-4 border border-white/20 hover:border-blue-400/50 text-white font-bold text-sm rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/10 hover:bg-white/5"
-                >
+                <button onClick={() => switchMode('employer')}
+                  className="px-8 py-4 border border-white/20 hover:border-blue-400/50 text-white font-bold text-sm rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/10 hover:bg-white/5">
                   🏢 Scout Without the Noise →
                 </button>
               </div>
@@ -173,15 +668,11 @@ export function Landing({ onViewDemo, onBuildOwn }: Props) {
                 <p className="text-sm text-white/50 font-bold mb-4 uppercase tracking-wider">Choose a real career profile:</p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                   {DEMO_PERSONAS.map(({ profile, emoji, role, company, salary }) => (
-                    <button
-                      key={profile.id}
-                      onClick={() => onViewDemo(profile)}
-                      className="bg-white/5 hover:bg-emerald-500/10 border border-white/10 hover:border-emerald-400/40 rounded-xl p-4 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group"
-                    >
+                    <button key={profile.id} onClick={() => onViewDemo(profile)}
+                      className="bg-white/5 hover:bg-emerald-500/10 border border-white/10 hover:border-emerald-400/40 rounded-xl p-4 text-left transition-all duration-300 hover:-translate-y-1 group">
                       <div className="text-2xl mb-2">{emoji}</div>
                       <div className="text-white font-black text-sm group-hover:text-emerald-400 transition-colors">{profile.name}</div>
-                      <div className="text-white/40 text-xs mt-1">{role}</div>
-                      <div className="text-white/30 text-xs">{company}</div>
+                      <div className="text-white/40 text-xs mt-1">{role} · {company}</div>
                       <div className="text-emerald-400 text-xs font-bold mt-2">{salary}</div>
                     </button>
                   ))}
@@ -192,14 +683,13 @@ export function Landing({ onViewDemo, onBuildOwn }: Props) {
                 </div>
               </div>
             )}
-
             <p className="text-xs text-white/20 font-semibold tracking-wide">
-              No black-box scores · No AI hallucinations · Every recommendation cites its source
+              No black-box scores · Every recommendation cites its source · PDPA compliant
             </p>
           </div>
 
-          {/* Right: Journey card — Fix #7: hover lift */}
-          <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-500/5 hover:border-emerald-400/20">
+          {/* Right: Journey card */}
+          <Card className="p-6">
             <div className="flex items-center justify-between mb-6">
               <p className="text-xs text-emerald-400 font-black uppercase tracking-widest">Realistic SWE Trajectory · Malaysia</p>
               <span className="text-xs bg-emerald-400/10 text-emerald-400 border border-emerald-400/20 px-2 py-1 rounded-full font-bold">Live data</span>
@@ -218,18 +708,15 @@ export function Landing({ onViewDemo, onBuildOwn }: Props) {
                 ))}
               </div>
             </div>
-            <p className="mt-6 text-xs text-white/20 italic border-t border-white/10 pt-4">
-              Based on 10,000+ verified progressions in Malaysia &amp; SEA. Your path will differ — we show you exactly how and why.
+            <p className="mt-5 text-xs text-white/20 italic border-t border-white/10 pt-4">
+              Based on 10,000+ verified progressions in Malaysia &amp; SEA.
             </p>
-          </div>
+          </Card>
         </div>
 
-        {/* Fix #1 — Scroll indicator */}
-        <button
-          onClick={scrollToNext}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30 hover:text-emerald-400 transition-colors duration-300 group z-10"
-          aria-label="Scroll to next section"
-        >
+        {/* Scroll indicator */}
+        <button onClick={scrollToNext}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30 hover:text-emerald-400 transition-colors duration-300 group z-10">
           <span className="text-xs font-bold uppercase tracking-widest">Explore</span>
           <div className="w-6 h-10 border-2 border-white/20 group-hover:border-emerald-400/50 rounded-full flex items-start justify-center pt-1.5 transition-colors duration-300">
             <div className="w-1 h-2 bg-white/40 group-hover:bg-emerald-400 rounded-full animate-bounce transition-colors duration-300" />
@@ -238,7 +725,7 @@ export function Landing({ onViewDemo, onBuildOwn }: Props) {
       </section>
 
       {/* Stats strip */}
-      <div className="border-y border-white/10 bg-white/[0.02] py-6">
+      <div className="border-y border-white/10 bg-white/[0.02] py-5">
         <div className="max-w-4xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {[
             { num: '10,000+', label: 'verified career profiles' },
@@ -254,450 +741,74 @@ export function Landing({ onViewDemo, onBuildOwn }: Props) {
         </div>
       </div>
 
-      {/* ── SECTION 2: CANDIDATE — TRADE-OFF NAVIGATOR ───────────────── */}
-      <section ref={section2Ref} className="py-24 px-6 bg-[#0d1117]">
-        <div className="max-w-6xl mx-auto">
-
-          <div className="text-center mb-14">
-            <span className="text-xs text-emerald-400 font-black uppercase tracking-widest border border-emerald-400/30 px-3 py-1 rounded-full">For Candidates</span>
-            <h2 className="text-4xl lg:text-5xl font-black text-white mt-6 mb-4 leading-tight">
-              Your next move isn't obvious.
-              <span className="block text-emerald-400">Neither should our advice be.</span>
-            </h2>
-            <p className="text-white/40 max-w-xl mx-auto text-lg text-center">
-              Every path has real trade-offs. We name them honestly — so you can choose with eyes open.
-            </p>
+      {/* ── THE GREAT TOGGLE ─────────────────────────────────────── */}
+      <div ref={toggleRef as React.RefObject<HTMLDivElement>} className="sticky top-0 z-50 bg-[#0a0f1e]/90 backdrop-blur-xl border-b border-white/8 py-4">
+        <div className="max-w-md mx-auto px-4">
+          {/* Label above */}
+          <p className="text-center text-xs font-black text-white/25 uppercase tracking-widest mb-3">
+            I am a...
+          </p>
+          {/* Capsule toggle */}
+          <div className="relative flex bg-slate-900/80 border border-slate-800 rounded-full p-1 backdrop-blur-md">
+            {/* Sliding pill */}
+            <div
+              className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-gradient-to-r from-fuchsia-500 to-cyan-400 rounded-full transition-all duration-300 ease-in-out shadow-lg shadow-fuchsia-500/20 ${
+                activeMode === 'talent' ? 'left-1' : 'left-[calc(50%+3px)]'
+              }`}
+            />
+            {/* Talent button */}
+            <button
+              onClick={() => switchMode('talent')}
+              className={`relative z-10 flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-black rounded-full transition-all duration-300 ${
+                activeMode === 'talent' ? 'text-black' : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <span>🧑‍💻</span>
+              <span className="hidden sm:inline">For Talent</span>
+              <span className="sm:hidden">Talent</span>
+            </button>
+            {/* Employer button */}
+            <button
+              onClick={() => switchMode('employer')}
+              className={`relative z-10 flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-black rounded-full transition-all duration-300 ${
+                activeMode === 'employer' ? 'text-black' : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <span>🏢</span>
+              <span className="hidden sm:inline">For Enterprise</span>
+              <span className="sm:hidden">Enterprise</span>
+            </button>
           </div>
-
-          {/* Fix #3 — Side-by-side path comparison toggle */}
-          <div className="flex justify-center gap-3 mb-10">
-            {(['corporate', 'startup'] as const).map((p) => (
-              <button
-                key={p}
-                onClick={() => setActivePath(p)}
-                className={`px-6 py-3 rounded-xl text-sm font-black transition-all duration-300 ${
-                  activePath === p
-                    ? 'bg-emerald-500 text-black scale-105 shadow-lg shadow-emerald-500/25'
-                    : 'border border-white/20 text-white/50 hover:border-white/40 hover:text-white hover:-translate-y-0.5'
-                }`}
-              >
-                {p === 'corporate' ? '🏢 Large Company Path' : '🚀 Startup Path'}
-              </button>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-            {/* Left: Path detail card */}
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-emerald-400/20">
-
-              {/* Badge + headline */}
-              <div className="flex items-center gap-3 mb-2">
-                <span className={`text-xs font-black px-3 py-1 rounded-full border ${
-                  activePath === 'corporate'
-                    ? 'bg-blue-400/10 text-blue-400 border-blue-400/30'
-                    : 'bg-emerald-400/10 text-emerald-400 border-emerald-400/30'
-                }`}>
-                  {path.badge}
-                </span>
-              </div>
-              <div className="text-white font-black text-2xl mb-1">{path.route}</div>
-              <div className="text-white/30 text-sm mb-1">⏱ {path.timeline}</div>
-              <div className="text-white/50 text-sm italic mb-6">"{path.tagline}"</div>
-
-              {/* Explainable AI reasoning */}
-              <div className="bg-emerald-400/10 border border-emerald-400/20 rounded-xl p-4 mb-6">
-                <p className="text-xs text-emerald-400 font-black uppercase mb-2">Why it fits your profile</p>
-                <p className="text-sm text-white/80 leading-relaxed">{path.why}</p>
-                <p className="text-xs text-white/30 mt-3 italic">— {path.evidence}</p>
-              </div>
-
-              {/* Fix #3 — Pros with descriptors */}
-              <div className="space-y-1 mb-4">
-                <p className="text-xs text-emerald-400 font-black uppercase tracking-wider mb-3">✓ Advantages</p>
-                {path.pros.map((item) => (
-                  <div key={item.label} className="flex items-start gap-3 py-1.5 border-b border-white/5">
-                    <span className="text-emerald-400 font-black mt-0.5 flex-shrink-0">✓</span>
-                    <div>
-                      <span className="text-white/80 text-sm font-bold">{item.label}</span>
-                      <span className="text-white/40 text-xs block">{item.desc}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Fix #3 — Cons with descriptors */}
-              <div className="space-y-1">
-                <p className="text-xs text-red-400/80 font-black uppercase tracking-wider mb-3">✗ Trade-offs</p>
-                {path.cons.map((item) => (
-                  <div key={item.label} className="flex items-start gap-3 py-1.5 border-b border-white/5">
-                    <span className="text-red-400 font-black mt-0.5 flex-shrink-0">✗</span>
-                    <div>
-                      <span className="text-white/60 text-sm font-bold">{item.label}</span>
-                      <span className="text-white/30 text-xs block">{item.desc}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: Salary timeline */}
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-blue-400/20">
-              <div>
-                <p className="text-xs text-white/30 font-black uppercase tracking-wider mb-6">
-                  MYR Salary Progression · {activePath === 'corporate' ? 'Large Corp Track' : 'Startup Track'}
-                </p>
-                {path.salaryRows.map((row) => (
-                  <div key={row.yr} className="mb-4">
-                    <div className="flex justify-between text-xs text-white/50 mb-1">
-                      <span className="font-bold">{row.yr} · <span className="text-white/30">{row.note}</span></span>
-                      <span className="font-black text-white">{row.sal}</span>
-                    </div>
-                    <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-emerald-500 to-blue-400 rounded-full transition-all duration-700" style={{ width: row.w }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <button
-                onClick={() => setShowPersonas(true)}
-                className="mt-6 w-full py-3 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-400/20 hover:border-emerald-400/40 text-emerald-400 font-black text-sm rounded-xl transition-all duration-300 hover:-translate-y-0.5"
-              >
-                See a real person who took this path →
-              </button>
-            </div>
-          </div>
+          {/* Context hint */}
+          <p className="text-center text-xs text-white/20 mt-2">
+            {activeMode === 'talent'
+              ? 'Candidates · Students · Career Explorers'
+              : 'Employers · HR Teams · Talent Acquisition'}
+          </p>
         </div>
-      </section>
+      </div>
 
-      {/* ── SECTION 3: EMPLOYER — ZERO-NOISE SCOUT ───────────────────── */}
-      <section ref={scoutRef} className="py-24 px-6 bg-[#060b14]">
-        <div className="max-w-6xl mx-auto">
-
-          <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-6 mb-16 max-w-3xl mx-auto text-center">
-            <p className="text-red-400 font-black text-xs uppercase tracking-widest mb-3">The Real Problem With Hiring in 2025</p>
-            <p className="text-white text-xl font-bold leading-relaxed">
-              "Your ATS was built to filter.
-              <span className="text-white/40"> Filtering optimises for résumés that game the ATS.
-              This is how you end up interviewing people who can't actually code."</span>
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-20">
-            <div>
-              <span className="text-xs text-blue-400 font-black uppercase tracking-widest">For Hiring Teams</span>
-              <h2 className="text-4xl lg:text-5xl font-black text-white mt-3 mb-6 leading-tight">
-                Stop filtering noise.
-                <span className="block text-blue-400">Start spotting signal.</span>
-              </h2>
-              <p className="text-white/40 text-lg leading-relaxed mb-10">
-                The average job post in 2025 receives 847 applications. Fewer than 12 are worth reading.
-                We fix the root cause — not the symptom.
-              </p>
-
-              {/* Fix #2 — Scout search input */}
-              <div className="mb-8">
-                <label className="text-xs text-blue-400 font-black uppercase tracking-widest mb-3 block">
-                  🔍 Try Silent Scouting
-                </label>
-                <div className="relative">
-                  <input
-                    ref={scoutInputRef}
-                    type="text"
-                    value={scoutQuery}
-                    onChange={(e) => setScoutQuery(e.target.value)}
-                    placeholder="Search hidden tech talents in Malaysia..."
-                    className="w-full bg-white/5 border border-white/20 hover:border-blue-400/40 focus:border-blue-400/60 focus:outline-none text-white placeholder-white/25 text-sm font-medium rounded-xl px-4 py-3.5 pr-12 transition-all duration-300"
-                  />
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20">
-                    {scoutQuery.length > 0
-                      ? <span className="text-blue-400 text-xs font-black cursor-pointer hover:text-blue-300" onClick={() => setScoutQuery('')}>✕</span>
-                      : <span className="text-lg">🔍</span>
-                    }
-                  </div>
-                </div>
-                {scoutQuery.length > 0 && (
-                  <div className="mt-2 bg-[#0a0f1e] border border-white/10 rounded-xl p-4">
-                    <div className="text-xs text-blue-400 font-black mb-2">Scanning verified trajectories for "{scoutQuery}"...</div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-emerald-400 flex items-center justify-center text-black font-black text-xs flex-shrink-0">
-                        {scoutQuery[0]?.toUpperCase() || '?'}
-                      </div>
-                      <div>
-                        <div className="text-white text-xs font-black">{scoutQuery} · Profile found</div>
-                        <div className="text-emerald-400 text-xs">System Design +22 pts · 90d · Not job-hunting yet</div>
-                      </div>
-                      <span className="ml-auto text-xs bg-emerald-400/20 text-emerald-400 px-2 py-1 rounded-full border border-emerald-400/20 font-bold flex-shrink-0">● Match</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="grid grid-cols-3 gap-4">
-                {[
-                  { num: '12×', label: 'signal-to-noise ratio' },
-                  { num: '0', label: 'AI-generated résumés accepted' },
-                  { num: '100%', label: 'verified evidence, not self-reported' },
-                ].map((stat) => (
-                  <div key={stat.label} className="bg-white/5 rounded-xl p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-1 hover:border-blue-400/20">
-                    <div className="text-2xl font-black text-blue-400">{stat.num}</div>
-                    <div className="text-xs text-white/30 mt-1 leading-snug">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Silent Scout demo card — Fix #7: hover lift */}
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-blue-400/20">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs text-blue-400 font-black uppercase tracking-widest">Silent Scouting · Live View</span>
-                <span className="text-xs bg-emerald-400/20 text-emerald-400 px-3 py-1 rounded-full font-bold border border-emerald-400/20">● Trajectory Match</span>
-              </div>
-              <div className="bg-[#0a0f1e] rounded-xl p-5 mb-4">
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-emerald-400 flex items-center justify-center text-black font-black text-sm flex-shrink-0">P</div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-white font-black text-sm">Priya S. · Kuala Lumpur</div>
-                    <div className="text-white/30 text-xs">UTM Computer Science · Year 4</div>
-                  </div>
-                  <div className="text-xs bg-white/5 text-white/30 border border-white/10 px-2 py-1 rounded flex-shrink-0">Not job-hunting yet</div>
-                </div>
-                {[
-                  { skill: 'System Design', score: 82, delta: '+18 pts · 90d', color: 'bg-emerald-400' },
-                  { skill: 'Production CI/CD', score: 74, delta: '+31 pts · 90d', color: 'bg-emerald-400' },
-                  { skill: 'Distributed Sys', score: 68, delta: '+22 pts · 90d', color: 'bg-blue-400' },
-                ].map((s) => (
-                  <div key={s.skill} className="mb-3">
-                    <div className="flex justify-between text-xs text-white/40 mb-1">
-                      <span>{s.skill}</span>
-                      <span className="text-emerald-400 font-bold">{s.delta}</span>
-                    </div>
-                    <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                      <div className={`h-full ${s.color} rounded-full`} style={{ width: `${s.score}%` }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <p className="text-xs text-white/20 italic">
-                Candidate has not applied. You're seeing verified evidence trajectory — not their pitch.
-              </p>
-            </div>
-          </div>
-
-          {/* 3-step process */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { step: '01', title: 'Set a growth profile', sub: 'Not a job description', body: 'Define the skills trajectory you need, not keywords to keyword-match against.' },
-              { step: '02', title: 'We surface candidates silently', sub: 'No noise, no spam', body: 'Only aligned trajectories appear. Unqualified hundreds never reach your inbox.' },
-              { step: '03', title: 'Reach out at the right moment', sub: "Before they're Open to Work", body: "We flag trajectory alignment before they update LinkedIn — so you're first, not 847th." },
-            ].map((item) => (
-              <div key={item.step} className="bg-white/[0.03] border border-white/10 hover:border-blue-400/30 rounded-2xl p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-white/[0.05]">
-                <div className="text-5xl font-black text-blue-400/20 mb-4">{item.step}</div>
-                <div className="font-black text-white text-lg mb-1">{item.title}</div>
-                <div className="text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">{item.sub}</div>
-                <p className="text-white/40 text-sm leading-relaxed">{item.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── SECTION 4: CAREER OS INFRASTRUCTURE ─────────────────────── */}
-      {/* Fix #4 — Perfect centering using flex flex-col items-center text-center mx-auto */}
-      <section className="py-24 px-6 bg-[#080d18]">
-        <div className="max-w-6xl mx-auto">
-
-          {/* Fix #4 — Centered header block */}
-          <div className="flex flex-col items-center text-center mx-auto max-w-2xl mb-16">
-            <span className="text-xs text-purple-400 font-black uppercase tracking-widest border border-purple-400/30 px-3 py-1 rounded-full mb-6">
-              System Architecture
-            </span>
-            <h2 className="text-4xl lg:text-5xl font-black text-white mb-4 leading-tight">
-              Not a job board. Not an ATS.
-              <span className="block text-white/30">The connective tissue between them.</span>
-            </h2>
-            <p className="text-white/40 text-lg leading-relaxed text-center">
-              Career OS is the layer existing tools were never designed to be:
-              continuous, bilateral, and intelligent across a 40-year horizon.
-            </p>
-          </div>
-
-          {/* Central OS node */}
-          <div className="flex justify-center mb-12">
-            <div className="bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-purple-400/30 rounded-2xl px-12 py-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-purple-500/10">
-              <div className="text-4xl mb-2">⚙️</div>
-              <div className="text-white font-black text-xl">Career OS</div>
-              <div className="text-white/30 text-xs mt-1">Intelligence Layer · 40-Year Horizon</div>
-            </div>
-          </div>
-
-          {/* 2×2 grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              { icon: '⚡', title: 'Auto-Updating Career Evidence', sub: 'Living Portfolio Sync', body: 'GitHub commits, deployments, and certifications auto-logged. Every skill gained is captured — no manual updating.', badges: ['GitHub', 'Vercel', 'Coursera', 'AWS Certs'] },
-              { icon: '📅', title: 'Career Moments, Not Job Alerts', sub: 'Calendar Intelligence', body: 'Knows when your skills are becoming market-rare, or when a pivot costs 3 years vs. 6 months. Proactive — not reactive.', badges: ['Google Calendar', 'Outlook', 'Workday'] },
-              { icon: '🔗', title: "Plays Well With What You Already Use", sub: 'ATS Bridge (Enterprise)', body: 'Career OS feeds your existing ATS richer signal. Pre-qualified candidates arrive at Greenhouse with verified evidence scores.', badges: ['Greenhouse', 'Lever', 'Workday', 'SAP'] },
-              { icon: '🎓', title: 'Real Graduate ROI — Not Survey Data', sub: 'University Outcome Loop', body: 'Anonymised cohort outcomes at 1, 3, and 10 years post-grad. Actual trajectories — letting curriculum teams fix what matters.', badges: ['100+ institutions · Malaysia'] },
-            ].map((card) => (
-              <div key={card.title} className="group bg-white/[0.03] border border-white/10 hover:border-purple-400/30 rounded-2xl p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-white/[0.05]">
-                <div className="text-3xl mb-4">{card.icon}</div>
-                <div className="text-xs text-purple-400 font-black uppercase tracking-widest mb-2">{card.sub}</div>
-                <h3 className="text-white font-black text-lg mb-3">{card.title}</h3>
-                <p className="text-white/40 text-sm leading-relaxed mb-5">{card.body}</p>
-                <div className="flex flex-wrap gap-2">
-                  {card.badges.map((b) => (
-                    <span key={b} className="text-xs px-2 py-1 bg-white/10 text-white/40 rounded-md font-semibold">{b}</span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── SECTION 5: TRUST & FAIR PAY ENGINE ───────────────────────── */}
-      <section className="py-24 px-6 bg-[#0a0f1e]">
-        <div className="max-w-6xl mx-auto">
-
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-black text-white mb-4">
-              Careers involve money and risk.
-              <span className="block text-emerald-400">We handle both honestly.</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-
-            {/* Stealth Mode */}
-            <div className="bg-gradient-to-br from-slate-900 to-[#0d1117] border border-white/10 rounded-2xl p-8 transition-all duration-300 hover:-translate-y-1 hover:border-purple-400/20 hover:shadow-xl">
-              <span className="text-xs text-purple-400 font-black uppercase tracking-widest block mb-4">🔒 Privacy Architecture</span>
-              <h3 className="text-2xl font-black text-white mb-2">
-                Looking while employed?
-                <span className="block text-white/40 font-bold text-xl mt-1">We built this for you.</span>
-              </h3>
-              <p className="text-white/40 text-sm leading-relaxed mb-6">
-                84% of employed professionals explore opportunities silently. Stealth Mode was designed from day one.
-              </p>
-              <div className="space-y-3">
-                {[
-                  'Current employer is auto-blocked. Always.',
-                  'No suspicious "profile view" activity signals',
-                  'Visibility toggled per company — not platform-wide',
-                  'Delete everything, instantly. Zero data retention.',
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-3 bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 transition-all duration-300 hover:border-purple-400/20">
-                    <span className="text-purple-400 font-black text-lg">→</span>
-                    <span className="text-white/60 text-sm font-medium">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Fix #5 — Fair Pay Engine with MYR */}
-            <div className="bg-gradient-to-br from-[#0d1a0d] to-[#0d1117] border border-emerald-400/20 rounded-2xl p-8 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-400/40 hover:shadow-xl">
-              <span className="text-xs text-emerald-400 font-black uppercase tracking-widest block mb-4">💰 Fair Pay Engine · 10,000+ Malaysian Employers</span>
-              <h3 className="text-2xl font-black text-white mb-2">
-                The salary range they gave you
-                <span className="block text-emerald-400">isn't real. This is.</span>
-              </h3>
-              <p className="text-white/40 text-sm leading-relaxed mb-6">
-                Live MYR compensation data from 10,000+ active employers across MNCs, GLCs, large locals, tech/SaaS. No surveys. Actual offer data.
-              </p>
-              {/* Fix #5 — MYR salary bars */}
-              <div className="bg-black/30 rounded-xl p-5 mb-6">
-                <div className="text-xs text-white/30 mb-4 font-bold">Senior SWE · Kuala Lumpur · 5 YOE · Real-time</div>
-                {[
-                  { label: 'P25  Low offer',  value: 'MYR 96,000/yr',  width: '40%', color: 'bg-red-400' },
-                  { label: 'P50  Median',     value: 'MYR 132,000/yr', width: '60%', color: 'bg-yellow-400' },
-                  { label: 'P90  Top offer',  value: 'MYR 216,000/yr', width: '90%', color: 'bg-emerald-400' },
-                ].map((row) => (
-                  <div key={row.label} className="mb-3">
-                    <div className="flex justify-between text-xs text-white/40 mb-1">
-                      <span>{row.label}</span>
-                      <span className="font-black text-white">{row.value}</span>
-                    </div>
-                    <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                      <div className={`h-full ${row.color} rounded-full`} style={{ width: row.width }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                {['Know Before You Negotiate', 'Underpayment Alert', 'Negotiation Timing'].map((f) => (
-                  <div key={f} className="text-xs px-3 py-2 bg-emerald-400/10 border border-emerald-400/20 text-emerald-400 rounded-lg font-bold text-center leading-snug transition-all duration-300 hover:bg-emerald-400/20 hover:border-emerald-400/40 cursor-default">
-                    {f}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Fix #6 — Bottom CTA with working Demo button */}
-          <div className="text-center border border-white/10 rounded-2xl p-12 bg-white/[0.02] transition-all duration-300 hover:border-emerald-400/20">
-            <div className="text-xs text-white/30 font-black uppercase tracking-widest mb-4">
-              🏆 Talentbank Tech Hackathon 2026 · Universities Track · Module 03
-            </div>
-            <h3 className="text-3xl font-black text-white mb-4">See it working on a real profile</h3>
-            <p className="text-white/40 mb-8 max-w-md mx-auto text-center">
-              Three real Malaysian professionals. Real MYR salary journeys. Real trade-offs. No prediction — just navigation.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              {/* Fix #6 — View Live Demo scrolls back to demo section */}
-              <button
-                onClick={() => {
-                  setShowPersonas(true);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="px-10 py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/25 active:scale-95"
-              >
-                🎓 View Live Demo →
-              </button>
-              <button
-                onClick={onBuildOwn}
-                className="px-10 py-4 border border-white/20 hover:border-emerald-400/40 text-white font-bold text-sm rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-white/5"
-              >
-                Build My Own Profile →
-              </button>
-            </div>
-            <p className="text-xs text-white/20 mt-6">No account needed · Free · Powered by Claude AI</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Fix #6 — Demo modal overlay (opens persona selector elegantly) */}
-      {showDemoModal && (
+      {/* ── MODE-SPECIFIC CONTENT ────────────────────────────────── */}
+      <section ref={section2Ref as React.RefObject<HTMLElement>}>
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-          onClick={() => setShowDemoModal(false)}
+          key={activeMode}
+          className="transition-opacity duration-300"
+          style={{ animation: 'fadeIn 0.3s ease-in-out' }}
         >
-          <div
-            className="bg-[#0d1117] border border-white/10 rounded-2xl p-8 max-w-lg w-full mx-4 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-white font-black text-xl">Choose a Live Demo Profile</h3>
-              <button onClick={() => setShowDemoModal(false)} className="text-white/30 hover:text-white/60 transition-colors text-2xl leading-none">×</button>
-            </div>
-            <div className="grid grid-cols-1 gap-3">
-              {DEMO_PERSONAS.map(({ profile, emoji, role, company, salary }) => (
-                <button
-                  key={profile.id}
-                  onClick={() => { setShowDemoModal(false); onViewDemo(profile); }}
-                  className="flex items-center gap-4 bg-white/5 hover:bg-emerald-500/10 border border-white/10 hover:border-emerald-400/40 rounded-xl p-4 text-left transition-all duration-300 hover:-translate-y-0.5 group"
-                >
-                  <span className="text-3xl">{emoji}</span>
-                  <div className="flex-1">
-                    <div className="text-white font-black group-hover:text-emerald-400 transition-colors">{profile.name}</div>
-                    <div className="text-white/40 text-xs">{role} · {company}</div>
-                  </div>
-                  <div className="text-emerald-400 text-sm font-black">{salary}</div>
-                </button>
-              ))}
-            </div>
-          </div>
+          {activeMode === 'talent'
+            ? <TalentSections onViewDemo={onViewDemo} onBuildOwn={onBuildOwn} />
+            : <EmployerSections onBuildOwn={onBuildOwn} />
+          }
         </div>
-      )}
+      </section>
 
+      {/* Fade-in animation */}
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 }
