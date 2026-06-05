@@ -20,6 +20,12 @@ const CohortView = lazy(() =>
 const TrajectorySimulator = lazy(() =>
   import('./pages/TrajectorySimulator').then((m) => ({ default: m.TrajectorySimulator }))
 );
+const TalentPortal = lazy(() =>
+  import('./pages/TalentPortal').then((m) => ({ default: m.TalentPortal }))
+);
+const EmployerPortal = lazy(() =>
+  import('./pages/EmployerPortal').then((m) => ({ default: m.EmployerPortal }))
+);
 import { AppFooter } from './components/AppFooter';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { mockCohortInsight } from './data/mockCohort';
@@ -59,6 +65,8 @@ function App() {
       gaps: 'Paths Forward — PathLens',
       cohort: 'University Cohort View — PathLens',
       trajectory: 'Trajectory Simulator — PathLens',
+      'talent-portal': 'Talent OS — PathLens',
+      'employer-portal': 'Recruiter Dashboard — PathLens',
     };
     document.title = PAGE_TITLES[currentPage] ?? 'PathLens';
   }, [currentPage]);
@@ -86,7 +94,7 @@ function App() {
   const renderPage = () => {
     switch (currentPage) {
       case 'landing':
-        return <Landing onViewDemo={handleViewDemo} onBuildOwn={handleBuildOwn} />;
+        return <Landing onBuildOwn={handleBuildOwn} onNavigate={handleNavigate} />;
       case 'profile':
         return (
           <ProfileAndEvidence
@@ -146,8 +154,23 @@ function App() {
             onBack={() => handleNavigate('dashboard')}
           />
         );
+      case 'talent-portal':
+        return (
+          <TalentPortal
+            onViewDemo={handleViewDemo}
+            onBuildOwn={handleBuildOwn}
+            onBack={() => handleNavigate('landing')}
+          />
+        );
+      case 'employer-portal':
+        return (
+          <EmployerPortal
+            onBuildOwn={handleBuildOwn}
+            onBack={() => handleNavigate('landing')}
+          />
+        );
       default:
-        return <Landing onViewDemo={handleViewDemo} onBuildOwn={handleBuildOwn} />;
+        return <Landing onBuildOwn={handleBuildOwn} onNavigate={handleNavigate} />;
     }
   };
 
@@ -157,7 +180,7 @@ function App() {
         <Navigation
           currentPage={currentPage}
           onNavigate={handleNavigate}
-          showNav={currentPage !== 'landing'}
+          showNav={currentPage !== 'landing' && currentPage !== 'talent-portal' && currentPage !== 'employer-portal'}
           onResetDemo={resetToDemo}
           onGoHome={handleGoHome}
           isDark={isDark}

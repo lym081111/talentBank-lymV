@@ -7,8 +7,10 @@ type TalentTag = 'cs_final' | 'node_dev' | 'ux_pivot';
 type EmpTag    = 'nextjs'   | 'dataeng';
 
 interface Props {
-  onViewDemo: (profile: StudentProfile) => void;
+  onViewDemo?: (profile: StudentProfile) => void;
   onBuildOwn: () => void;
+  defaultMode?: ViewMode;
+  hideToggle?: boolean;
 }
 
 // ─── Injected CSS ─────────────────────────────────────────────────────────────
@@ -854,8 +856,8 @@ const E_TAGS: { key: EmpTag; label: string; icon: string }[] = [
 // ══════════════════════════════════════════════════════════════════════════════
 //  MAIN COMPONENT
 // ══════════════════════════════════════════════════════════════════════════════
-export function CareerOSPortal({ onBuildOwn }: Props) {
-  const [mode, setMode]       = useState<ViewMode>('talent');
+export function CareerOSPortal({ onBuildOwn, defaultMode = 'talent', hideToggle = false }: Props) {
+  const [mode, setMode]       = useState<ViewMode>(defaultMode);
   const [tTag, setTTag]       = useState<TalentTag>('cs_final');
   const [eTag, setETag]       = useState<EmpTag>('nextjs');
   const [animKey, setAnimKey] = useState(0);
@@ -901,31 +903,33 @@ export function CareerOSPortal({ onBuildOwn }: Props) {
         </div>
 
         {/* ── Portal mode toggle ───────────────────────────────────── */}
-        <div className="relative flex rounded-2xl border border-white/8 p-1.5 mb-6 max-w-md mx-auto" style={{ background: 'rgba(255,255,255,.04)' }}>
-          {/* Sliding pill */}
-          <div
-            className="mode-slider absolute top-1.5 bottom-1.5 rounded-xl border border-white/12"
-            style={{
-              left:  mode === 'talent' ? '6px' : 'calc(50% + 3px)',
-              width: 'calc(50% - 9px)',
-              background: 'rgba(255,255,255,.09)',
-            }}
-          />
-          {([
-            { key: 'talent'   as ViewMode, icon: '🧑‍💻', label: 'Talent OS' },
-            { key: 'employer' as ViewMode, icon: '🏢',   label: 'Recruiter Dashboard' },
-          ]).map(b => (
-            <button
-              key={b.key}
-              onClick={() => switchMode(b.key)}
-              className="relative z-10 flex-1 flex items-center justify-center gap-2.5 py-3 text-sm font-black rounded-xl transition-colors duration-300"
-              style={{ color: mode === b.key ? 'white' : 'rgba(255,255,255,.32)' }}
-            >
-              <span>{b.icon}</span>
-              <span>{b.label}</span>
-            </button>
-          ))}
-        </div>
+        {!hideToggle && (
+          <div className="relative flex rounded-2xl border border-white/8 p-1.5 mb-6 max-w-md mx-auto" style={{ background: 'rgba(255,255,255,.04)' }}>
+            {/* Sliding pill */}
+            <div
+              className="mode-slider absolute top-1.5 bottom-1.5 rounded-xl border border-white/12"
+              style={{
+                left:  mode === 'talent' ? '6px' : 'calc(50% + 3px)',
+                width: 'calc(50% - 9px)',
+                background: 'rgba(255,255,255,.09)',
+              }}
+            />
+            {([
+              { key: 'talent'   as ViewMode, icon: '🧑‍💻', label: 'Talent OS' },
+              { key: 'employer' as ViewMode, icon: '🏢',   label: 'Recruiter Dashboard' },
+            ]).map(b => (
+              <button
+                key={b.key}
+                onClick={() => switchMode(b.key)}
+                className="relative z-10 flex-1 flex items-center justify-center gap-2.5 py-3 text-sm font-black rounded-xl transition-colors duration-300"
+                style={{ color: mode === b.key ? 'white' : 'rgba(255,255,255,.32)' }}
+              >
+                <span>{b.icon}</span>
+                <span>{b.label}</span>
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* ── IT status / hiring-condition tags ───────────────────── */}
         <div className="flex flex-wrap gap-2.5 justify-center mb-8">
