@@ -18,6 +18,8 @@ interface Props {
   onDeleteEvidence: (id: string) => void;
   onAnalyze: () => void;
   onClearAndStart?: () => void;
+  onBack?: () => void;
+  backLabel?: string;
 }
 
 type FormMode = 'closed' | 'add' | { editing: Evidence } | { template: Partial<Omit<Evidence, 'id'>> };
@@ -90,12 +92,33 @@ export function ProfileAndEvidence({
   onDeleteEvidence,
   onAnalyze,
   onClearAndStart,
+  onBack,
+  backLabel = 'Back',
 }: Props) {
   const [formMode, setFormMode] = useState<FormMode>('closed');
   const [showSuccess, setShowSuccess] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(!isDemoMode && evidence.length === 0);
   const [editForm, setEditForm] = useState(profile);
   const formRef = useRef<HTMLDivElement>(null);
+  const allExtractedSkills = useMemo(() => {
+    const skills: ExtractedSkill[] = [];
+    evidence.forEach(item => {
+      if (item.technologies) {
+        item.technologies.split(',').forEach(tech => {
+          const trimmed = tech.trim();
+          if (trimmed) {
+            skills.push({
+              skill: trimmed,
+              confidence: 'high',
+              sourceEvidenceId: item.id,
+              sourcePhrase: item.technologies || '',
+            });
+          }
+        });
+      }
+    });
+    return skills;
+  }, [evidence]);
 
   useEffect(() => {
     if (showSuccess) {
@@ -103,6 +126,14 @@ export function ProfileAndEvidence({
       return () => clearTimeout(timer);
     }
   }, [showSuccess]);
+
+  useEffect(() => {
+    setEditForm(profile);
+    if (!isDemoMode && evidence.length === 0) {
+      setIsEditingProfile(true);
+      setFormMode('closed');
+    }
+  }, [profile, isDemoMode, evidence.length]);
 
 
   function handleSave(data: Omit<Evidence, 'id'>) {
@@ -135,36 +166,88 @@ export function ProfileAndEvidence({
   return (
     <div className={styles.container}>
       <div className={styles.inner}>
+        {onBack && (
+          <button className={styles.backButton} onClick={onBack}>
+            ← {backLabel}
+          </button>
+        )}
+
         {isDemoMode && (
           <div style={{
-            background: 'linear-gradient(135deg, var(--color-accent-light) 0%, var(--color-primary-light) 100%)',
-            border: '1.5px solid var(--color-accent)',
-            borderRadius: 'var(--radius-lg)',
-            padding: '12px 20px',
-            marginBottom: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '10px',
+            background: 'linear-gradient(135deg, #06111f 0%, #0f172a 55%, #172554 100%)',
+            border: '1px solid rgba(34, 211, 238, 0.28)',
+            borderRadius: '22px',
+            padding: '22px',
+            marginBottom: '24px',
+            boxShadow: '0 18px 45px rgba(15, 23, 42, 0.18)',
           }}>
-            <div style={{ fontSize: '13px', color: 'var(--color-text)' }}>
-              <strong>👋 You're viewing {profile.name}'s demo profile.</strong>
-              {' '}Browse the full demo, or start fresh with your own evidence.
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              justifyContent: 'space-between',
+              gap: '18px',
+              flexWrap: 'wrap',
+            }}>
+              <div style={{ maxWidth: '540px' }}>
+                <div style={{
+                  fontSize: '11px',
+                  fontWeight: 900,
+                  letterSpacing: '0.16em',
+                  textTransform: 'uppercase',
+                  color: '#67e8f9',
+                  marginBottom: '8px',
+                }}>
+                  Guided demo profile
+                </div>
+                <h2 style={{ margin: 0, color: 'white', fontSize: '24px', fontWeight: 900, letterSpacing: '-0.04em' }}>
+                  {profile.name}'s resume has already been converted into a Career OS.
+                </h2>
+                <p style={{ margin: '10px 0 0 0', color: 'rgba(255,255,255,0.62)', fontSize: '14px', lineHeight: 1.7 }}>
+                  Review the evidence, extracted skills, readiness landscape, and next actions as if this were a real submitted resume.
+                </p>
+              </div>
+              {onClearAndStart && (
+                <button
+                  onClick={onClearAndStart}
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: 800,
+                    padding: '11px 18px',
+                    background: 'white',
+                    color: '#020617',
+                    border: 'none',
+                    borderRadius: '999px',
+                    cursor: 'pointer',
+                    flexShrink: 0,
+                  }}
+                >
+                  Start a blank profile
+                </button>
+              )}
             </div>
-            {onClearAndStart && (
-              <button
-                onClick={onClearAndStart}
-                style={{
-                  fontSize: '12px', fontWeight: '700', padding: '6px 16px',
-                  background: 'var(--color-accent)', color: 'white',
-                  border: 'none', borderRadius: 'var(--radius-md)', cursor: 'pointer',
-                  flexShrink: 0,
-                }}
-              >
-                Start My Own →
-              </button>
-            )}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+              gap: '10px',
+              marginTop: '18px',
+            }}>
+              {[
+                ['1', 'Resume evidence', 'Work history is split into proof blocks.'],
+                ['2', 'Skill signal', 'Tools and capabilities are traceable to source.'],
+                ['3', 'Readiness view', 'Scores explain gaps and next moves.'],
+              ].map(([num, title, body]) => (
+                <div key={num} style={{
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'rgba(255,255,255,0.045)',
+                  borderRadius: '14px',
+                  padding: '13px',
+                }}>
+                  <div style={{ color: '#67e8f9', fontSize: '12px', fontWeight: 900 }}>{num}</div>
+                  <div style={{ color: 'white', fontSize: '13px', fontWeight: 800, marginTop: '4px' }}>{title}</div>
+                  <div style={{ color: 'rgba(255,255,255,0.45)', fontSize: '12px', marginTop: '4px', lineHeight: 1.45 }}>{body}</div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
@@ -407,30 +490,7 @@ export function ProfileAndEvidence({
               </div>
 
               {/* Skills Grouped by Demand */}
-              {(() => {
-                const allExtractedSkills = useMemo(() => {
-                  const skills: ExtractedSkill[] = [];
-                  evidence.forEach(item => {
-                    if (item.technologies) {
-                      item.technologies.split(',').forEach(tech => {
-                        const trimmed = tech.trim();
-                        if (trimmed) {
-                          skills.push({
-                            skill: trimmed,
-                            confidence: 'high',
-                            sourceEvidenceId: item.id,
-                            sourcePhrase: item.technologies || '',
-                          });
-                        }
-                      });
-                    }
-                  });
-                  return skills;
-                }, [evidence]);
-
-                if (allExtractedSkills.length === 0) return null;
-
-                return (
+              {allExtractedSkills.length > 0 && (
                   <div style={{
                     background: 'var(--color-surface)',
                     border: '1px solid var(--color-border)',
@@ -444,8 +504,7 @@ export function ProfileAndEvidence({
                     </h3>
                     <SkillsByDemandVisualization extractedSkills={allExtractedSkills} />
                   </div>
-                );
-              })()}
+              )}
             </>
           )}
 

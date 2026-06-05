@@ -38,8 +38,21 @@ import { StudentProfile } from './types/evidence';
 import './App.css';
 import type { Page } from './types/navigation';
 
+function createBlankProfile(): StudentProfile {
+  return {
+    id: `student_custom_${Date.now()}`,
+    name: '',
+    university: '',
+    year: 1,
+    major: '',
+    targetRole: '',
+    evidence: [],
+  };
+}
+
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('landing');
+  const [profileReturnPage, setProfileReturnPage] = useState<Page>('landing');
   const { isDark, toggle: toggleDarkMode } = useDarkMode();
 
   const { evidence, addEvidence, updateEvidence, deleteEvidence, resetToDemo, clearAll, setEvidence } = useEvidence();
@@ -77,12 +90,15 @@ function App() {
 
   const handleViewDemo = (profile: StudentProfile) => {
     // Set the student profile and their evidence
+    setProfileReturnPage('talent-portal');
     updateProfile(profile);
     setEvidence(profile.evidence);
     handleNavigate('profile');
   };
 
-  const handleBuildOwn = () => {
+  const handleBuildOwn = (returnPage?: Page) => {
+    setProfileReturnPage(returnPage ?? (currentPage === 'profile' ? profileReturnPage : currentPage));
+    updateProfile(createBlankProfile());
     clearAll();
     handleNavigate('profile');
   };
@@ -94,7 +110,7 @@ function App() {
   const renderPage = () => {
     switch (currentPage) {
       case 'landing':
-        return <Landing onBuildOwn={handleBuildOwn} onNavigate={handleNavigate} />;
+        return <Landing onBuildOwn={() => handleBuildOwn('landing')} onNavigate={handleNavigate} />;
       case 'profile':
         return (
           <ProfileAndEvidence
@@ -106,7 +122,9 @@ function App() {
             onUpdateEvidence={updateEvidence}
             onDeleteEvidence={deleteEvidence}
             onAnalyze={() => handleNavigate('extraction')}
-            onClearAndStart={handleBuildOwn}
+            onClearAndStart={() => handleBuildOwn()}
+            onBack={() => handleNavigate(profileReturnPage)}
+            backLabel={profileReturnPage === 'talent-portal' ? 'Back to Talent OS' : profileReturnPage === 'employer-portal' ? 'Back to Recruiter Dashboard' : 'Back to previous page'}
           />
         );
       case 'extraction':
@@ -158,19 +176,19 @@ function App() {
         return (
           <TalentPortal
             onViewDemo={handleViewDemo}
-            onBuildOwn={handleBuildOwn}
+            onBuildOwn={() => handleBuildOwn('talent-portal')}
             onBack={() => handleNavigate('landing')}
           />
         );
       case 'employer-portal':
         return (
           <EmployerPortal
-            onBuildOwn={handleBuildOwn}
+            onBuildOwn={() => handleBuildOwn('employer-portal')}
             onBack={() => handleNavigate('landing')}
           />
         );
       default:
-        return <Landing onBuildOwn={handleBuildOwn} onNavigate={handleNavigate} />;
+        return <Landing onBuildOwn={() => handleBuildOwn('landing')} onNavigate={handleNavigate} />;
     }
   };
 

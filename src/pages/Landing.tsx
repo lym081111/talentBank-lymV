@@ -55,7 +55,7 @@ export function Landing({ onBuildOwn, onNavigate }: Props) {
             </p>
 
             {/* CTA pair */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
+            <div className="hidden">
               <button
                 onClick={() => onNavigate('talent-portal')}
                 className="px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/25 active:scale-95"
