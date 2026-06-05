@@ -75,7 +75,6 @@ function App() {
   };
 
   const handleBuildOwn = () => {
-    // Clear all evidence - this will trigger the profile edit form in ProfileAndEvidence
     clearAll();
     handleNavigate('profile');
   };

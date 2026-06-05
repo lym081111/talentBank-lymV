@@ -1,5 +1,5 @@
 .container {
-  background: #0a0f1e;
+  background: var(--color-bg);
   min-height: 100vh;
   padding: 40px 20px;
 }
@@ -15,19 +15,19 @@
 
 .overallSection h2 {
   font-size: 28px;
-  color: #ffffff;
+  color: var(--color-text);
   margin-bottom: 24px;
   font-weight: 800;
 }
 
 .overallCard {
-  background: rgba(255,255,255,0.05);
+  background: linear-gradient(135deg, #eff6ff 0%, #ecfdf5 50%, #f9fafb 100%);
   border-radius: var(--radius-xl);
   padding: 48px 32px;
   text-align: center;
   margin-bottom: 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 20px rgba(30, 64, 175, 0.08);
+  border: 1px solid var(--color-border);
   position: relative;
   overflow: hidden;
 }
@@ -39,14 +39,14 @@
   right: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(30, 64, 175, 0.08) 0%, transparent 70%);
   pointer-events: none;
 }
 
 .overallScore {
   font-size: 72px;
   font-weight: 900;
-  background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -57,7 +57,7 @@
 .overallLevel {
   font-size: 28px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-text);
   margin-bottom: 16px;
 }
 
@@ -65,20 +65,19 @@
   margin: 0;
   font-size: 16px;
   line-height: 1.7;
-  color: rgba(255,255,255,0.6);
-  font-weight: 500;
+  color: var(--color-text-secondary);
   max-width: 600px;
   margin: 0 auto;
 }
 
 .disclaimer {
-  background: rgba(255,255,255,0.05);
-  border-left: 4px solid rgba(255,193,7,0.7);
+  background: var(--color-warning-light);
+  border-left: 4px solid var(--color-warning);
   border-radius: var(--radius-lg);
   padding: 16px 20px;
   margin: 0;
   font-size: 13px;
-  color: rgba(255,255,255,0.6);
+  color: var(--color-text-secondary);
   line-height: 1.6;
 }
 
@@ -88,7 +87,7 @@
 
 .dimensionsSection h3 {
   font-size: 22px;
-  color: #ffffff;
+  color: var(--color-text);
   margin-bottom: 20px;
   font-weight: 700;
 }
@@ -101,8 +100,8 @@
 }
 
 .scoringGuide {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: linear-gradient(135deg, #ecfdf5 0%, #eff6ff 100%);
+  border: 1px solid var(--color-accent);
   border-radius: var(--radius-lg);
   padding: 24px;
   margin-bottom: 32px;
@@ -112,7 +111,7 @@
 .scoringGuide h4 {
   margin: 0 0 16px 0;
   font-size: 16px;
-  color: #ffffff;
+  color: var(--color-text);
   font-weight: 700;
 }
 
@@ -125,21 +124,20 @@
 
 .scoreThreshold {
   padding: 10px 12px;
-  background: rgba(255,255,255,0.05);
+  background: var(--color-surface);
   border-radius: var(--radius-md);
   font-size: 13px;
   line-height: 1.5;
-  color: rgba(255,255,255,0.6);
 }
 
 .scoreThreshold strong {
-  color: #ffffff;
+  color: var(--color-text);
   font-weight: 700;
 }
 
 .nextSection {
   padding-top: 28px;
-  border-top: 1px solid rgba(255,255,255,0.08);
+  border-top: 1px solid var(--color-divider);
 }
 
 .buttonGroup {
@@ -150,9 +148,9 @@
 }
 
 .secondaryButton {
-  background: transparent;
-  color: #ffffff;
-  border: 1px solid rgba(255,255,255,0.2);
+  background: var(--color-surface);
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
   padding: 14px 32px;
   border-radius: var(--radius-lg);
   font-size: 15px;
@@ -163,10 +161,11 @@
 }
 
 .secondaryButton:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.35);
+  background: var(--color-primary-light);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .secondaryButton:active {
@@ -174,14 +173,14 @@
 }
 
 .nextButton {
-  background: #10b981;
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
   color: white;
   padding: 16px 40px;
   border-radius: var(--radius-lg);
   font-size: 16px;
   font-weight: 700;
   transition: all var(--transition);
-  box-shadow: 0 8px 24px rgba(16,185,129,0.3);
+  box-shadow: var(--shadow-lg);
   letter-spacing: -0.3px;
   cursor: pointer;
   border: none;
@@ -189,7 +188,7 @@
 
 .nextButton:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(16,185,129,0.4);
+  box-shadow: var(--shadow-xl);
 }
 
 .nextButton:active {

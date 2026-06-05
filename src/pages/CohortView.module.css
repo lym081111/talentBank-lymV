@@ -1,5 +1,5 @@
 .container {
-  background: #0a0f1e;
+  background: var(--color-bg);
   min-height: 100vh;
   padding: 40px 20px;
 }
@@ -10,23 +10,23 @@
 }
 
 .header {
-  background: rgba(255,255,255,0.05);
+  background: var(--color-surface);
   border-radius: var(--radius-xl);
   padding: 32px;
   margin-bottom: 32px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
   transition: all var(--transition-slow);
 }
 
 .header:hover {
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-  border-color: rgba(255,255,255,0.2);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary);
 }
 
 .header h2 {
   font-size: 28px;
-  color: #ffffff;
+  color: var(--color-text);
   margin-bottom: 12px;
   font-weight: 800;
 }
@@ -35,7 +35,7 @@
   margin: 0;
   font-size: 16px;
   line-height: 1.7;
-  color: rgba(255,255,255,0.6);
+  color: var(--color-text-secondary);
 }
 
 /* Perspective toggle */
@@ -43,8 +43,8 @@
   display: flex;
   gap: 8px;
   margin-bottom: 28px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: 6px;
   width: fit-content;
@@ -57,19 +57,19 @@
   border-radius: var(--radius-md);
   font-size: 14px;
   font-weight: 600;
-  color: rgba(255,255,255,0.6);
+  color: var(--color-text-secondary);
   cursor: pointer;
   transition: all var(--transition);
 }
 
 .toggleBtn:hover {
-  color: #ffffff;
-  background: rgba(255,255,255,0.08);
+  color: var(--color-text);
+  background: var(--color-surface-hover);
 }
 
 .toggleActive {
   padding: 8px 20px;
-  background: #10b981;
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
   border: none;
   border-radius: var(--radius-md);
   font-size: 14px;
@@ -77,13 +77,13 @@
   color: white;
   cursor: pointer;
   transition: all var(--transition);
-  box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
 }
 
 /* Student view */
 .studentContext {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: 24px;
   margin-bottom: 24px;
@@ -93,7 +93,7 @@
   margin: 0 0 16px 0;
   font-size: 16px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-text);
 }
 
 .scoreRow {
@@ -104,7 +104,7 @@
 }
 
 .scoreCard {
-  background: rgba(255,255,255,0.05);
+  background: var(--color-surface-hover);
   border-radius: var(--radius-md);
   padding: 16px;
   text-align: center;
@@ -113,7 +113,7 @@
 .scoreValue {
   font-size: 28px;
   font-weight: 900;
-  color: #10b981;
+  color: var(--color-primary);
   letter-spacing: -1px;
   margin-bottom: 4px;
 }
@@ -123,18 +123,18 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: rgba(255,255,255,0.3);
+  color: var(--color-text-muted);
 }
 
 .dimensionCompare {
-  border-top: 1px solid rgba(255,255,255,0.08);
+  border-top: 1px solid var(--color-divider);
   padding-top: 16px;
 }
 
 /* University view lists */
 .actionList {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: 24px;
   margin-bottom: 24px;
@@ -143,7 +143,7 @@
 .actionList h3 {
   margin: 0 0 20px 0;
   font-size: 18px;
-  color: #ffffff;
+  color: var(--color-text);
   font-weight: 700;
 }
 
@@ -156,16 +156,16 @@
 .action {
   display: flex;
   gap: 14px;
-  background: rgba(255,255,255,0.05);
+  background: var(--color-surface-hover);
   border-radius: var(--radius-md);
   padding: 16px;
-  border-left: 3px solid #10b981;
+  border-left: 3px solid var(--color-primary);
 }
 
 .actionNum {
   font-size: 20px;
   font-weight: 900;
-  color: #10b981;
+  color: var(--color-primary);
   flex-shrink: 0;
   line-height: 1.2;
 }
@@ -173,7 +173,7 @@
 .action strong {
   display: block;
   font-size: 13px;
-  color: #ffffff;
+  color: var(--color-text);
   margin-bottom: 6px;
   font-weight: 700;
 }
@@ -182,22 +182,22 @@
   margin: 0;
   font-size: 13px;
   line-height: 1.6;
-  color: rgba(255,255,255,0.6);
+  color: var(--color-text-secondary);
 }
 
 .context {
-  background: rgba(255,255,255,0.05);
+  background: var(--color-surface);
   border-radius: var(--radius-lg);
   padding: 28px;
   margin-bottom: 32px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
 }
 
 .context h3 {
   margin: 0 0 14px 0;
   font-size: 18px;
-  color: #ffffff;
+  color: var(--color-text);
   font-weight: 700;
 }
 
@@ -205,7 +205,7 @@
   margin: 0 0 14px 0;
   font-size: 15px;
   line-height: 1.7;
-  color: rgba(255,255,255,0.6);
+  color: var(--color-text-secondary);
 }
 
 .context p:last-child {
@@ -213,19 +213,19 @@
 }
 
 .submitSection {
-  background: rgba(255,255,255,0.05);
+  background: linear-gradient(135deg, var(--color-success-light) 0%, var(--color-primary-light) 100%);
   border-radius: var(--radius-lg);
   padding: 28px;
   margin-bottom: 32px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-left: 4px solid #10b981;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-success);
 }
 
 .submitSection h3 {
   margin: 0 0 12px 0;
   font-size: 18px;
-  color: #ffffff;
+  color: var(--color-text);
   font-weight: 700;
 }
 
@@ -233,28 +233,28 @@
   margin: 0 0 16px 0;
   font-size: 15px;
   line-height: 1.7;
-  color: rgba(255,255,255,0.6);
+  color: var(--color-text-secondary);
 }
 
 .submitBtn {
   padding: 12px 28px;
-  background: #10b981;
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-success) 100%);
   color: white;
   border-radius: var(--radius-lg);
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   transition: all var(--transition);
-  box-shadow: 0 6px 20px rgba(16,185,129,0.3);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
 }
 
 .submitBtn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(16,185,129,0.4);
+  box-shadow: 0 10px 28px rgba(255, 107, 53, 0.4);
 }
 
 .submitBtn:disabled {
-  background: rgba(255,255,255,0.1);
+  background: var(--color-text-muted);
   box-shadow: none;
   cursor: not-allowed;
   opacity: 0.6;
@@ -263,7 +263,7 @@
 .submitSuccess {
   margin: 0;
   font-size: 15px;
-  color: #10b981;
+  color: var(--color-success);
   font-weight: 700;
 }
 
@@ -275,18 +275,18 @@
 }
 
 .actionSection {
-  background: rgba(255,255,255,0.05);
+  background: var(--color-surface);
   border-radius: var(--radius-lg);
   padding: 28px;
   margin: 32px 0;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
 }
 
 .actionSection h3 {
   margin: 0 0 20px 0;
   font-size: 18px;
-  color: #ffffff;
+  color: var(--color-text);
   font-weight: 700;
 }
 
@@ -297,23 +297,23 @@
 }
 
 .action {
-  background: rgba(255,255,255,0.05);
+  background: var(--color-surface-hover);
   border-radius: var(--radius-lg);
   padding: 18px;
-  border-left: 3px solid #10b981;
+  border-left: 3px solid var(--color-primary);
   transition: all var(--transition);
 }
 
 .action:hover {
-  border-left-color: #3b82f6;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-  background: rgba(255,255,255,0.08);
+  border-left-color: var(--color-secondary);
+  box-shadow: var(--shadow-sm);
+  background: var(--color-primary-light);
 }
 
 .action strong {
   display: block;
   font-size: 14px;
-  color: #ffffff;
+  color: var(--color-text);
   margin-bottom: 8px;
   font-weight: 700;
 }
@@ -322,22 +322,22 @@
   margin: 0;
   font-size: 14px;
   line-height: 1.6;
-  color: rgba(255,255,255,0.6);
+  color: var(--color-text-secondary);
 }
 
 .endSection {
-  background: rgba(255,255,255,0.05);
-  border-left: 4px solid rgba(59,130,246,0.6);
+  background: var(--color-secondary-light);
+  border-left: 4px solid var(--color-secondary);
   border-radius: var(--radius-lg);
   padding: 28px;
   margin-bottom: 32px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid var(--color-border);
 }
 
 .endSection h3 {
   margin: 0 0 14px 0;
   font-size: 18px;
-  color: #ffffff;
+  color: var(--color-text);
   font-weight: 700;
 }
 
@@ -345,14 +345,14 @@
   margin: 0 0 14px 0;
   font-size: 15px;
   line-height: 1.7;
-  color: rgba(255,255,255,0.6);
+  color: var(--color-text-secondary);
 }
 
 .endSection ul {
   margin: 0;
   padding-left: 24px;
   font-size: 15px;
-  color: rgba(255,255,255,0.6);
+  color: var(--color-text-secondary);
 }
 
 .endSection li {
@@ -361,7 +361,7 @@
 }
 
 .endSection strong {
-  color: #ffffff;
+  color: var(--color-text);
   font-weight: 700;
 }
 
@@ -370,14 +370,14 @@
   gap: 12px;
   justify-content: center;
   padding-top: 28px;
-  border-top: 1px solid rgba(255,255,255,0.08);
+  border-top: 1px solid var(--color-divider);
 }
 
 .backButton {
   padding: 12px 28px;
-  background: transparent;
-  color: #ffffff;
-  border: 1px solid rgba(255,255,255,0.2);
+  background: var(--color-surface);
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
   border-radius: var(--radius-lg);
   font-size: 15px;
   font-weight: 700;
@@ -386,8 +386,7 @@
 }
 
 .backButton:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.35);
+  background: var(--color-primary-light);
   transform: translateY(-2px);
 }
 
@@ -427,12 +426,12 @@
 }
 
 .employerIntro {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-accent-light) 100%);
+  border: 1px solid var(--color-primary);
   border-radius: var(--radius-lg);
   padding: 14px 18px;
   font-size: 13px;
-  color: rgba(255,255,255,0.6);
+  color: var(--color-text-secondary);
   line-height: 1.6;
 }
 
@@ -440,11 +439,11 @@
 
 /* Recruiter card */
 .recruiterCard {
-  background: rgba(255,255,255,0.05);
-  border: 1.5px solid rgba(255,255,255,0.1);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
   border-radius: var(--radius-xl);
   padding: 24px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  box-shadow: var(--shadow-sm);
 }
 
 .recruiterCardHeader {
@@ -457,7 +456,7 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #10b981, #3b82f6);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
   color: white;
   font-size: 22px;
   font-weight: 800;
@@ -476,19 +475,19 @@
   margin: 0 0 4px 0;
   font-size: 18px;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--color-text);
 }
 
 .recruiterMeta {
   margin: 0 0 4px 0;
   font-size: 13px;
-  color: rgba(255,255,255,0.6);
+  color: var(--color-text-secondary);
 }
 
 .recruiterTarget {
   margin: 0;
   font-size: 12px;
-  color: rgba(255,255,255,0.3);
+  color: var(--color-text-muted);
 }
 
 .recruiterScore {
@@ -499,14 +498,14 @@
 .recruiterScoreNum {
   font-size: 32px;
   font-weight: 800;
-  color: #10b981;
+  color: var(--color-primary);
   line-height: 1;
 }
 
 .recruiterScoreLabel {
   font-size: 10px;
   font-weight: 600;
-  color: rgba(255,255,255,0.3);
+  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-top: 2px;
@@ -515,13 +514,13 @@
 .recruiterScoreLevel {
   font-size: 11px;
   font-weight: 700;
-  color: #10b981;
+  color: var(--color-primary);
   margin-top: 4px;
 }
 
 .recruiterDivider {
   height: 1px;
-  background: rgba(255,255,255,0.08);
+  background: var(--color-divider);
   margin: 16px 0;
 }
 
@@ -534,7 +533,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: rgba(255,255,255,0.6);
+  color: var(--color-text-secondary);
   margin-bottom: 10px;
 }
 
@@ -545,7 +544,7 @@
 }
 
 .recruiterStrengthItem {
-  background: rgba(255,255,255,0.05);
+  background: var(--color-bg);
   border-radius: var(--radius-sm);
   padding: 8px 10px;
 }
@@ -553,7 +552,7 @@
 .recruiterStrengthName {
   font-size: 12px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--color-text);
 }
 
 .recruiterStrengthScore {
@@ -578,20 +577,20 @@
   margin: 0 0 12px 0;
   padding-left: 20px;
   font-size: 13px;
-  color: rgba(255,255,255,0.6);
+  color: var(--color-text-secondary);
   line-height: 1.7;
 }
 
 .shortlistConcern {
   font-size: 12px;
-  color: rgba(255,255,255,0.3);
+  color: var(--color-text-muted);
   font-style: italic;
 }
 
 /* Resume vs PathLens comparison */
 .employerWhy {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: 20px;
 }
@@ -600,7 +599,7 @@
   margin: 0 0 16px 0;
   font-size: 14px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-text);
 }
 
 .employerWhyGrid {
@@ -619,20 +618,20 @@
   padding: 10px 12px;
   border-radius: var(--radius-sm);
   font-size: 12px;
-  color: rgba(255,255,255,0.6);
+  color: var(--color-text-secondary);
   line-height: 1.5;
-  background: rgba(255,255,255,0.05);
+  background: var(--color-bg);
 }
 
 .employerWhyItem strong {
   display: block;
   margin-bottom: 4px;
-  color: #ffffff;
+  color: var(--color-text);
 }
 
 .employerDisclaimer {
   font-size: 11px;
-  color: rgba(255,255,255,0.3);
+  color: var(--color-text-muted);
   text-align: center;
   font-style: italic;
   padding: 0 16px;

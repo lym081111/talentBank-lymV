@@ -1,9 +1,10 @@
 .nav {
-  background: rgba(10,15,30,0.95);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: var(--shadow-sm);
   backdrop-filter: blur(12px);
 }
 
@@ -40,11 +41,11 @@
   border-radius: var(--radius-md);
   transition: all var(--transition);
   flex-shrink: 0;
-  color: #ffffff;
+  color: var(--color-text);
 }
 
 .homeBtn:hover {
-  background: rgba(255,255,255,0.08);
+  background: var(--color-primary-light);
   transform: scale(1.1);
 }
 
@@ -55,7 +56,7 @@
 .navBrand {
   font-size: 18px;
   font-weight: 800;
-  background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -80,7 +81,7 @@
 .step {
   background: none;
   padding: 8px 14px;
-  color: rgba(255,255,255,0.3);
+  color: var(--color-text-muted);
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
@@ -91,14 +92,14 @@
 }
 
 .step:hover {
-  color: #ffffff;
-  background: rgba(255,255,255,0.08);
+  color: var(--color-primary);
+  background: var(--color-primary-light);
 }
 
 .step.active {
-  color: #10b981;
+  color: var(--color-primary);
   font-weight: 700;
-  background: rgba(16,185,129,0.1);
+  background: var(--color-primary-light);
 }
 
 .step.active::after {
@@ -108,24 +109,24 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #10b981 0%, #3b82f6 100%);
+  background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-primary) 100%);
   border-radius: 1px;
 }
 
 .step.disabled {
-  color: rgba(255,255,255,0.3);
+  color: var(--color-text-muted);
   opacity: 0.5;
   cursor: not-allowed;
   background: transparent;
 }
 
 .step.disabled:hover {
-  color: rgba(255,255,255,0.3);
+  color: var(--color-text-muted);
   background: transparent;
 }
 
 .divider {
-  color: rgba(255,255,255,0.1);
+  color: var(--color-border);
   font-size: 13px;
   flex-shrink: 0;
   opacity: 0.5;
@@ -140,11 +141,11 @@
   border-radius: var(--radius-md);
   transition: all var(--transition);
   flex-shrink: 0;
-  color: #ffffff;
+  color: var(--color-text);
 }
 
 .darkModeBtn:hover {
-  background: rgba(255,255,255,0.08);
+  background: var(--color-primary-light);
   transform: scale(1.1);
 }
 
@@ -155,8 +156,8 @@
 .resetBtn {
   padding: 7px 16px;
   background: transparent;
-  color: rgba(255,255,255,0.3);
-  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   font-size: 13px;
   font-weight: 600;
@@ -167,9 +168,9 @@
 }
 
 .resetBtn:hover {
-  background: rgba(255,193,7,0.08);
-  color: rgba(255,193,7,0.8);
-  border-color: rgba(255,193,7,0.4);
+  background: var(--color-warning-light);
+  color: var(--color-warning);
+  border-color: var(--color-warning);
   transform: translateY(-1px);
 }
 

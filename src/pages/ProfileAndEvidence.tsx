@@ -97,27 +97,6 @@ export function ProfileAndEvidence({
   const [editForm, setEditForm] = useState(profile);
   const formRef = useRef<HTMLDivElement>(null);
 
-  // Must be at top level - cannot be inside JSX
-  const allExtractedSkills = useMemo<ExtractedSkill[]>(() => {
-    const skills: ExtractedSkill[] = [];
-    evidence.forEach(item => {
-      if (item.technologies) {
-        item.technologies.split(',').forEach(tech => {
-          const trimmed = tech.trim();
-          if (trimmed) {
-            skills.push({
-              skill: trimmed,
-              confidence: 'high',
-              sourceEvidenceId: item.id,
-              sourcePhrase: item.technologies || '',
-            });
-          }
-        });
-      }
-    });
-    return skills;
-  }, [evidence]);
-
   useEffect(() => {
     if (showSuccess) {
       const timer = setTimeout(() => setShowSuccess(false), 4000);
@@ -125,27 +104,15 @@ export function ProfileAndEvidence({
     }
   }, [showSuccess]);
 
-  // Keep editForm in sync with profile when not editing
-  useEffect(() => {
-    if (!isEditingProfile) {
-      setEditForm(profile);
-    }
-  }, [profile, isEditingProfile]);
-
 
   function handleSave(data: Omit<Evidence, 'id'>) {
-    try {
-      if (formMode === 'add' || (typeof formMode === 'object' && 'template' in formMode)) {
-        onAddEvidence(data);
-        setShowSuccess(true);
-      } else if (typeof formMode === 'object' && 'editing' in formMode) {
-        onUpdateEvidence(formMode.editing.id, data);
-      }
-      setFormMode('closed');
-    } catch (error) {
-      console.error('Error saving evidence:', error);
-      setFormMode('closed');
+    if (formMode === 'add' || (typeof formMode === 'object' && 'template' in formMode)) {
+      onAddEvidence(data);
+      setShowSuccess(true);
+    } else if (typeof formMode === 'object' && 'editing' in formMode) {
+      onUpdateEvidence(formMode.editing.id, data);
     }
+    setFormMode('closed');
   }
 
   const handleSaveProfile = () => {
@@ -202,7 +169,7 @@ export function ProfileAndEvidence({
         )}
 
         <div className={styles.profileCard}>
-          {isEditingProfile && formMode === 'closed' ? (
+          {isEditingProfile ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <h3 style={{ margin: '0 0 8px 0' }}>Edit Your Profile</h3>
               <div>
@@ -417,15 +384,7 @@ export function ProfileAndEvidence({
                   <button
                     key={tmpl.data.type}
                     className={styles.templateCard}
-                    disabled={isEditingProfile}
-                    title={isEditingProfile ? "Please save your profile first" : ""}
-                    onClick={() => {
-                      if (!isEditingProfile) {
-                        setIsEditingProfile(false);
-                        setFormMode({ template: tmpl.data });
-                      }
-                    }}
-                    style={isEditingProfile ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+                    onClick={() => setFormMode({ template: tmpl.data })}
                   >
                     <span className={styles.templateEmoji}>{tmpl.emoji}</span>
                     <span className={styles.templateLabel}>{tmpl.label}</span>
@@ -448,21 +407,45 @@ export function ProfileAndEvidence({
               </div>
 
               {/* Skills Grouped by Demand */}
-              {allExtractedSkills.length > 0 && (
-                <div style={{
-                  background: 'var(--color-surface)',
-                  border: '1px solid var(--color-border)',
-                  borderRadius: 'var(--radius-lg)',
-                  padding: '24px',
-                  marginTop: '32px',
-                  marginBottom: '20px',
-                }}>
-                  <h3 style={{ margin: '0 0 20px 0', fontSize: '16px', fontWeight: '700', color: 'var(--color-text)' }}>
-                    📊 Skills Summary (by Demand Level)
-                  </h3>
-                  <SkillsByDemandVisualization extractedSkills={allExtractedSkills} />
-                </div>
-              )}
+              {(() => {
+                const allExtractedSkills = useMemo(() => {
+                  const skills: ExtractedSkill[] = [];
+                  evidence.forEach(item => {
+                    if (item.technologies) {
+                      item.technologies.split(',').forEach(tech => {
+                        const trimmed = tech.trim();
+                        if (trimmed) {
+                          skills.push({
+                            skill: trimmed,
+                            confidence: 'high',
+                            sourceEvidenceId: item.id,
+                            sourcePhrase: item.technologies || '',
+                          });
+                        }
+                      });
+                    }
+                  });
+                  return skills;
+                }, [evidence]);
+
+                if (allExtractedSkills.length === 0) return null;
+
+                return (
+                  <div style={{
+                    background: 'var(--color-surface)',
+                    border: '1px solid var(--color-border)',
+                    borderRadius: 'var(--radius-lg)',
+                    padding: '24px',
+                    marginTop: '32px',
+                    marginBottom: '20px',
+                  }}>
+                    <h3 style={{ margin: '0 0 20px 0', fontSize: '16px', fontWeight: '700', color: 'var(--color-text)' }}>
+                      📊 Skills Summary (by Demand Level)
+                    </h3>
+                    <SkillsByDemandVisualization extractedSkills={allExtractedSkills} />
+                  </div>
+                );
+              })()}
             </>
           )}
 
@@ -470,10 +453,7 @@ export function ProfileAndEvidence({
             {evidence.length > 0 && formMode === 'closed' && (
               <button
                 className={styles.exportButton}
-                onClick={() => {
-                  setIsEditingProfile(false);
-                  setFormMode('add');
-                }}
+                onClick={() => setFormMode('add')}
               >
                 + Add More Evidence
               </button>

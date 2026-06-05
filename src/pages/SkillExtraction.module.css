@@ -1,5 +1,5 @@
 .container {
-  background: #0a0f1e;
+  background: var(--color-bg);
   min-height: 100vh;
   padding: 40px 20px;
 }
@@ -10,23 +10,23 @@
 }
 
 .header {
-  background: rgba(255,255,255,0.05);
+  background: var(--color-surface);
   border-radius: var(--radius-xl);
   padding: 32px;
   margin-bottom: 28px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
   transition: all var(--transition-slow);
 }
 
 .header:hover {
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-  border-color: rgba(255,255,255,0.2);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary);
 }
 
 .header h2 {
   font-size: 28px;
-  color: #ffffff;
+  color: var(--color-text);
   margin-bottom: 12px;
   font-weight: 800;
 }
@@ -35,7 +35,7 @@
   margin: 0;
   font-size: 16px;
   line-height: 1.7;
-  color: rgba(255,255,255,0.6);
+  color: var(--color-text-secondary);
 }
 
 .summary {
@@ -46,25 +46,24 @@
 }
 
 .summaryCard {
-  background: rgba(255,255,255,0.05);
+  background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-secondary-light) 100%);
   border-radius: var(--radius-lg);
   padding: 24px;
   text-align: center;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
   transition: all var(--transition);
 }
 
 .summaryCard:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  border-color: rgba(255,255,255,0.18);
+  box-shadow: var(--shadow-md);
 }
 
 .summaryValue {
   font-size: 36px;
   font-weight: 900;
-  background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -73,25 +72,25 @@
 
 .summaryLabel {
   font-size: 13px;
-  color: rgba(255,255,255,0.6);
+  color: var(--color-text-secondary);
   font-weight: 600;
 }
 
 .explanation {
-  background: rgba(255,255,255,0.05);
-  border-left: 4px solid #10b981;
+  background: var(--color-surface);
+  border-left: 4px solid var(--color-primary);
   border-radius: var(--radius-lg);
   padding: 24px;
   margin-bottom: 28px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
 }
 
 .explanation p {
   margin: 0 0 14px 0;
   font-size: 14px;
   line-height: 1.7;
-  color: rgba(255,255,255,0.6);
+  color: var(--color-text-secondary);
 }
 
 .explanation p:last-child {
@@ -99,7 +98,7 @@
 }
 
 .explanation strong {
-  color: #ffffff;
+  color: var(--color-text);
   font-weight: 700;
 }
 
@@ -108,39 +107,39 @@
 }
 
 .nextSteps {
-  background: rgba(16,185,129,0.08);
-  border-left: 4px solid #10b981;
+  background: var(--color-primary-light);
+  border-left: 4px solid var(--color-primary);
   border-radius: var(--radius-lg);
   padding: 20px 24px;
   margin-bottom: 28px;
-  border: 1px solid rgba(16,185,129,0.2);
+  border: 1px solid var(--color-border);
 }
 
 .nextSteps p {
   margin: 0;
   font-size: 14px;
   line-height: 1.7;
-  color: #10b981;
+  color: var(--color-primary);
   font-weight: 500;
 }
 
 .continueButton {
   width: 100%;
   padding: 16px 24px;
-  background: #10b981;
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
   color: white;
   border-radius: var(--radius-lg);
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   transition: all var(--transition);
-  box-shadow: 0 8px 24px rgba(16,185,129,0.3);
+  box-shadow: 0 8px 24px rgba(255, 107, 53, 0.3);
   letter-spacing: -0.3px;
 }
 
 .continueButton:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(16,185,129,0.4);
+  box-shadow: 0 12px 32px rgba(255, 107, 53, 0.4);
 }
 
 .continueButton:active {

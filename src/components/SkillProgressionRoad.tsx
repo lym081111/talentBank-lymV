@@ -16,9 +16,9 @@ export function SkillProgressionRoad({ skills }: Props) {
 
   const getMilestoneColor = (priority: string) => {
     switch (priority) {
-      case 'high':   return { bg: '#ef4444', text: '#ffffff', light: 'rgba(239,68,68,0.15)',   border: 'rgba(239,68,68,0.4)' };
-      case 'medium': return { bg: '#f59e0b', text: '#ffffff', light: 'rgba(245,158,11,0.15)',  border: 'rgba(245,158,11,0.4)' };
-      default:       return { bg: '#10b981', text: '#ffffff', light: 'rgba(16,185,129,0.15)',  border: 'rgba(16,185,129,0.4)' };
+      case 'high': return { bg: '#dc2626', text: '#ffffff', light: '#fee2e2' };
+      case 'medium': return { bg: '#ea580c', text: '#ffffff', light: '#fed7aa' };
+      default: return { bg: '#059669', text: '#ffffff', light: '#d1fae5' };
     }
   };
 
@@ -52,9 +52,9 @@ export function SkillProgressionRoad({ skills }: Props) {
       <div style={{
         position: 'relative',
         padding: '40px 20px',
-        background: 'linear-gradient(135deg, #0d1a2e 0%, #0a1a14 100%)',
+        background: 'linear-gradient(135deg, #f0f9ff 0%, #ecfdf5 100%)',
         borderRadius: 'var(--radius-lg)',
-        border: '1px solid rgba(16,185,129,0.25)',
+        border: '2px solid var(--color-accent)',
         overflow: 'hidden'
       }}>
         {/* Road background lines */}
@@ -154,11 +154,11 @@ export function SkillProgressionRoad({ skills }: Props) {
                   {/* Milestone Card */}
                   <div style={{
                     flex: 1,
-                    background: 'rgba(255,255,255,0.06)',
-                    border: `2px solid ${colors.border}`,
+                    background: 'white',
+                    border: `3px solid ${colors.bg}`,
                     borderRadius: 'var(--radius-lg)',
                     padding: '20px',
-                    boxShadow: `0 4px 20px ${colors.light}`
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)'
                   }}>
                     <div style={{
                       display: 'flex',
@@ -171,7 +171,7 @@ export function SkillProgressionRoad({ skills }: Props) {
                           margin: '0 0 6px 0',
                           fontSize: '16px',
                           fontWeight: '900',
-                          color: '#ffffff',
+                          color: 'var(--color-text)',
                           letterSpacing: '-0.3px'
                         }}>
                           {skill.skill}
@@ -266,8 +266,8 @@ export function SkillProgressionRoad({ skills }: Props) {
                     <div
                       key={skill.skill}
                       style={{
-                        background: 'rgba(255,255,255,0.06)',
-                        border: `1px solid ${colors.border}`,
+                        background: 'white',
+                        border: `2px solid ${colors.bg}`,
                         borderRadius: 'var(--radius-lg)',
                         padding: '16px',
                         position: 'relative'
@@ -288,7 +288,7 @@ export function SkillProgressionRoad({ skills }: Props) {
                         margin: '0 0 6px 0',
                         fontSize: '14px',
                         fontWeight: '800',
-                        color: '#ffffff'
+                        color: 'var(--color-text)'
                       }}>
                         {skill.skill}
                       </h5>
@@ -335,28 +335,22 @@ export function SkillProgressionRoad({ skills }: Props) {
               🏁 MASTERY ACHIEVED
             </div>
           </div>
-
-          {/* Tip box — inside the road so users can see it in context */}
-          <div style={{
-            background: 'rgba(255,255,255,0.05)',
-            border: '1px dashed rgba(16,185,129,0.4)',
-            borderRadius: 'var(--radius-lg)',
-            padding: '14px 20px',
-            marginTop: '32px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            fontSize: '12px',
-            color: 'rgba(255,255,255,0.5)',
-            fontWeight: '600',
-          }}>
-            <span style={{ fontSize: '18px', flexShrink: 0 }}>💡</span>
-            <div>
-              <strong style={{ color: '#ffffff', display: 'block', marginBottom: '2px' }}>How to read this map:</strong>
-              Follow the <strong style={{ color: '#ef4444' }}>main road</strong> (numbered milestones) first — high-priority skills with the biggest score impact. Then explore the <strong style={{ color: '#f59e0b' }}>optional branch</strong> for medium-priority specializations.
-            </div>
-          </div>
         </div>
+      </div>
+
+      {/* Strategic Tip */}
+      <div style={{
+        background: 'var(--color-bg)',
+        border: '2px dashed var(--color-accent)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '20px',
+        marginTop: '24px',
+        textAlign: 'center',
+        fontSize: '13px',
+        color: 'var(--color-text-secondary)',
+        fontWeight: '500'
+      }}>
+        💡 Follow the main road first (high priority) to reach mastery quickly. Then explore optional branches (medium priority) to specialize.
       </div>
     </div>
   );
