@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { StudentProfile } from '../types/evidence';
 import { priyaSharmaProfile, kaiChenProfile, aishaPatelProfile } from '../data/mockStudent';
+import { CareerOSPortal } from '../components/CareerOSPortal';
 
 interface Props {
   onViewDemo: (profile: StudentProfile) => void;
@@ -740,6 +741,9 @@ export function Landing({ onViewDemo, onBuildOwn }: Props) {
           ))}
         </div>
       </div>
+
+      {/* ── CAREER OS INTERACTIVE PORTAL ───────────────────────── */}
+      <CareerOSPortal onViewDemo={onViewDemo} onBuildOwn={onBuildOwn} />
 
       {/* ── THE GREAT TOGGLE ─────────────────────────────────────── */}
       <div ref={toggleRef as React.RefObject<HTMLDivElement>} className="sticky top-0 z-50 bg-[#0a0f1e]/90 backdrop-blur-xl border-b border-white/8 py-4">
