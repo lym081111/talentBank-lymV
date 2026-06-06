@@ -146,6 +146,288 @@ function CareerGuidanceSection({ profile }: { profile: ReadinessProfile }) {
   );
 }
 
+type OSModuleId = 'navigator' | 'portfolio' | 'coach' | 'pay' | 'life';
+
+const OS_MODULES: Array<{ id: OSModuleId; label: string; helper: string }> = [
+  { id: 'navigator', label: 'Path Navigator', helper: 'career routes' },
+  { id: 'portfolio', label: 'Living Portfolio', helper: 'resume proof' },
+  { id: 'coach', label: 'AI Coach', helper: 'next move' },
+  { id: 'pay', label: 'Fair Pay Engine', helper: 'MYR signal' },
+  { id: 'life', label: 'Life Designer', helper: 'career timing' },
+];
+
+function getUniqueSkills(profile: ReadinessProfile) {
+  return [...new Map(profile.allExtractedSkills.map(skill => [skill.skill, skill])).values()];
+}
+
+function getRoleTrack(targetRole: string) {
+  const role = targetRole.toLowerCase();
+  if (role.includes('data')) {
+    return {
+      current: 'Data platform track',
+      stretch: 'AI infrastructure track',
+      currentPay: 'MYR 9,000-14,000/mo',
+      stretchPay: 'MYR 16,000-24,000/mo',
+      pivotSkill: 'production ML pipelines',
+    };
+  }
+  if (role.includes('product')) {
+    return {
+      current: 'Marketplace product track',
+      stretch: 'Regional growth lead track',
+      currentPay: 'MYR 10,000-16,000/mo',
+      stretchPay: 'MYR 18,000-28,000/mo',
+      pivotSkill: 'pricing, funnel analysis, and technical discovery',
+    };
+  }
+  if (role.includes('design') || role.includes('ux')) {
+    return {
+      current: 'Product design track',
+      stretch: 'AI product experience track',
+      currentPay: 'MYR 7,000-12,000/mo',
+      stretchPay: 'MYR 14,000-22,000/mo',
+      pivotSkill: 'research-backed prototyping with AI workflows',
+    };
+  }
+  return {
+    current: 'Software engineering track',
+    stretch: 'Platform / AI systems track',
+    currentPay: 'MYR 8,000-14,000/mo',
+    stretchPay: 'MYR 16,000-26,000/mo',
+    pivotSkill: 'system design, cloud reliability, and LLM integration',
+  };
+}
+
+function getPaySignal(overall: number, targetRole: string) {
+  const role = targetRole.toLowerCase();
+  const base = role.includes('product') ? 7200 : role.includes('data') ? 7800 : role.includes('design') || role.includes('ux') ? 6200 : 7600;
+  const yourBase = Math.round((base + overall * 78) / 100) * 100;
+  const market75 = Math.round((base + 3300 + overall * 92) / 100) * 100;
+  return {
+    yourBase,
+    market75,
+    gap: Math.max(0, market75 - yourBase),
+  };
+}
+
+function DynamicOSModules({
+  profile,
+  studentProfile,
+  evidence,
+  onViewGaps,
+  onBackToProfile,
+  onViewTrajectory,
+}: {
+  profile: ReadinessProfile;
+  studentProfile: StudentProfile;
+  evidence: Evidence[];
+  onViewGaps: () => void;
+  onBackToProfile: () => void;
+  onViewTrajectory?: () => void;
+}) {
+  const [activeModule, setActiveModule] = useState<OSModuleId>('navigator');
+  const uniqueSkills = useMemo(() => getUniqueSkills(profile), [profile]);
+  const weakDimension = useMemo(
+    () => [...profile.dimensions].sort((a, b) => a.score - b.score)[0],
+    [profile.dimensions]
+  );
+  const strongDimension = useMemo(
+    () => [...profile.dimensions].sort((a, b) => b.score - a.score)[0],
+    [profile.dimensions]
+  );
+  const roleTrack = useMemo(() => getRoleTrack(studentProfile.targetRole), [studentProfile.targetRole]);
+  const paySignal = useMemo(() => getPaySignal(profile.overall, studentProfile.targetRole), [profile.overall, studentProfile.targetRole]);
+  const verifiedCount = evidence.filter(item => item.verified).length;
+  const linkedCount = evidence.filter(item => Boolean(item.link)).length;
+  const topEvidence = evidence.slice(0, 3);
+  const topSkills = uniqueSkills.slice(0, 6).map(skill => skill.skill);
+
+  const moduleSummary: Record<OSModuleId, {
+    headline: string;
+    body: string;
+    metrics: Array<{ label: string; value: string; note: string }>;
+    action: string;
+    onAction?: () => void;
+    blocks: Array<{ title: string; body: string; tone: 'good' | 'warn' | 'info' }>;
+  }> = {
+    navigator: {
+      headline: `${studentProfile.name || 'This candidate'} has a ${studentProfile.targetRole || 'target role'} profile, but the route depends on proof depth.`,
+      body: `${strongDimension?.dimension ?? 'Strongest evidence'} is currently the strongest signal. ${weakDimension?.dimension ?? 'one readiness area'} is the first place the route can break.`,
+      metrics: [
+        { label: 'Current route', value: roleTrack.current, note: roleTrack.currentPay },
+        { label: 'Stretch route', value: roleTrack.stretch, note: roleTrack.stretchPay },
+        { label: 'Route blocker', value: `${weakDimension?.score ?? 0}/100`, note: weakDimension?.dimension ?? 'Missing readiness evidence' },
+      ],
+      action: 'Simulate trajectory',
+      onAction: onViewTrajectory,
+      blocks: [
+        {
+          title: 'Route A: stay close to current proof',
+          body: `Use ${topSkills.slice(0, 3).join(', ') || 'current project evidence'} to pursue ${roleTrack.current}. Lower risk, but slower salary expansion if the weak dimension stays unresolved.`,
+          tone: 'good',
+        },
+        {
+          title: 'Route B: stretch into higher-liquidity work',
+          body: `Add ${roleTrack.pivotSkill}. This is the path to ${roleTrack.stretch}, but only after the profile shows one project or role with measurable ownership.`,
+          tone: 'info',
+        },
+      ],
+    },
+    portfolio: {
+      headline: `${studentProfile.name || 'The candidate'} has ${evidence.length} evidence blocks. The portfolio is only as strong as what can be verified.`,
+      body: `The system reads resume content, links, outcomes, and technologies. It does not reward generic claims without source evidence.`,
+      metrics: [
+        { label: 'Evidence blocks', value: String(evidence.length), note: `${verifiedCount} verified` },
+        { label: 'Linked proof', value: String(linkedCount), note: `${Math.max(0, evidence.length - linkedCount)} items need a URL or artifact` },
+        { label: 'Skills detected', value: String(uniqueSkills.length), note: topSkills.slice(0, 3).join(', ') || 'No skills yet' },
+      ],
+      action: 'Update evidence',
+      onAction: onBackToProfile,
+      blocks: topEvidence.map((item, index) => ({
+        title: `${String(index + 1).padStart(2, '0')} ${item.title}`,
+        body: `${item.technologies || 'No stack listed'} · ${item.outcome || item.description}`,
+        tone: item.link || item.verified ? 'good' : 'warn',
+      })),
+    },
+    coach: {
+      headline: `The next coaching move is not motivational. It is to fix ${weakDimension?.dimension ?? 'the weakest signal'}.`,
+      body: weakDimension?.explanation ?? 'Add clearer evidence before asking the system for high-confidence coaching.',
+      metrics: [
+        { label: 'Weakest signal', value: weakDimension?.dimension ?? 'Unknown', note: `${weakDimension?.score ?? 0}/100` },
+        { label: 'Strongest signal', value: strongDimension?.dimension ?? 'Unknown', note: `${strongDimension?.score ?? 0}/100` },
+        { label: 'Coach confidence', value: profile.overall >= 70 ? 'High' : profile.overall >= 50 ? 'Medium' : 'Low', note: `${evidence.length} evidence inputs used` },
+      ],
+      action: 'View paths forward',
+      onAction: onViewGaps,
+      blocks: [
+        {
+          title: 'What AI uses',
+          body: `Profile target, ${evidence.length} evidence items, ${uniqueSkills.length} extracted skills, and readiness scores. No hidden personality score.`,
+          tone: 'info',
+        },
+        {
+          title: 'What AI should say next',
+          body: `Create one new proof item that raises ${weakDimension?.dimension ?? 'the weakest dimension'} above 75. The explanation must cite the exact evidence it used.`,
+          tone: 'warn',
+        },
+      ],
+    },
+    pay: {
+      headline: `The pay view is inferred from readiness, target role, and proof strength. It changes when the evidence changes.`,
+      body: `${studentProfile.targetRole || 'Target role'} profiles with stronger proof can defend higher MYR bands because the negotiation has evidence attached.`,
+      metrics: [
+        { label: 'Profile base', value: `MYR ${paySignal.yourBase.toLocaleString()}`, note: 'inferred current defendable base' },
+        { label: 'Market 75th', value: `MYR ${paySignal.market75.toLocaleString()}`, note: 'target band after proof gap closes' },
+        { label: 'Gap', value: `MYR ${paySignal.gap.toLocaleString()}`, note: 'not a promise, a negotiation signal' },
+      ],
+      action: 'Fix pay blockers',
+      onAction: onViewGaps,
+      blocks: [
+        {
+          title: 'Negotiation proof',
+          body: topEvidence[0]?.outcome || topEvidence[0]?.description || 'Add one quantified project outcome before using this in a salary conversation.',
+          tone: topEvidence[0]?.outcome ? 'good' : 'warn',
+        },
+        {
+          title: 'What blocks the higher band',
+          body: `${weakDimension?.dimension ?? 'Weak evidence'} is still under market-ready level. Close it before claiming the 75th percentile band.`,
+          tone: 'warn',
+        },
+      ],
+    },
+    life: {
+      headline: `Career planning should allow breaks, pivots, and skill sprints without treating them as failure.`,
+      body: `For ${studentProfile.name || 'this profile'}, the highest-leverage break is a focused sprint on ${roleTrack.pivotSkill}.`,
+      metrics: [
+        { label: 'Sprint length', value: '3 months', note: 'bootcamp, project sprint, or structured portfolio rebuild' },
+        { label: 'Short-term cost', value: 'MYR 12K-18K', note: 'estimated opportunity cost' },
+        { label: 'Long-term upside', value: '+35-60%', note: 'if new evidence raises weak dimensions above 75' },
+      ],
+      action: 'Simulate life route',
+      onAction: onViewTrajectory,
+      blocks: [
+        {
+          title: 'Recommended sprint',
+          body: `Build one artifact that proves ${roleTrack.pivotSkill} and explicitly improves ${weakDimension?.dimension ?? 'the weakest readiness area'}.`,
+          tone: 'info',
+        },
+        {
+          title: 'Resume narrative',
+          body: `The break becomes defensible when it produces evidence: shipped demo, write-up, benchmark, user result, or verified certificate.`,
+          tone: 'good',
+        },
+      ],
+    },
+  };
+
+  const active = moduleSummary[activeModule];
+
+  return (
+    <section className={styles.osWorkspace}>
+      <div className={styles.osWorkspaceHeader}>
+        <div>
+          <p className={styles.osEyebrow}>Full OS demo · dynamic modules</p>
+          <h3>Five modules, generated from this candidate's evidence.</h3>
+          <p>
+            Click a module. The workspace changes based on the profile name, target role, evidence, extracted skills, readiness scores, and gaps.
+          </p>
+        </div>
+        <div className={styles.osScorePill}>
+          <span>{profile.overall}</span>
+          <small>readiness</small>
+        </div>
+      </div>
+
+      <div className={styles.osModuleShell}>
+        <div className={styles.osModuleNav} aria-label="Career OS modules">
+          {OS_MODULES.map(module => (
+            <button
+              key={module.id}
+              type="button"
+              onClick={() => setActiveModule(module.id)}
+              className={activeModule === module.id ? styles.osModuleActive : ''}
+            >
+              <strong>{module.label}</strong>
+              <span>{module.helper}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className={styles.osModuleCanvas}>
+          <p className={styles.osCanvasLabel}>{OS_MODULES.find(module => module.id === activeModule)?.label}</p>
+          <h4>{active.headline}</h4>
+          <p>{active.body}</p>
+
+          <div className={styles.osMetricGrid}>
+            {active.metrics.map(metric => (
+              <div key={metric.label} className={styles.osMetric}>
+                <span>{metric.label}</span>
+                <strong>{metric.value}</strong>
+                <small>{metric.note}</small>
+              </div>
+            ))}
+          </div>
+
+          <div className={styles.osInsightGrid}>
+            {active.blocks.map(block => (
+              <div key={block.title} className={`${styles.osInsightCard} ${styles[block.tone]}`}>
+                <strong>{block.title}</strong>
+                <p>{block.body}</p>
+              </div>
+            ))}
+          </div>
+
+          {active.onAction && (
+            <button type="button" className={styles.osActionButton} onClick={active.onAction}>
+              {active.action}
+            </button>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 interface Props {
   profile: ReadinessProfile;
   studentProfile: StudentProfile;
@@ -295,6 +577,15 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
             </span>
           </div>
         </div>
+
+        <DynamicOSModules
+          profile={profile}
+          studentProfile={studentProfile}
+          evidence={evidence}
+          onViewGaps={onViewGaps}
+          onBackToProfile={onBackToProfile}
+          onViewTrajectory={onViewTrajectory}
+        />
 
         {/* Visual Score Range Indicators */}
         <div style={{
