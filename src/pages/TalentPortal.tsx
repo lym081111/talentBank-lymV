@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { CareerOSPortal } from '../components/CareerOSPortal';
 import { StudentProfile, Evidence } from '../types/evidence';
 import { priyaSharmaProfile, kaiChenProfile, aishaPatelProfile } from '../data/mockStudent';
 
@@ -62,7 +61,7 @@ function splitTechnologies(profile: StudentProfile) {
 
 function getSalarySignals(profile: StudentProfile) {
   const text = profile.evidence.map(item => item.outcome ?? '').join(' ');
-  const matches = text.match(/(?:SGD|MYR|INR)\s?[\d,.]+[KkLl]?(?:\/month|\/year)?/g);
+  const matches = text.match(/MYR\s?[\d,.]+[KkLl]?(?:\/month|\/year)?/g);
   return matches ? Array.from(new Set(matches)).slice(0, 4) : [];
 }
 
@@ -77,6 +76,30 @@ function getEvidenceKind(item: Evidence) {
   if (item.title.toLowerCase().includes('senior')) return 'Senior proof';
   if (item.title.toLowerCase().includes('intern')) return 'Early proof';
   return 'Role proof';
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function highlightText(text: string, keywords: string[]) {
+  const usefulKeywords = keywords.filter(keyword => keyword.length > 1).slice(0, 14);
+  const moneyAndMetrics = /MYR\s?[\d,.]+[KkLl]?(?:\/month|\/year)?|\d+(?:\.\d+)?%|\d+(?:,\d{3})?\+?\s?(?:users|events\/day|requests\/day|transactions|stakeholders|PRs|countries|sellers|GMV|QPS)/gi;
+  const keywordPattern = usefulKeywords.length ? usefulKeywords.map(escapeRegExp).join('|') : '$^';
+  const pattern = new RegExp(`(${keywordPattern}|${moneyAndMetrics.source})`, 'gi');
+  return text.split(pattern).filter(Boolean).map((part, index) => {
+    const isKeyword = usefulKeywords.some(keyword => keyword.toLowerCase() === part.toLowerCase());
+    const isMetric = /^MYR|\d/.test(part);
+    if (!isKeyword && !isMetric) return <span key={index}>{part}</span>;
+    return (
+      <strong
+        key={index}
+        className={`font-black ${isMetric ? 'text-emerald-200 text-[1.08em]' : 'text-cyan-100 text-[1.05em]'}`}
+      >
+        {part}
+      </strong>
+    );
+  });
 }
 
 function buildMarketMatches(profile: StudentProfile, skills: string[]) {
@@ -140,27 +163,86 @@ function CandidateSelector({
   onSelect: (profile: StudentProfile) => void;
 }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {DEMO_PERSONAS.map(candidate => {
         const active = candidate.profile.id === selectedId;
         return (
           <button
             key={candidate.profile.id}
             onClick={() => onSelect(candidate.profile)}
-            className={`text-left rounded-2xl border p-4 transition-all duration-300 hover:-translate-y-1 ${
+            className={`relative overflow-hidden text-left rounded-3xl border p-5 min-h-[168px] transition-all duration-300 hover:-translate-y-1 ${
               active
-                ? 'border-cyan-300/60 bg-cyan-300/10 shadow-[0_0_30px_rgba(34,211,238,0.14)]'
+                ? 'border-cyan-300/70 bg-cyan-300/12 shadow-[0_0_34px_rgba(34,211,238,0.22)] animate-[activeProfile_1.8s_ease-in-out_infinite]'
                 : 'border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.06]'
             }`}
           >
             <div className={`h-1.5 rounded-full bg-gradient-to-r ${candidate.accent} mb-4`} />
-            <div className="text-white font-black text-sm">{candidate.label}</div>
+            {active && (
+              <div className="absolute right-4 top-4 rounded-full border border-cyan-200/35 bg-cyan-200/12 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-cyan-100">
+                Viewing
+              </div>
+            )}
+            <div className="text-white font-black text-2xl leading-tight pr-20">{candidate.label}</div>
             <div className="text-white/45 text-xs mt-1">{candidate.role}</div>
             <div className="text-white/30 text-xs mt-1">{candidate.location}</div>
+            <p className="text-white/45 text-xs leading-relaxed mt-4">{candidate.summary}</p>
           </button>
         );
       })}
     </div>
+  );
+}
+
+function CurrentProfileBanner({
+  profile,
+  page,
+  onViewDemo,
+}: {
+  profile: StudentProfile;
+  page: CandidatePage;
+  onViewDemo: () => void;
+}) {
+  const pageTitle = PAGE_NAV.find(item => item.id === page)?.title ?? 'Profile';
+  return (
+    <div className="mt-8 rounded-3xl border border-cyan-300/20 bg-cyan-300/10 p-5 flex flex-col lg:flex-row lg:items-center gap-4 justify-between shadow-[0_0_28px_rgba(34,211,238,0.09)]">
+      <div>
+        <div className="text-cyan-100 text-xs font-black uppercase tracking-[0.2em]">Currently viewing</div>
+        <div className="text-white font-black text-3xl mt-1">{profile.name}</div>
+        <div className="text-white/45 text-sm mt-1">
+          {pageTitle} page · {profile.targetRole} · {profile.evidence.length} evidence blocks
+        </div>
+      </div>
+      <button
+        onClick={onViewDemo}
+        className="rounded-2xl bg-white px-6 py-4 text-sm font-black text-slate-950 transition-all hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(34,211,238,0.18)]"
+      >
+        Open {profile.name}'s full OS demo
+      </button>
+    </div>
+  );
+}
+
+function CandidateDemoShortcut({ profile, onViewDemo }: { profile: StudentProfile; onViewDemo: () => void }) {
+  return (
+    <section className="mt-8 rounded-3xl border border-white/10 bg-white/[0.04] p-7">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-5 items-center">
+        <div>
+          <div className="text-xs text-cyan-200 font-black uppercase tracking-[0.22em]">What the full OS demo shows</div>
+          <h2 className="text-2xl md:text-3xl font-black text-white mt-2">
+            Analyze {profile.name}'s resume into readiness, gaps, MYR pay signal, and the five dynamic Career OS modules.
+          </h2>
+          <p className="text-white/45 text-sm mt-3 max-w-3xl">
+            The deeper demo starts from this selected candidate, then changes the Landscape module content based on their evidence, skills, target role, and weakest readiness signal.
+          </p>
+        </div>
+        <button
+          onClick={onViewDemo}
+          className="rounded-2xl bg-cyan-300 px-7 py-5 text-sm font-black text-slate-950 transition-all hover:-translate-y-1 hover:bg-white hover:shadow-[0_20px_50px_rgba(34,211,238,0.2)]"
+        >
+          Open full OS demo for {profile.name}
+        </button>
+      </div>
+    </section>
   );
 }
 
@@ -205,6 +287,10 @@ function MetricCard({ label, value, note }: { label: string; value: string; note
 }
 
 function EvidenceCard({ item, index }: { item: Evidence; index: number }) {
+  const keywords = (item.technologies ?? '')
+    .split(',')
+    .map(skill => skill.trim())
+    .filter(Boolean);
   return (
     <article className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/40 hover:shadow-[0_0_22px_rgba(34,211,238,0.12)]">
       <div className="flex items-start justify-between gap-4">
@@ -220,11 +306,19 @@ function EvidenceCard({ item, index }: { item: Evidence; index: number }) {
           </span>
         )}
       </div>
-      <p className="text-white/55 text-sm leading-relaxed mt-4">{item.description}</p>
-      {item.technologies && <p className="text-white/35 text-xs mt-4">Stack: {item.technologies}</p>}
+      <p className="text-white/55 text-sm leading-relaxed mt-4">{highlightText(item.description, keywords)}</p>
+      {item.technologies && (
+        <div className="flex flex-wrap gap-2 mt-4">
+          {keywords.map(skill => (
+            <span key={skill} className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-black text-cyan-100">
+              {skill}
+            </span>
+          ))}
+        </div>
+      )}
       {item.outcome && (
         <div className="mt-4 rounded-xl border border-amber-300/20 bg-amber-300/10 p-3 text-sm text-amber-100">
-          {item.outcome}
+          {highlightText(item.outcome, keywords)}
         </div>
       )}
     </article>
@@ -360,6 +454,7 @@ function SkillsPage({ skills, profile }: { skills: string[]; profile: StudentPro
 }
 
 function TrajectoryPage({ profile, salarySignals }: { profile: StudentProfile; salarySignals: string[] }) {
+  const latestFirst = [...profile.evidence].reverse();
   return (
     <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-7 animate-[fadeIn_0.25s_ease-out]">
       <div className="text-cyan-200 text-xs font-black uppercase tracking-[0.22em]">Career movement</div>
@@ -367,13 +462,20 @@ function TrajectoryPage({ profile, salarySignals }: { profile: StudentProfile; s
       <div className="mt-8 relative">
         <div className="absolute left-4 top-0 bottom-0 w-px bg-white/10" />
         <div className="space-y-5">
-          {profile.evidence.map((item, index) => (
+          {latestFirst.map((item, index) => (
             <div key={item.id} className="relative pl-12">
               <div className="absolute left-0 top-1 h-8 w-8 rounded-full border border-cyan-300/40 bg-cyan-300/10 flex items-center justify-center text-xs font-black text-cyan-100">
                 {index + 1}
               </div>
               <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-5">
-                <div className="text-white font-black">{item.title}</div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="text-white font-black">{item.title}</div>
+                  {index === 0 && (
+                    <span className="rounded-full bg-cyan-300 px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.12em] text-slate-950">
+                      Latest
+                    </span>
+                  )}
+                </div>
                 {item.duration && <div className="text-white/35 text-xs mt-1">{item.duration}</div>}
                 <div className="text-white/55 text-sm leading-relaxed mt-3">{item.outcome ?? item.description}</div>
               </div>
@@ -382,10 +484,10 @@ function TrajectoryPage({ profile, salarySignals }: { profile: StudentProfile; s
         </div>
       </div>
       <div className="mt-8 rounded-2xl border border-emerald-300/20 bg-emerald-300/10 p-5">
-        <div className="text-emerald-100 font-black">Compensation movement detected</div>
+          <div className="text-emerald-100 font-black">Compensation movement detected</div>
         <p className="text-emerald-100/65 text-sm mt-2">
           {salarySignals.length
-            ? salarySignals.join(' -> ')
+            ? [...salarySignals].reverse().join(' <- ')
             : 'No explicit salary movement was found. The candidate should add salary range or level changes if they want Fair Pay analysis.'}
         </p>
       </div>
@@ -449,6 +551,10 @@ export function TalentPortal({ onViewDemo, onBuildOwn, onBack }: Props) {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
           }
+          @keyframes activeProfile {
+            0%, 100% { box-shadow: 0 0 34px rgba(34,211,238,0.18); }
+            50% { box-shadow: 0 0 46px rgba(34,211,238,0.34); }
+          }
         `}
       </style>
 
@@ -474,7 +580,7 @@ export function TalentPortal({ onViewDemo, onBuildOwn, onBack }: Props) {
             </button>
             <button
               onClick={() => onViewDemo(selectedProfile)}
-              className="rounded-full bg-white px-4 py-2 text-xs font-black text-slate-950 transition-all hover:-translate-y-0.5"
+              className="rounded-full bg-cyan-300 px-5 py-2.5 text-xs font-black text-slate-950 transition-all hover:-translate-y-0.5 hover:bg-white"
             >
               Open full OS demo
             </button>
@@ -501,24 +607,19 @@ export function TalentPortal({ onViewDemo, onBuildOwn, onBack }: Props) {
           }} />
         </section>
 
+        <CurrentProfileBanner
+          profile={selectedProfile}
+          page={page}
+          onViewDemo={() => onViewDemo(selectedProfile)}
+        />
+
         <section className="mt-8">
           <PageTabs page={page} onChange={setPage} />
         </section>
 
-        <section className="mt-10">
-          <div className="mb-5">
-            <div className="text-xs text-cyan-200 font-black uppercase tracking-[0.22em]">Talent OS components</div>
-            <h2 className="text-2xl md:text-3xl font-black text-white mt-2">
-              Five Career OS modules for the candidate side.
-            </h2>
-            <p className="text-white/45 text-sm mt-2 max-w-3xl">
-              This is the official starter-kit layer, now tied to the Talent OS role instead of floating on the landing page. Use it as the component map behind the resume pages below.
-            </p>
-          </div>
-          <CareerOSPortal defaultMode="talent" hideToggle hideCta onBuildOwn={onBuildOwn} />
-        </section>
+        <CandidateDemoShortcut profile={selectedProfile} onViewDemo={() => onViewDemo(selectedProfile)} />
 
-        <section className="mt-6">
+        <section className="mt-8">
           {page === 'snapshot' && (
             <SnapshotPage
               profile={selectedProfile}

@@ -595,9 +595,9 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
           marginBottom: '32px',
         }}>
           {[
-            { label: '75+', emoji: '🏆', color: 'var(--color-success)', desc: 'Market Ready', salary: 'SGD 180k+' },
-            { label: '55-74', emoji: '📈', color: 'var(--color-accent)', desc: 'Good Progress', salary: 'SGD 120-160k' },
-            { label: '30-54', emoji: '⚙️', color: 'var(--color-warning)', desc: 'Building', salary: 'SGD 48-72k' },
+            { label: '75+', emoji: '🏆', color: 'var(--color-success)', desc: 'Market Ready', salary: 'MYR 630k+' },
+            { label: '55-74', emoji: '📈', color: 'var(--color-accent)', desc: 'Good Progress', salary: 'MYR 420-560k' },
+            { label: '30-54', emoji: '⚙️', color: 'var(--color-warning)', desc: 'Building', salary: 'MYR 168-252k' },
             { label: '<30', emoji: '🌱', color: 'var(--color-danger)', desc: 'Starting Out', salary: 'Entry Level' },
           ].map((range, idx) => (
             <div
@@ -642,7 +642,7 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
                 <strong style={{ color: 'var(--color-success)' }}>You're market-ready for senior roles.</strong> Similar to Priya Sharma (Senior SWE at Grab with score 88/100).
               </p>
               <p style={{ margin: '0 0 8px 0' }}>
-                Expected salary range (Asia tech): <strong>SGD 180k-250k/year</strong> (Singapore), <strong>INR 40L-80L/year</strong> (India), with equity/RSU packages.
+                Expected salary range (Asia tech): <strong>MYR 630K-875K/year</strong> for Singapore-facing senior profiles, with equity/RSU packages.
               </p>
               <p style={{ margin: 0 }}>
                 Next: Focus on system design, leadership, or specialized domains to unlock Staff Engineer trajectory (+30-50% salary).
@@ -655,10 +655,10 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
                 <strong style={{ color: 'var(--color-warning)' }}>You're on a good trajectory.</strong> Similar to Kai Chen (3 years in, score 70/100 → Data Engineer at ByteDance).
               </p>
               <p style={{ margin: '0 0 8px 0' }}>
-                Expected salary range: <strong>SGD 120k-160k/year</strong> (Singapore), <strong>INR 25L-40L/year</strong> (India).
+                Expected salary range: <strong>MYR 420K-560K/year</strong> for Singapore-facing mid-level profiles.
               </p>
               <p style={{ margin: 0 }}>
-                <strong>Quick wins:</strong> Closing 1-2 skill gaps can unlock +20-30% salary uplift (SGD 24-48k additional). See "Skills to Develop" below for estimated timelines and ROI.
+                <strong>Quick wins:</strong> Closing 1-2 skill gaps can unlock +20-30% salary uplift (MYR 84K-168K additional). See "Skills to Develop" below for estimated timelines and ROI.
               </p>
             </div>
           )}
@@ -668,7 +668,7 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
                 <strong style={{ color: 'var(--color-text-secondary)' }}>You're building your foundation.</strong> This is where 95% of students start.
               </p>
               <p style={{ margin: '0 0 8px 0' }}>
-                Entry-level salary expectations: <strong>SGD 48-72k/year</strong> (internship/junior), <strong>INR 12L-18L/year</strong> (India).
+                Entry-level salary expectations: <strong>MYR 168K-252K/year</strong> for Singapore-facing internship/junior roles.
               </p>
               <p style={{ margin: 0 }}>
                 <strong>Strategy:</strong> 1-2 solid projects + 1 high-impact skill = 55+ score in 3-6 months. Priya went from 45 → 88 in 4 years (18% YoY growth).

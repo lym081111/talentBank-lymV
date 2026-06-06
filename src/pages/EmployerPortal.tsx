@@ -93,6 +93,30 @@ function getImpactSignals(profile: StudentProfile) {
   return matches ? Array.from(new Set(matches)).slice(0, 6) : [];
 }
 
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function highlightText(text: string, keywords: string[]) {
+  const usefulKeywords = keywords.filter(keyword => keyword.length > 1).slice(0, 14);
+  const moneyAndMetrics = /MYR\s?[\d,.]+[KkLl]?(?:\/month|\/year)?|\d+(?:\.\d+)?%|\d+(?:,\d{3})?\+?\s?(?:users|events\/day|requests\/day|transactions|stakeholders|countries|sellers|qps)/gi;
+  const keywordPattern = usefulKeywords.length ? usefulKeywords.map(escapeRegExp).join('|') : '$^';
+  const pattern = new RegExp(`(${keywordPattern}|${moneyAndMetrics.source})`, 'gi');
+  return text.split(pattern).filter(Boolean).map((part, index) => {
+    const isKeyword = usefulKeywords.some(keyword => keyword.toLowerCase() === part.toLowerCase());
+    const isMetric = /^MYR|\d/.test(part);
+    if (!isKeyword && !isMetric) return <span key={index}>{part}</span>;
+    return (
+      <strong
+        key={index}
+        className={`font-black ${isMetric ? 'text-emerald-200 text-[1.08em]' : 'text-blue-100 text-[1.05em]'}`}
+      >
+        {part}
+      </strong>
+    );
+  });
+}
+
 function scoreCandidate(profile: StudentProfile, role: RoleId) {
   const content = textOf(profile);
   const requirements = ROLES[role].needs;
@@ -172,33 +196,87 @@ function CandidateSelector({
   role: RoleId;
   onSelect: (profile: StudentProfile) => void;
 }) {
+  const scoredCandidates = CANDIDATES
+    .map(candidate => ({ ...candidate, score: scoreCandidate(candidate.profile, role) }))
+    .sort((a, b) => b.score - a.score);
+  const topCandidateId = scoredCandidates[0]?.profile.id;
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-      {CANDIDATES.map(candidate => {
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {scoredCandidates.map((candidate, rank) => {
         const active = candidate.profile.id === selectedId;
-        const score = scoreCandidate(candidate.profile, role);
+        const isTopChoice = candidate.profile.id === topCandidateId;
         return (
           <button
             key={candidate.profile.id}
             onClick={() => onSelect(candidate.profile)}
-            className={`text-left rounded-2xl border p-4 transition-all duration-300 hover:-translate-y-1 ${
+            className={`relative overflow-hidden text-left rounded-3xl border p-5 min-h-[190px] transition-all duration-300 hover:-translate-y-1 ${
               active
-                ? 'border-blue-300/60 bg-blue-300/10 shadow-[0_0_30px_rgba(96,165,250,0.14)]'
-                : 'border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.06]'
+                ? 'border-blue-300/70 bg-blue-300/12 shadow-[0_0_36px_rgba(96,165,250,0.22)] animate-[activeRecruiterProfile_1.8s_ease-in-out_infinite]'
+                : isTopChoice
+                  ? 'border-emerald-300/50 bg-emerald-300/8 shadow-[0_0_28px_rgba(52,211,153,0.13)]'
+                  : 'border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.06]'
             }`}
           >
             <div className={`h-1.5 rounded-full bg-gradient-to-r ${candidate.accent} mb-4`} />
+            <div className="absolute right-4 top-4 flex flex-col items-end gap-2">
+              {active && (
+                <span className="rounded-full border border-blue-200/35 bg-blue-200/12 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-blue-100">
+                  Viewing
+                </span>
+              )}
+              {isTopChoice && (
+                <span className="rounded-full bg-emerald-300 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-slate-950">
+                  Top choice
+                </span>
+              )}
+            </div>
             <div className="flex items-start justify-between gap-3">
               <div>
-                <div className="text-white font-black text-sm">{candidate.profile.name}</div>
+                <div className="text-white font-black text-2xl leading-tight pr-24">{candidate.profile.name}</div>
                 <div className="text-white/45 text-xs mt-1">{candidate.role}</div>
               </div>
-              <div className="text-blue-100 font-black text-sm">{score}%</div>
+              <div className="mt-14 text-right">
+                <div className="text-4xl font-black text-white leading-none">{candidate.score}%</div>
+                <div className="text-[10px] text-white/35 font-black uppercase tracking-[0.12em] mt-1">match</div>
+              </div>
             </div>
+            <div className="text-white/35 text-xs mt-3">Rank #{rank + 1} for {ROLES[role].title}</div>
             <div className="text-white/30 text-xs mt-2">{candidate.status}</div>
           </button>
         );
       })}
+    </div>
+  );
+}
+
+function CurrentRecruiterBanner({
+  selected,
+  role,
+  page,
+}: {
+  selected: StudentProfile;
+  role: RoleId;
+  page: EmployerPage;
+}) {
+  const score = scoreCandidate(selected, role);
+  const pageTitle = PAGE_NAV.find(item => item.id === page)?.title ?? 'Shortlist';
+  const ranked = CANDIDATES
+    .map(candidate => ({ id: candidate.profile.id, score: scoreCandidate(candidate.profile, role) }))
+    .sort((a, b) => b.score - a.score);
+  const rank = ranked.findIndex(candidate => candidate.id === selected.id) + 1;
+  return (
+    <div className="mt-8 rounded-3xl border border-blue-300/20 bg-blue-300/10 p-5 flex flex-col lg:flex-row lg:items-center gap-4 justify-between shadow-[0_0_28px_rgba(96,165,250,0.1)]">
+      <div>
+        <div className="text-blue-100 text-xs font-black uppercase tracking-[0.2em]">Currently reviewing</div>
+        <div className="text-white font-black text-3xl mt-1">{selected.name}</div>
+        <div className="text-white/45 text-sm mt-1">
+          {pageTitle} page · {ROLES[role].title} · rank #{rank} of {CANDIDATES.length}
+        </div>
+      </div>
+      <div className="rounded-3xl border border-white/10 bg-white/[0.06] px-6 py-4 text-right">
+        <div className="text-5xl font-black text-white leading-none">{score}%</div>
+        <div className="text-blue-100 text-xs font-black uppercase tracking-[0.16em] mt-1">match confidence</div>
+      </div>
     </div>
   );
 }
@@ -262,17 +340,29 @@ function MetricCard({ label, value, note }: { label: string; value: string; note
 }
 
 function EvidenceCard({ item, rank }: { item: Evidence; rank: number }) {
+  const keywords = (item.technologies ?? '')
+    .split(',')
+    .map(skill => skill.trim())
+    .filter(Boolean);
   return (
     <article className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-blue-300/40 hover:shadow-[0_0_22px_rgba(96,165,250,0.12)]">
       <div className="text-blue-200 text-xs font-black uppercase tracking-[0.18em]">
         Evidence {String(rank).padStart(2, '0')}
       </div>
       <h3 className="text-white font-black text-lg mt-2">{item.title}</h3>
-      <p className="text-white/55 text-sm leading-relaxed mt-4">{item.description}</p>
-      {item.technologies && <p className="text-white/35 text-xs mt-4">Stack: {item.technologies}</p>}
+      <p className="text-white/55 text-sm leading-relaxed mt-4">{highlightText(item.description, keywords)}</p>
+      {item.technologies && (
+        <div className="flex flex-wrap gap-2 mt-4">
+          {keywords.map(skill => (
+            <span key={skill} className="rounded-full border border-blue-300/20 bg-blue-300/10 px-3 py-1 text-xs font-black text-blue-100">
+              {skill}
+            </span>
+          ))}
+        </div>
+      )}
       {item.outcome && (
         <div className="mt-4 rounded-xl border border-emerald-300/20 bg-emerald-300/10 p-3 text-sm text-emerald-100">
-          {item.outcome}
+          {highlightText(item.outcome, keywords)}
         </div>
       )}
     </article>
@@ -494,6 +584,10 @@ export function EmployerPortal({ onBuildOwn, onBack }: Props) {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
           }
+          @keyframes activeRecruiterProfile {
+            0%, 100% { box-shadow: 0 0 34px rgba(96,165,250,0.18); }
+            50% { box-shadow: 0 0 48px rgba(96,165,250,0.36); }
+          }
         `}
       </style>
 
@@ -551,6 +645,8 @@ export function EmployerPortal({ onBuildOwn, onBack }: Props) {
             }}
           />
         </section>
+
+        <CurrentRecruiterBanner selected={selectedProfile} role={role} page={page} />
 
         <section className="mt-10">
           <div className="mb-5">
