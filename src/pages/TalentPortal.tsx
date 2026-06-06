@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { CareerOSPortal } from '../components/CareerOSPortal';
 import { StudentProfile, Evidence } from '../types/evidence';
 import { priyaSharmaProfile, kaiChenProfile, aishaPatelProfile } from '../data/mockStudent';
 
@@ -502,6 +503,19 @@ export function TalentPortal({ onViewDemo, onBuildOwn, onBack }: Props) {
 
         <section className="mt-8">
           <PageTabs page={page} onChange={setPage} />
+        </section>
+
+        <section className="mt-10">
+          <div className="mb-5">
+            <div className="text-xs text-cyan-200 font-black uppercase tracking-[0.22em]">Talent OS components</div>
+            <h2 className="text-2xl md:text-3xl font-black text-white mt-2">
+              Five Career OS modules for the candidate side.
+            </h2>
+            <p className="text-white/45 text-sm mt-2 max-w-3xl">
+              This is the official starter-kit layer, now tied to the Talent OS role instead of floating on the landing page. Use it as the component map behind the resume pages below.
+            </p>
+          </div>
+          <CareerOSPortal defaultMode="talent" hideToggle hideCta onBuildOwn={onBuildOwn} />
         </section>
 
         <section className="mt-6">

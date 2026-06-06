@@ -1,8 +1,6 @@
-import { CareerOSPortal } from '../components/CareerOSPortal';
 import { Page } from '../types/navigation';
 
 interface Props {
-  onBuildOwn: () => void;
   onNavigate: (page: Page) => void;
 }
 
@@ -21,7 +19,7 @@ function Card({ children, className = '' }: { children: React.ReactNode; classNa
   );
 }
 
-export function Landing({ onBuildOwn, onNavigate }: Props) {
+export function Landing({ onNavigate }: Props) {
   const scrollToRole = () => document.getElementById('role-selection')?.scrollIntoView({ behavior: 'smooth' });
 
   return (
@@ -128,17 +126,6 @@ export function Landing({ onBuildOwn, onNavigate }: Props) {
       </div>
 
       {/* ── CAREER OS INTERACTIVE PORTAL ───────────────────────── */}
-      <div className="py-10 px-6 bg-[#0a0f1e]">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-8">
-            <p className="text-xs text-white/30 font-black uppercase tracking-widest mb-2">Live Interactive Demo</p>
-            <h2 className="text-2xl font-black text-white">See Career OS in action</h2>
-            <p className="text-white/40 text-sm mt-2">Switch between Talent and Employer views · real Malaysian IT data</p>
-          </div>
-          <CareerOSPortal onBuildOwn={onBuildOwn} />
-        </div>
-      </div>
-
       {/* ── ROLE SELECTION ──────────────────────────────────────── */}
       <div id="role-selection" className="py-20 px-6 bg-[#080d18]">
         <div className="max-w-4xl mx-auto">

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { CareerOSPortal } from '../components/CareerOSPortal';
 import { Evidence, StudentProfile } from '../types/evidence';
 import { priyaSharmaProfile, kaiChenProfile, aishaPatelProfile } from '../data/mockStudent';
 
@@ -549,6 +550,19 @@ export function EmployerPortal({ onBuildOwn, onBack }: Props) {
               setPage('shortlist');
             }}
           />
+        </section>
+
+        <section className="mt-10">
+          <div className="mb-5">
+            <div className="text-xs text-blue-200 font-black uppercase tracking-[0.22em]">Recruiter Dashboard components</div>
+            <h2 className="text-2xl md:text-3xl font-black text-white mt-2">
+              Five Career OS modules for the employer side.
+            </h2>
+            <p className="text-white/45 text-sm mt-2 max-w-3xl">
+              This is the official starter-kit layer, now tied to the recruiter role instead of floating on the landing page. It explains the system components behind the candidate review workspace below.
+            </p>
+          </div>
+          <CareerOSPortal defaultMode="employer" hideToggle hideCta onBuildOwn={onBuildOwn} />
         </section>
 
         <section className="mt-8">

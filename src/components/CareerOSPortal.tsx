@@ -11,6 +11,7 @@ interface Props {
   onBuildOwn: () => void;
   defaultMode?: ViewMode;
   hideToggle?: boolean;
+  hideCta?: boolean;
 }
 
 // ─── Injected CSS ─────────────────────────────────────────────────────────────
@@ -856,7 +857,7 @@ const E_TAGS: { key: EmpTag; label: string; icon: string }[] = [
 // ══════════════════════════════════════════════════════════════════════════════
 //  MAIN COMPONENT
 // ══════════════════════════════════════════════════════════════════════════════
-export function CareerOSPortal({ onBuildOwn, defaultMode = 'talent', hideToggle = false }: Props) {
+export function CareerOSPortal({ onBuildOwn, defaultMode = 'talent', hideToggle = false, hideCta = false }: Props) {
   const [mode, setMode]       = useState<ViewMode>(defaultMode);
   const [tTag, setTTag]       = useState<TalentTag>('cs_final');
   const [eTag, setETag]       = useState<EmpTag>('nextjs');
@@ -991,18 +992,20 @@ export function CareerOSPortal({ onBuildOwn, defaultMode = 'talent', hideToggle 
         </div>
 
         {/* ── CTA ─────────────────────────────────────────────────── */}
-        <div className="text-center mt-10 pt-8 border-t border-white/6">
-          <button
-            onClick={onBuildOwn}
-            className="cta-glow inline-flex items-center gap-3 px-10 py-4 rounded-2xl font-black text-sm text-black"
-            style={{ background: 'linear-gradient(135deg, #d946ef, #8b5cf6, #22d3ee)' }}
-          >
-            {mode === 'talent'
-              ? '🎓 Build My Full Career OS Profile →'
-              : '🏢 Access Full Employer Dashboard →'}
-          </button>
-          <p className="text-xs text-white/15 mt-4">No account · Free · MYR market data · PDPA compliant</p>
-        </div>
+        {!hideCta && (
+          <div className="text-center mt-10 pt-8 border-t border-white/6">
+            <button
+              onClick={onBuildOwn}
+              className="cta-glow inline-flex items-center gap-3 px-10 py-4 rounded-2xl font-black text-sm text-black"
+              style={{ background: 'linear-gradient(135deg, #d946ef, #8b5cf6, #22d3ee)' }}
+            >
+              {mode === 'talent'
+                ? '🎓 Build My Full Career OS Profile →'
+                : '🏢 Access Full Employer Dashboard →'}
+            </button>
+            <p className="text-xs text-white/15 mt-4">No account · Free · MYR market data · PDPA compliant</p>
+          </div>
+        )}
       </div>
     </div>
   );
