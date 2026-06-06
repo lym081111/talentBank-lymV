@@ -103,6 +103,11 @@ function App() {
     handleNavigate('profile');
   };
 
+  const handleUpdateEvidenceFromDashboard = () => {
+    setProfileReturnPage('dashboard');
+    handleNavigate('profile');
+  };
+
   const handleGoHome = () => {
     handleNavigate('landing');
   };
@@ -124,7 +129,15 @@ function App() {
             onAnalyze={() => handleNavigate('extraction')}
             onClearAndStart={() => handleBuildOwn()}
             onBack={() => handleNavigate(profileReturnPage)}
-            backLabel={profileReturnPage === 'talent-portal' ? 'Back to Talent OS' : profileReturnPage === 'employer-portal' ? 'Back to Recruiter Dashboard' : 'Back to previous page'}
+            backLabel={
+              profileReturnPage === 'talent-portal'
+                ? 'Back to Talent OS'
+                : profileReturnPage === 'employer-portal'
+                  ? 'Back to Recruiter Dashboard'
+                  : profileReturnPage === 'dashboard'
+                    ? 'Back to Landscape'
+                    : 'Back to previous page'
+            }
           />
         );
       case 'extraction':
@@ -144,7 +157,7 @@ function App() {
             hasEvidence={evidence.length > 0}
             evidence={evidence}
             onViewGaps={() => handleNavigate('gaps')}
-            onBackToProfile={() => handleNavigate('profile')}
+            onBackToProfile={handleUpdateEvidenceFromDashboard}
             onViewTrajectory={() => handleNavigate('trajectory')}
           />
         );
@@ -152,8 +165,9 @@ function App() {
         return (
           <Gaps
             gaps={gaps}
+            onBackToDashboard={() => handleNavigate('dashboard')}
             onViewCohort={() => handleNavigate('cohort')}
-            onUpdateEvidence={() => handleNavigate('profile')}
+            onUpdateEvidence={handleUpdateEvidenceFromDashboard}
           />
         );
       case 'cohort':

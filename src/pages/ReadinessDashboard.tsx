@@ -239,7 +239,7 @@ function DynamicOSModules({
   const paySignal = useMemo(() => getPaySignal(profile.overall, studentProfile.targetRole), [profile.overall, studentProfile.targetRole]);
   const verifiedCount = evidence.filter(item => item.verified).length;
   const linkedCount = evidence.filter(item => Boolean(item.link)).length;
-  const topEvidence = evidence.slice(0, 3);
+  const evidenceBlocks = evidence;
   const topSkills = uniqueSkills.slice(0, 6).map(skill => skill.skill);
 
   const moduleSummary: Record<OSModuleId, {
@@ -283,7 +283,7 @@ function DynamicOSModules({
       ],
       action: 'Update evidence',
       onAction: onBackToProfile,
-      blocks: topEvidence.map((item, index) => ({
+      blocks: evidenceBlocks.map((item, index) => ({
         title: `${String(index + 1).padStart(2, '0')} ${item.title}`,
         body: `${item.technologies || 'No stack listed'} · ${item.outcome || item.description}`,
         tone: item.link || item.verified ? 'good' : 'warn',
@@ -325,8 +325,8 @@ function DynamicOSModules({
       blocks: [
         {
           title: 'Negotiation proof',
-          body: topEvidence[0]?.outcome || topEvidence[0]?.description || 'Add one quantified project outcome before using this in a salary conversation.',
-          tone: topEvidence[0]?.outcome ? 'good' : 'warn',
+          body: evidenceBlocks[0]?.outcome || evidenceBlocks[0]?.description || 'Add one quantified project outcome before using this in a salary conversation.',
+          tone: evidenceBlocks[0]?.outcome ? 'good' : 'warn',
         },
         {
           title: 'What blocks the higher band',

@@ -196,11 +196,9 @@ function CandidateSelector({
 function CurrentProfileBanner({
   profile,
   page,
-  onViewDemo,
 }: {
   profile: StudentProfile;
   page: CandidatePage;
-  onViewDemo: () => void;
 }) {
   const pageTitle = PAGE_NAV.find(item => item.id === page)?.title ?? 'Profile';
   return (
@@ -212,12 +210,6 @@ function CurrentProfileBanner({
           {pageTitle} page · {profile.targetRole} · {profile.evidence.length} evidence blocks
         </div>
       </div>
-      <button
-        onClick={onViewDemo}
-        className="rounded-2xl bg-white px-6 py-4 text-sm font-black text-slate-950 transition-all hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(34,211,238,0.18)]"
-      >
-        Open {profile.name}'s full OS demo
-      </button>
     </div>
   );
 }
@@ -578,12 +570,6 @@ export function TalentPortal({ onViewDemo, onBuildOwn, onBack }: Props) {
             >
               Build my own profile
             </button>
-            <button
-              onClick={() => onViewDemo(selectedProfile)}
-              className="rounded-full bg-cyan-300 px-5 py-2.5 text-xs font-black text-slate-950 transition-all hover:-translate-y-0.5 hover:bg-white"
-            >
-              Open full OS demo
-            </button>
           </div>
         </div>
       </div>
@@ -610,7 +596,6 @@ export function TalentPortal({ onViewDemo, onBuildOwn, onBack }: Props) {
         <CurrentProfileBanner
           profile={selectedProfile}
           page={page}
-          onViewDemo={() => onViewDemo(selectedProfile)}
         />
 
         <section className="mt-8">

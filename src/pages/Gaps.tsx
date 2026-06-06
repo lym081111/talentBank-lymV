@@ -4,6 +4,7 @@ import styles from './Gaps.module.css';
 
 interface Props {
   gaps: Gap[];
+  onBackToDashboard?: () => void;
   onViewCohort: () => void;
   onUpdateEvidence?: () => void;
 }
@@ -41,12 +42,35 @@ function findQuickWin(gaps: Gap[]): { gap: Gap; action: NextAction } | null {
   return best ? { gap: best.gap, action: best.action } : null;
 }
 
-export function Gaps({ gaps, onViewCohort, onUpdateEvidence }: Props) {
+export function Gaps({ gaps, onBackToDashboard, onViewCohort, onUpdateEvidence }: Props) {
   const quickWin = findQuickWin(gaps);
 
   return (
     <div className={styles.container} role="main" aria-label="Paths Forward — growth opportunities">
       <div className={styles.inner}>
+        {onBackToDashboard && (
+          <button
+            onClick={onBackToDashboard}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              marginBottom: '20px',
+              padding: '10px 18px',
+              background: 'var(--color-surface)',
+              border: '1.5px solid var(--color-border)',
+              borderRadius: 'var(--radius-lg)',
+              color: 'var(--color-text)',
+              fontSize: '13px',
+              fontWeight: '800',
+              cursor: 'pointer',
+              transition: 'all var(--transition)',
+            }}
+          >
+            Back to Landscape
+          </button>
+        )}
+
         <div className={styles.header}>
           <h2>Your Paths Forward</h2>
           <p>Here's where your landscape has room to grow. Each dimension includes concrete actions for the next 30–90 days — pick one and start navigating.</p>
@@ -155,6 +179,24 @@ export function Gaps({ gaps, onViewCohort, onUpdateEvidence }: Props) {
         </div>
 
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          {onBackToDashboard && (
+            <button
+              onClick={onBackToDashboard}
+              style={{
+                padding: '12px 28px',
+                background: 'var(--color-surface)',
+                border: '2px solid var(--color-border)',
+                borderRadius: 'var(--radius-lg)',
+                color: 'var(--color-text)',
+                fontSize: '14px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                transition: 'all var(--transition)',
+              }}
+            >
+              Back to Landscape
+            </button>
+          )}
           {onUpdateEvidence && (
             <button
               onClick={onUpdateEvidence}
