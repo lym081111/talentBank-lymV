@@ -126,6 +126,38 @@ export function Landing({ onNavigate }: Props) {
         </div>
       </div>
 
+      {/* ── HOW IT WORKS ──────────────────────────────────────── */}
+      <div className="py-14 px-6 bg-[#080d18]">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-10">
+            <p className="text-xs text-white/30 font-black uppercase tracking-widest mb-2">How It Works</p>
+            <h2 className="text-2xl font-black text-white">Three steps. No résumé spam.</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/[0.08] rounded-2xl overflow-hidden">
+            {([
+              { step: '01', icon: '🧑‍💻', title: 'Build your proof profile', desc: 'Upload your resume. Career OS extracts verified skills, salary signals, and trajectory evidence — no self-reported claims.', color: 'text-emerald-400' },
+              { step: '02', icon: '🗺️',  title: 'Career OS maps your trajectory', desc: 'Realistic next moves, trade-off warnings, Fair Pay gap analysis, and 10-year market forecasts — grounded in Malaysian IT data.', color: 'text-cyan-400' },
+              { step: '03', icon: '🔍', title: 'Employers scout silently', desc: 'Employers find you by proof, not keyword. No cold applications. No black-box scores. Every match cites its evidence.', color: 'text-blue-400' },
+            ] as const).map((s) => (
+              <div key={s.step} className="bg-[#080d18] p-7">
+                <div className="text-3xl mb-4">{s.icon}</div>
+                <div className={`text-xs font-black uppercase tracking-widest mb-2 ${s.color}`}>Step {s.step}</div>
+                <h3 className="text-white font-black text-lg leading-snug mb-3">{s.title}</h3>
+                <p className="text-white/35 text-sm leading-relaxed">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+          {/* Live scouting ticker */}
+          <div className="mt-5 rounded-2xl border border-white/8 bg-white/[0.02] px-5 py-3 flex items-center gap-3 overflow-hidden">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+            <p className="text-xs text-white/30 font-mono truncate">
+              <span className="text-emerald-400 font-black">LIVE</span>
+              {' '}· Priya Sharma (Platform SWE) scouted by 3 KL employers · Kai Chen's Kafka pipeline proof matched a Data Engineer role at MYR 11,500 · Aisha Patel re-engaged after 5-month gap ↑ PM match 88%
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* ── CAREER OS INTERACTIVE PORTAL ───────────────────────── */}
       <div className="py-12 px-6 bg-[#0a0f1e]">
         <div className="max-w-5xl mx-auto">

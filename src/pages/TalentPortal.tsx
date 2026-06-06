@@ -491,6 +491,18 @@ function MatchesPage({ profile, skills }: { profile: StudentProfile; skills: str
   const matches = buildMarketMatches(profile, skills);
   return (
     <div className="space-y-4 animate-[fadeIn_0.25s_ease-out]">
+      {/* Silent scouting notification — marketplace bridge moment */}
+      <div className="rounded-2xl border border-emerald-300/25 bg-emerald-300/[0.07] px-5 py-3 flex items-center gap-3">
+        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+        <p className="text-xs">
+          <span className="text-emerald-300 font-black">Silently scouted: </span>
+          <span className="text-white/50">
+            {profile.name}'s proof profile was viewed by{' '}
+            <strong className="text-white/80">3 employers</strong> in the last 24h via Career OS — before any résumé was sent.
+          </span>
+        </p>
+      </div>
+
       <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
         <div className="text-cyan-200 text-xs font-black uppercase tracking-[0.22em]">Marketplace preview</div>
         <h2 className="text-3xl font-black text-white mt-3">Jobs should match the candidate's proof, not keyword stuffing.</h2>

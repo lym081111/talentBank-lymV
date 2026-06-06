@@ -822,21 +822,21 @@ function EmployerTerminal() {
 // ══════════════════════════════════════════════════════════════════════════════
 
 const TALENT_TABS = [
-  { num: '01', label: 'Career Path', headline: "Stop guessing your next 40 years based on 2-sentence job descriptions." },
-  { num: '02', label: 'Portfolio',   headline: "Static resumes lie. Your production commit stream doesn't." },
-  { num: '03', label: 'AI Coach',    headline: "A relentless tech mentor monitoring your market value 24/7." },
-  { num: '04', label: 'Fair Pay',    headline: "Are you paid what you're actually worth, or just what you settled for?" },
-  { num: '05', label: 'Chapters',    headline: "Life has gaps. Your Career OS should architect them, not penalise them." },
-  { num: '06', label: 'Your Track',  headline: "Candidates have problems we haven't named yet." },
+  { num: '01', label: 'Career Path', module: 'Career Path Navigator',  headline: "Stop guessing your next 40 years based on 2-sentence job descriptions." },
+  { num: '02', label: 'Portfolio',   module: 'Living Portfolio',        headline: "Static resumes lie. Your production commit stream doesn't." },
+  { num: '03', label: 'AI Coach',    module: 'AI Career Coach',         headline: "A relentless tech mentor monitoring your market value 24/7." },
+  { num: '04', label: 'Fair Pay',    module: 'Fair Pay Engine',          headline: "Are you paid what you're actually worth, or just what you settled for?" },
+  { num: '05', label: 'Chapters',    module: 'Life Chapter Designer',    headline: "Life has gaps. Your Career OS should architect them, not penalise them." },
+  { num: '06', label: 'Your Track',  module: 'Open Module',              headline: "Candidates have problems we haven't named yet." },
 ];
 
 const EMPLOYER_TABS = [
-  { num: '01', label: 'Smart Match', headline: "HR screens historical text. Career OS evaluates future trajectory velocity." },
-  { num: '02', label: 'Retention',   headline: "Why discover an engineer is quitting only when the resignation letter lands?" },
-  { num: '03', label: 'Re-Engage',   headline: "Revive your silver-medalists. Bypass the 45-day hiring loop entirely." },
-  { num: '04', label: 'Onboarding',  headline: "Intercept probation-stage churn before the 6-month mark." },
-  { num: '05', label: 'Resilience',  headline: "The Malaysian aging tech crunch is incoming. Architect your 10-year buffer." },
-  { num: '06', label: 'Your Track',  headline: "Employers face talent problems we haven't named yet." },
+  { num: '01', label: 'Smart Match', module: 'Smart Talent Matching',        headline: "HR screens historical text. Career OS evaluates future trajectory velocity." },
+  { num: '02', label: 'Retention',   module: 'Talent Retention Signals',     headline: "Why discover an engineer is quitting only when the resignation letter lands?" },
+  { num: '03', label: 'Re-Engage',   module: 'Talent Re-Engagement',         headline: "Revive your silver-medalists. Bypass the 45-day hiring loop entirely." },
+  { num: '04', label: 'Onboarding',  module: 'Onboarding Predictor',         headline: "Intercept probation-stage churn before the 6-month mark." },
+  { num: '05', label: 'Resilience',  module: 'Workforce Resilience Planner', headline: "The Malaysian aging tech crunch is incoming. Architect your 10-year buffer." },
+  { num: '06', label: 'Your Track',  module: 'Open Module',                  headline: "Employers face talent problems we haven't named yet." },
 ];
 
 export function CareerOSPortal({ onBuildOwn, defaultMode = 'talent', hideToggle, hideCta }: Props) {
@@ -983,9 +983,15 @@ export function CareerOSPortal({ onBuildOwn, defaultMode = 'talent', hideToggle,
             style={{ borderLeft: '1px solid rgba(255,255,255,.05)' }}>
             {/* Sub-page headline */}
             <div style={{ borderBottom: '1px solid rgba(255,255,255,.05)', padding: '10px 18px' }}>
-              <p className="text-white/36 text-xs leading-relaxed">
-                {tabs[activeTab]?.headline}
-              </p>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[9px] font-black uppercase tracking-widest rounded px-2 py-0.5 flex-shrink-0"
+                  style={{ background: acc.bg, border: `1px solid ${acc.border}`, color: acc.text }}>
+                  {tabs[activeTab]?.module}
+                </span>
+                <p className="text-white/36 text-xs leading-relaxed">
+                  {tabs[activeTab]?.headline}
+                </p>
+              </div>
             </div>
 
             {/* Interactive content — key forces remount on tag/mode change */}
