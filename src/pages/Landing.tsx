@@ -1,4 +1,5 @@
 import { Page } from '../types/navigation';
+import { CareerOSPortal } from '../components/CareerOSPortal';
 
 interface Props {
   onNavigate: (page: Page) => void;
@@ -126,6 +127,17 @@ export function Landing({ onNavigate }: Props) {
       </div>
 
       {/* ── CAREER OS INTERACTIVE PORTAL ───────────────────────── */}
+      <div className="py-12 px-6 bg-[#0a0f1e]">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-8">
+            <p className="text-xs text-white/30 font-black uppercase tracking-widest mb-2">Live Interactive Demo</p>
+            <h2 className="text-2xl font-black text-white">See Career OS in action</h2>
+            <p className="text-white/38 text-sm mt-2">Switch between Talent and Employer views · real Malaysian IT data</p>
+          </div>
+          <CareerOSPortal onBuildOwn={() => onNavigate('profile')} />
+        </div>
+      </div>
+
       {/* ── ROLE SELECTION ──────────────────────────────────────── */}
       <div id="role-selection" className="py-20 px-6 bg-[#080d18]">
         <div className="max-w-4xl mx-auto">
