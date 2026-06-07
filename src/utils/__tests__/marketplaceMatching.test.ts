@@ -3,7 +3,6 @@ import {
   matchMarketplaceRoles,
   MOCK_INTERNSHIP_ROLES,
   InternshipRole,
-  MarketplaceMatch,
 } from '../marketplaceMatching';
 import { calculateReadinessProfile } from '../readinessScoring';
 import { generateGaps } from '../nextActions';
