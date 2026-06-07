@@ -1,9 +1,11 @@
-import { Gap, NextAction } from '../types/evidence';
+import { Gap, NextAction, ReadinessProfile } from '../types/evidence';
 import { GapActionCard } from '../components/GapActionCard';
+import { matchMarketplaceRoles, MarketplaceMatch } from '../utils/marketplaceMatching';
 import styles from './Gaps.module.css';
 
 interface Props {
   gaps: Gap[];
+  readinessProfile?: ReadinessProfile;
   onBackToDashboard?: () => void;
   onViewCohort: () => void;
   onUpdateEvidence?: () => void;
@@ -42,9 +44,12 @@ function findQuickWin(gaps: Gap[]): { gap: Gap; action: NextAction } | null {
   return best ? { gap: best.gap, action: best.action } : null;
 }
 
-export function Gaps({ gaps, onBackToDashboard, onViewCohort, onUpdateEvidence }: Props) {
+export function Gaps({ gaps, readinessProfile, onBackToDashboard, onViewCohort, onUpdateEvidence }: Props) {
   const quickWin = findQuickWin(gaps);
   const topBlockers = gaps.slice(0, 3);
+  const marketplaceMatches: MarketplaceMatch[] = readinessProfile
+    ? matchMarketplaceRoles(readinessProfile, gaps).slice(0, 3)
+    : [];
 
   return (
     <div className={styles.container} role="main" aria-label="3 blockers before you apply">
@@ -181,6 +186,67 @@ export function Gaps({ gaps, onBackToDashboard, onViewCohort, onUpdateEvidence }
             </li>
           </ol>
         </div>
+
+        {/* Career Marketplace Bridge — Module 04 */}
+        {marketplaceMatches.length > 0 && (
+          <div style={{
+            background: 'var(--color-surface)',
+            border: '1.5px solid var(--color-border)',
+            borderRadius: 'var(--radius-xl)',
+            padding: '24px',
+            marginBottom: '28px',
+          }}>
+            <div style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--color-primary)', marginBottom: '6px' }}>
+              Career OS — Module 04: Internship Marketplace
+            </div>
+            <h3 style={{ margin: '0 0 6px 0', color: 'var(--color-text)', fontSize: '18px', fontWeight: 900 }}>
+              How your profile matches live roles
+            </h3>
+            <p style={{ margin: '0 0 18px 0', color: 'var(--color-text-secondary)', fontSize: '13px', lineHeight: 1.6 }}>
+              These are mock marketplace roles matched against your readiness profile — the same signal a Career OS employer would see before reaching out.
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px' }}>
+              {marketplaceMatches.map((match) => {
+                const fitColor =
+                  match.fit === 'Strong match' ? 'var(--color-success)' :
+                  match.fit === 'Stretch match' ? 'var(--color-accent)' :
+                  'var(--color-text-secondary)';
+                return (
+                  <div key={match.role.id} style={{
+                    border: '1px solid var(--color-border)',
+                    borderRadius: 'var(--radius-lg)',
+                    padding: '16px',
+                    background: 'var(--color-surface-hover)',
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '8px' }}>
+                      <div>
+                        <div style={{ fontWeight: 900, color: 'var(--color-text)', fontSize: '14px', marginBottom: '2px' }}>{match.role.title}</div>
+                        <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>{match.role.company} · {match.role.market}</div>
+                      </div>
+                      <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                        <div style={{ fontWeight: 900, fontSize: '20px', color: fitColor }}>{match.score}%</div>
+                        <div style={{ fontSize: '10px', fontWeight: 700, color: fitColor, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{match.fit}</div>
+                      </div>
+                    </div>
+                    {match.whyMatched.length > 0 && (
+                      <div style={{ fontSize: '12px', color: 'var(--color-success)', marginBottom: '6px' }}>
+                        ✓ {match.whyMatched[0]}
+                      </div>
+                    )}
+                    {match.blockers.length > 0 && (
+                      <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: '8px' }}>
+                        ⚠ {match.blockers[0]}
+                      </div>
+                    )}
+                    <div style={{ fontSize: '12px', color: 'var(--color-text-muted)', borderTop: '1px solid var(--color-border)', paddingTop: '8px', marginTop: '4px' }}>
+                      Next: {match.nextStep}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Career OS Inter-Module Connections */}
         <div className={styles.careerOsSection}>

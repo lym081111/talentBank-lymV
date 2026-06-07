@@ -7,6 +7,7 @@ interface Props {
   readinessProfile: ReadinessProfile;
   studentProfile: StudentProfile;
   onBack: () => void;
+  backLabel?: string;
 }
 
 function getUniversityIntervention(dimension: string, percentage?: number) {
@@ -56,7 +57,7 @@ function getUniversityIntervention(dimension: string, percentage?: number) {
   };
 }
 
-export function CohortView({ cohort, readinessProfile, studentProfile, onBack }: Props) {
+export function CohortView({ cohort, readinessProfile, studentProfile, onBack, backLabel }: Props) {
   const weakestDimensions = useMemo(
     () => [...readinessProfile.dimensions].sort((a, b) => a.score - b.score).slice(0, 3),
     [readinessProfile.dimensions]
@@ -96,7 +97,7 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack }:
             onClick={onBack}
             className="rounded-2xl border border-white/15 px-5 py-3 text-sm font-black text-white/70 transition-all hover:-translate-y-0.5 hover:border-cyan-300/50 hover:bg-white/[0.06] hover:text-white"
           >
-            Back to readiness dashboard
+            {backLabel ?? 'Back to readiness dashboard'}
           </button>
         </div>
 

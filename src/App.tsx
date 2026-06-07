@@ -35,6 +35,7 @@ import { useEvidence } from './hooks/useEvidence';
 import { useStudentProfile } from './hooks/useStudentProfile';
 import { useDarkMode } from './hooks/useDarkMode';
 import { StudentProfile } from './types/evidence';
+import { priyaSharmaProfile } from './data/mockStudent';
 import './App.css';
 import type { Page } from './types/navigation';
 
@@ -53,6 +54,7 @@ function createBlankProfile(): StudentProfile {
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('landing');
   const [profileReturnPage, setProfileReturnPage] = useState<Page>('landing');
+  const [lightweightViewReturnPage, setLightweightViewReturnPage] = useState<Page>('landing');
   const { isDark, toggle: toggleDarkMode } = useDarkMode();
 
   const { evidence, addEvidence, updateEvidence, deleteEvidence, resetToDemo, clearAll, setEvidence } = useEvidence();
@@ -108,6 +110,18 @@ function App() {
     handleNavigate('profile');
   };
 
+  // Navigate to a lightweight view (Employer or University) that needs a profile.
+  // If no evidence is loaded yet (direct entry from landing), silently seed Priya's
+  // demo profile so the view renders with real data instead of empty/zero state.
+  const handleNavigateToLightweightView = (page: 'cohort' | 'employer-portal') => {
+    setLightweightViewReturnPage(currentPage);
+    if (evidence.length === 0) {
+      updateProfile(priyaSharmaProfile);
+      setEvidence(priyaSharmaProfile.evidence);
+    }
+    handleNavigate(page);
+  };
+
   const handleGoHome = () => {
     handleNavigate('landing');
   };
@@ -115,7 +129,18 @@ function App() {
   const renderPage = () => {
     switch (currentPage) {
       case 'landing':
-        return <Landing onNavigate={handleNavigate} onBuildOwn={() => handleBuildOwn('landing')} />;
+        return (
+          <Landing
+            onNavigate={(page) => {
+              if (page === 'cohort' || page === 'employer-portal') {
+                handleNavigateToLightweightView(page);
+              } else {
+                handleNavigate(page);
+              }
+            }}
+            onBuildOwn={() => handleBuildOwn('landing')}
+          />
+        );
       case 'profile':
         return (
           <ProfileAndEvidence
@@ -165,8 +190,9 @@ function App() {
         return (
           <Gaps
             gaps={gaps}
+            readinessProfile={readinessProfile}
             onBackToDashboard={() => handleNavigate('dashboard')}
-            onViewCohort={() => handleNavigate('cohort')}
+            onViewCohort={() => handleNavigateToLightweightView('cohort')}
             onUpdateEvidence={handleUpdateEvidenceFromDashboard}
           />
         );
@@ -176,7 +202,14 @@ function App() {
             cohort={mockCohortInsight}
             readinessProfile={readinessProfile}
             studentProfile={studentProfile}
-            onBack={() => handleNavigate('dashboard')}
+            onBack={() => handleNavigate(lightweightViewReturnPage)}
+            backLabel={
+              lightweightViewReturnPage === 'landing'
+                ? 'Back to home'
+                : lightweightViewReturnPage === 'gaps'
+                  ? 'Back to gaps'
+                  : 'Back to readiness dashboard'
+            }
           />
         );
       case 'trajectory':
@@ -201,7 +234,7 @@ function App() {
             evidence={evidence}
             readinessProfile={readinessProfile}
             onBuildOwn={() => handleBuildOwn('employer-portal')}
-            onBack={() => handleNavigate('landing')}
+            onBack={() => handleNavigate(lightweightViewReturnPage)}
           />
         );
       default:

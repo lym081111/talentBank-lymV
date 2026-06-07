@@ -34,6 +34,30 @@ export const DEMO_INSIGHTS = {
     nextStep:
       "Choose your strongest project and take it to production completeness this month: (1) Deploy it to a live URL (Vercel/Railway), (2) add simple Sentry error tracking, (3) write a 'Lessons Learned' section on GitHub documenting one technical decision and its tradeoff. Production experience, even self-taught, separates internship-ready from early-stage students.",
   } as CareerInsight,
+  'Priya Sharma': {
+    narrative:
+      "Priya's evidence tells a rare story in the Asia tech market: end-to-end production ownership at Grab across intern, SWE II, and Senior SWE, with hard proof of scale — 8M+ daily active users, 99.99% uptime SLA, and MYR 35B+ in monthly transactions processed. The distributed systems depth (Raft consensus, Kafka, real-time matching) puts her in the top 5–10% of backend engineers at her level across Singapore and Malaysia. The landscape from here is clear: Staff Engineer and above is within reach, but the path requires public proof — recruiters at Shopee, ByteDance, and Stripe Singapore consistently ask for externally verifiable architecture work, not just internal impact claims.",
+    keyGap:
+      "Public Portfolio Absence — every evidence item lives behind Grab's internal systems. There are no public GitHub projects, no technical blog posts, and no architecture write-ups that a recruiter or Staff Eng panel can inspect before the interview. In Singapore's competitive senior engineering market, private-company evidence alone creates friction in the hiring process.",
+    nextStep:
+      "Write one sanitized architecture case study this month — pick the driver-consumer matching system redesign, strip all proprietary details, and publish it as a 600-word technical post on GitHub Pages or Medium. Cover the constraint (wait time vs. driver earnings trade-off), the algorithm decision, and one failure you handled. This single public artifact is worth more than 10 internal promotion notes when applying to Staff roles at Stripe, Shopee, or Sea Group.",
+  } as CareerInsight,
+  'Kai Chen': {
+    narrative:
+      "Kai's career arc — DBS analyst to ByteDance Senior Data Engineer in under 3 years — is one of the cleanest analyst-to-engineer transitions visible in the Singapore data market. The pipeline evidence is concrete: 100M events/day at ByteDance, 500M events/day at senior level, sub-15-minute latency from 4 hours. Kafka, Flink, ClickHouse, and Spark are exactly the stack that Grab, Sea Group, and regional fintechs are hiring for in 2025–2026, with 12–15% YoY demand growth. The landscape is strong: Senior Data Engineer to Staff or Data Platform Lead is achievable in the next 18–24 months, but the jump requires leadership proof at larger team scale and a visible technical opinion outside ByteDance's walls.",
+    keyGap:
+      "Leadership Scope & External Visibility — team size is capped at 2 engineers across all evidence. Staff Engineer and Data Platform Lead roles at Singapore Tier 1 tech companies typically want to see 4–6 person team ownership, cross-org RFC influence, or external conference/blog presence. Kai's technical depth is not in question; the gap is proving that depth can scale to org-level influence.",
+    nextStep:
+      "Submit a talk proposal to DataEngConf Asia or PyCon APAC covering the 500M events/day architecture decision — specifically the trade-off between ClickHouse and a competing solution. Conference talks are the fastest credentialing shortcut for senior data engineers in the Singapore market, and the abstract alone is usually enough to unlock Staff-level recruiter conversations at Shopee, Grab, and regional banks.",
+  } as CareerInsight,
+  'Aisha Patel': {
+    narrative:
+      "Aisha's PM evidence spans three distinct markets — India (Flipkart, Amazon), India-to-SEA cross-border (Lazada) — with hard commercial outcomes: 8% conversion lift on Amazon India and MYR 280M+ annual GMV run rate at Lazada. That combination of market-entry proof, P&L ownership, and multi-country research is rare among PMs at her level and directly matches what Shopee, Grab, and Gojek are hiring for in Singapore and Jakarta as they push into new geographies. The path to Group PM or Director of Product is open, but the next hiring panel will probe technical fluency — how deeply does she understand the systems her teams are building?",
+    keyGap:
+      "Technical Depth Evidence — all four evidence items show strong business and strategy execution, but none document a technical decision: no API design choice, no data model trade-off, no infrastructure constraint that shaped the product roadmap. Senior PM panels at tier-1 Asia tech companies consistently distinguish between PMs who coordinate engineers and PMs who can hold a technical opinion in a system design conversation.",
+    nextStep:
+      "Add one technical decision story to the Lazada cross-border evidence block: pick a real constraint (e.g., seller onboarding API latency, or data pipeline lag affecting inventory sync) and write 2–3 sentences describing what the technical trade-off was, what you recommended, and what shipped. It does not need to be a deep engineering decision — it needs to show that you were in the room when the architecture choice was made and understood why it mattered to the product.",
+  } as CareerInsight,
 };
 
 export const DANIEL_LEE_DEMO_INSIGHT = DEMO_INSIGHTS['Daniel Lee'];

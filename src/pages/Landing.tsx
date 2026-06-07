@@ -122,7 +122,7 @@ export function Landing({ onNavigate, onBuildOwn }: Props) {
               </div>
             </div>
             <p className="mt-5 text-xs text-white/25 italic border-t border-white/10 pt-4">
-              Scope boundary: no employer login, job posting system, applicant tracking, candidate comparison, messaging, or marketplace.
+              Stage 1 prototype — frontend only, localStorage persistence. Marketplace matching and cohort data are seeded mocks showing the Career OS integration pattern.
             </p>
           </Card>
         </div>
@@ -259,7 +259,7 @@ export function Landing({ onNavigate, onBuildOwn }: Props) {
           </div>
 
           <p className="text-center text-xs text-white/20 mt-8">
-            Talentbank Tech Hackathon 2026 - Stage 1 prototype - frontend only - no employer marketplace
+            Talentbank Tech Hackathon 2026 · Stage 1 prototype · Universities Module 03 · Career Marketplace bridge included
           </p>
         </div>
       </div>
