@@ -780,11 +780,16 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
         <div className={styles.dimensionsSection}>
           <h3 style={{ fontSize: '22px', fontWeight: '800', marginBottom: '8px' }}>📊 Your 6 Dimensions</h3>
           <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)', marginBottom: '20px', lineHeight: '1.6', fontWeight: '500' }}>
-            Career readiness broken down into 6 key dimensions. <strong style={{ color: 'var(--color-accent)' }}>Target 75+ in each</strong> to stay competitive in the job market.
+            Career readiness broken down into 6 key dimensions. Every card shows score, status, why the score was assigned, and which evidence source supported the signal. <strong style={{ color: 'var(--color-accent)' }}>Target 75+ in each</strong> to stay competitive.
           </p>
           <div className={styles.dimensionsGrid}>
             {profile.dimensions.map((dimension, idx) => (
-              <DimensionScoreGauge key={idx} dimension={dimension} />
+              <DimensionScoreGauge
+                key={idx}
+                dimension={dimension}
+                evidence={evidence}
+                extractedSkills={profile.allExtractedSkills}
+              />
             ))}
           </div>
         </div>

@@ -14,6 +14,53 @@ interface Props {
 type SubmitState = 'idle' | 'loading' | 'success' | 'error';
 type ViewMode = 'student' | 'university' | 'employer';
 
+function getUniversityIntervention(dimension: string, percentage?: number) {
+  const affected = percentage ? `${percentage}% of cohort` : 'target cohort';
+
+  if (dimension.includes('Production')) {
+    return {
+      title: 'Run a CI/CD proof sprint',
+      body: `${affected} needs stronger production practice evidence. Run a 2-week GitHub Actions, testing, deployment, and monitoring sprint tied to one existing student project.`,
+      owner: 'Faculty + lab assistants',
+      measure: 'Evidence items with deployment/test links',
+    };
+  }
+
+  if (dimension.includes('Work')) {
+    return {
+      title: 'Create micro-internship briefs',
+      body: `${affected} needs work-readiness proof. Convert employer problems into 10-hour micro-briefs with team roles, feedback, and deliverables.`,
+      owner: 'Career services + employer partners',
+      measure: 'New team-based evidence blocks',
+    };
+  }
+
+  if (dimension.includes('Portfolio')) {
+    return {
+      title: 'Hold a portfolio evidence clinic',
+      body: `${affected} needs clearer proof. Review README quality, project outcomes, live URLs, and source links before internship applications open.`,
+      owner: 'Career services',
+      measure: 'Portfolio score movement after 30 days',
+    };
+  }
+
+  if (dimension.includes('Communication')) {
+    return {
+      title: 'Add technical storytelling reviews',
+      body: `${affected} needs better explanation evidence. Require a 3-minute demo, architecture note, and one reflective post for capstone work.`,
+      owner: 'Course coordinators',
+      measure: 'Documentation and presentation signals',
+    };
+  }
+
+  return {
+    title: `Target ${dimension}`,
+    body: `${affected} shows a readiness gap in ${dimension}. Create a focused workshop, collect new evidence, then rerun the cohort profile.`,
+    owner: 'Programme team',
+    measure: 'Dimension score movement',
+  };
+}
+
 function getShortlistDecision(score: number): {
   verdict: string;
   color: string;
@@ -91,6 +138,21 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack }:
     () => [...readinessProfile.dimensions].sort((a, b) => a.score - b.score)[0],
     [readinessProfile.dimensions]
   );
+
+  const recommendedInterventions = useMemo(() => {
+    const weakDimensions = [...readinessProfile.dimensions]
+      .sort((a, b) => a.score - b.score)
+      .slice(0, 3);
+
+    return weakDimensions.map((dimension) => {
+      const cohortGap = cohort.topGaps.find((gap) => gap.dimension === dimension.dimension);
+      return {
+        dimension,
+        cohortGap,
+        intervention: getUniversityIntervention(dimension.dimension, cohortGap?.percentage),
+      };
+    });
+  }, [cohort.topGaps, readinessProfile.dimensions]);
 
   async function handleSubmit() {
     setSubmitState('loading');
@@ -227,6 +289,31 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack }:
             </div>
 
             <CohortInsightCard cohort={cohort} />
+
+            <div className={styles.actionList}>
+              <h3>Recommended University Interventions</h3>
+              <p style={{ margin: '0 0 18px 0', fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
+                These are generated from the lowest readiness dimensions and cohort gap frequency. The point is action: run the intervention, collect new evidence, rerun the profile.
+              </p>
+              <div className={styles.actionGrid}>
+                {recommendedInterventions.map(({ dimension, cohortGap, intervention }, index) => (
+                  <div key={dimension.dimension} className={styles.action}>
+                    <div className={styles.actionNum}>{index + 1}</div>
+                    <div>
+                      <strong>{intervention.title}</strong>
+                      <p>{intervention.body}</p>
+                      <p style={{ marginTop: '8px', fontSize: '12px' }}>
+                        <strong>Gap:</strong> {dimension.dimension} ({dimension.score}/100)
+                        {cohortGap ? ` · ${cohortGap.studentCount} students affected` : ''}
+                      </p>
+                      <p style={{ marginTop: '6px', fontSize: '12px' }}>
+                        <strong>Owner:</strong> {intervention.owner} · <strong>Measure:</strong> {intervention.measure}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
 
             <div className={styles.actionList}>
               <h3>What Universities Do With This Data</h3>

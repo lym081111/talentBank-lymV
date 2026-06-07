@@ -65,8 +65,8 @@ export function AICareerInsight({ evidence, profile }: Props) {
     return (
       <div className={styles.container}>
         <div className={styles.header}>
-          <span className={styles.title}>✨ Career Intelligence</span>
-          <span className={styles.badge}>⚡ Claude AI</span>
+          <span className={styles.title}>Career Intelligence</span>
+          <span className={styles.badge}>AI-assisted explanation</span>
         </div>
         <div className={styles.skeleton}>
           <div className={styles.shimmer} style={{ width: '90%', height: '16px', marginBottom: '10px' }} />
@@ -80,9 +80,9 @@ export function AICareerInsight({ evidence, profile }: Props) {
   }
 
   return (
-    <div className={styles.container} role="region" aria-label="AI Career Intelligence">
+    <div className={styles.container} role="region" aria-label="AI-assisted career explanation">
       <div className={styles.header}>
-        <span className={styles.title}>✨ Career Intelligence</span>
+        <span className={styles.title}>Career Intelligence</span>
         <div className={styles.headerRight}>
           <span
             className={styles.confidenceBadge}
@@ -92,13 +92,12 @@ export function AICareerInsight({ evidence, profile }: Props) {
           >
             Confidence: {confidence.label} · {evidence.length} item{evidence.length !== 1 ? 's' : ''}
           </span>
-          <span className={styles.badge} aria-live="polite" aria-label={isStreaming ? 'AI is generating insight' : 'AI insight ready'}>
-            ⚡ Claude AI {isStreaming ? '•' : ''}
+          <span className={styles.badge} aria-live="polite" aria-label={isStreaming ? 'AI is generating explanation' : 'AI explanation ready'}>
+            AI-assisted explanation {isStreaming ? '•' : ''}
           </span>
         </div>
       </div>
 
-      {/* aria-live so screen readers announce streaming content as it arrives */}
       {narrative && (
         <div className={styles.narrative} aria-live="polite" aria-atomic="false">
           <p>{narrative}</p>
@@ -108,13 +107,13 @@ export function AICareerInsight({ evidence, profile }: Props) {
       {keyGap && (
         <div className={styles.blocks}>
           <div className={styles.block} role="note" aria-label="Key focus area">
-            <div className={styles.blockLabel}>🎯 Key Focus Area</div>
+            <div className={styles.blockLabel}>Key Focus Area</div>
             <div className={styles.blockContent} aria-live="polite">{keyGap}</div>
           </div>
 
           {nextStep && (
             <div className={`${styles.block} ${styles.blockAction}`} role="note" aria-label="Recommended next step">
-              <div className={styles.blockLabel}>⚡ Recommended Next Step</div>
+              <div className={styles.blockLabel}>Recommended Next Step</div>
               <div className={styles.blockContent} aria-live="polite">{nextStep}</div>
             </div>
           )}
@@ -125,31 +124,32 @@ export function AICareerInsight({ evidence, profile }: Props) {
         <>
           <div className={styles.footer}>
             {isDemo
-              ? 'Demo insight · Powered by Claude AI · Real users get personalised analysis'
-              : 'Powered by Claude AI · Personalised from your evidence'}
+              ? 'Demo insight · transparent evidence extraction + AI-assisted explanation'
+              : 'transparent evidence extraction + AI-assisted explanation'}
             {' · '}
             <button
               className={styles.howLink}
               onClick={() => setShowPromptInfo((v) => !v)}
             >
-              {showPromptInfo ? 'Hide' : 'How this AI works ↓'}
+              {showPromptInfo ? 'Hide' : 'How this AI works'}
             </button>
           </div>
 
           {showPromptInfo && (
             <div className={styles.promptInfo}>
-              <p className={styles.promptInfoTitle}>🔍 AI Transparency</p>
+              <p className={styles.promptInfoTitle}>AI Transparency</p>
               <ul className={styles.promptInfoList}>
-                <li><strong>Model:</strong> claude-haiku-4-5 (Anthropic) — fast, efficient, low-cost</li>
-                <li><strong>Inputs used:</strong> Your evidence titles, descriptions, technologies, and target role</li>
-                <li><strong>Prompt approach:</strong> Structured JSON output — narrative, key gap, next step — to ensure consistent, parseable responses</li>
-                <li><strong>What it does NOT have:</strong> Your grades, real job market APIs, your actual code, or verified outcomes</li>
-                <li><strong>Fallback:</strong> If the API is unavailable, a deterministic rule-based insight runs instead — same format, no LLM</li>
-                <li><strong>Limitations:</strong> This is a language model, not a hiring manager. Treat it as a thinking partner, not a verdict.</li>
+                <li><strong>Model:</strong> claude-haiku-4-5 (Anthropic), used for narrative explanation only</li>
+                <li><strong>Inputs used:</strong> evidence titles, descriptions, technologies, outcomes, and target role</li>
+                <li><strong>Prompt approach:</strong> structured JSON for narrative, key gap, and next step</li>
+                <li><strong>What AI does not decide:</strong> readiness score, extracted skill, matched phrase, or university intervention priority</li>
+                <li><strong>What it does not have:</strong> grades, real job market APIs, actual code, or verified outcomes beyond entered evidence</li>
+                <li><strong>Fallback:</strong> if the API is unavailable, deterministic rule-based insight runs in the same format</li>
+                <li><strong>Limitations:</strong> this is not "AI predicts your career." It explains the evidence trail already shown on the page.</li>
               </ul>
               <p className={styles.promptInfoNote}>
                 Confidence is <em>{confidence.label.toLowerCase()}</em> because you have {evidence.length} evidence item{evidence.length !== 1 ? 's' : ''}.
-                {evidence.length < 5 && ' Add more evidence for a higher-confidence analysis.'}
+                {evidence.length < 5 && ' Add more evidence for a higher-confidence explanation.'}
               </p>
             </div>
           )}

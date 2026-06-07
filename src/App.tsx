@@ -115,7 +115,7 @@ function App() {
   const renderPage = () => {
     switch (currentPage) {
       case 'landing':
-        return <Landing onNavigate={handleNavigate} />;
+        return <Landing onNavigate={handleNavigate} onBuildOwn={() => handleBuildOwn('landing')} />;
       case 'profile':
         return (
           <ProfileAndEvidence
@@ -202,7 +202,7 @@ function App() {
           />
         );
       default:
-        return <Landing onNavigate={handleNavigate} />;
+        return <Landing onNavigate={handleNavigate} onBuildOwn={() => handleBuildOwn('landing')} />;
     }
   };
 

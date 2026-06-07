@@ -35,7 +35,7 @@ export function SkillExtraction({ evidence, extractedSkills, onContinue }: Props
       <div className={styles.inner}>
         <div className={styles.header}>
           <h2>We Found Your Skills</h2>
-          <p>We analyzed your evidence and extracted the real skills you demonstrated. Here's the breakdown:</p>
+          <p>Transparent evidence extraction + AI-assisted explanation. PathLens shows the extracted skill, evidence source, matched phrase, and confidence before any readiness score is calculated.</p>
         </div>
 
         <div className={styles.summary}>
