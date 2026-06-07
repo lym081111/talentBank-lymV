@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { StudentProfile, Evidence } from '../types/evidence';
-import { priyaSharmaProfile, kaiChenProfile, aishaPatelProfile } from '../data/mockStudent';
+import { danielLeeProfile, priyaSharmaProfile, kaiChenProfile, aishaPatelProfile } from '../data/mockStudent';
 
 interface Props {
   onViewDemo: (profile: StudentProfile) => void;
@@ -12,11 +12,22 @@ type CandidatePage = 'snapshot' | 'resume' | 'skills' | 'trajectory' | 'matches'
 
 const DEMO_PERSONAS = [
   {
+    profile: danielLeeProfile,
+    label: 'Daniel Lee',
+    role: 'CS Student → SWE',
+    location: 'Universiti Malaya, KL',
+    accent: 'from-cyan-300 to-sky-400',
+    type: 'student' as const,
+    summary:
+      'Year 4 CS student with FYP, one internship, and a hackathon finalist result — strong foundation, clear production-practice gap to close before application season.',
+  },
+  {
     profile: priyaSharmaProfile,
     label: 'Priya Sharma',
     role: 'Platform SWE',
     location: 'Grab, Singapore',
     accent: 'from-cyan-400 to-emerald-300',
+    type: 'alumni' as const,
     summary:
       'Backend engineer with repeated proof of production ownership, distributed systems depth, and senior-level platform responsibility.',
   },
@@ -26,6 +37,7 @@ const DEMO_PERSONAS = [
     role: 'Data Engineer',
     location: 'ByteDance, Singapore',
     accent: 'from-violet-400 to-cyan-300',
+    type: 'alumni' as const,
     summary:
       'Data infrastructure candidate with a clear analyst-to-engineer transition and hard evidence in real-time streaming systems.',
   },
@@ -35,6 +47,7 @@ const DEMO_PERSONAS = [
     role: 'Product Manager',
     location: 'Lazada, Southeast Asia',
     accent: 'from-amber-300 to-rose-300',
+    type: 'alumni' as const,
     summary:
       'Product operator with market-entry evidence, commercial thinking, and cross-functional delivery across India and Southeast Asia.',
   },
@@ -162,33 +175,62 @@ function CandidateSelector({
   selectedId: string;
   onSelect: (profile: StudentProfile) => void;
 }) {
+  const studentPersonas = DEMO_PERSONAS.filter(c => c.type === 'student');
+  const alumniPersonas = DEMO_PERSONAS.filter(c => c.type === 'alumni');
+
+  const renderCard = (candidate: typeof DEMO_PERSONAS[0]) => {
+    const active = candidate.profile.id === selectedId;
+    return (
+      <button
+        key={candidate.profile.id}
+        onClick={() => onSelect(candidate.profile)}
+        className={`relative overflow-hidden text-left rounded-3xl border p-5 min-h-[168px] transition-all duration-300 hover:-translate-y-1 ${
+          active
+            ? 'border-cyan-300/70 bg-cyan-300/12 shadow-[0_0_34px_rgba(34,211,238,0.22)] animate-[activeProfile_1.8s_ease-in-out_infinite]'
+            : 'border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.06]'
+        }`}
+      >
+        <div className={`h-1.5 rounded-full bg-gradient-to-r ${candidate.accent} mb-4`} />
+        <div className="absolute right-4 top-4 flex flex-col items-end gap-1">
+          {active && (
+            <div className="rounded-full border border-cyan-200/35 bg-cyan-200/12 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-cyan-100">
+              Viewing
+            </div>
+          )}
+          <div className={`rounded-full border px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.14em] ${
+            candidate.type === 'student'
+              ? 'border-sky-300/40 bg-sky-300/10 text-sky-200'
+              : 'border-white/15 bg-white/[0.04] text-white/35'
+          }`}>
+            {candidate.type === 'student' ? 'Student' : 'Alumni'}
+          </div>
+        </div>
+        <div className="text-white font-black text-2xl leading-tight pr-20">{candidate.label}</div>
+        <div className="text-white/45 text-xs mt-1">{candidate.role}</div>
+        <div className="text-white/30 text-xs mt-1">{candidate.location}</div>
+        <p className="text-white/45 text-xs leading-relaxed mt-4">{candidate.summary}</p>
+      </button>
+    );
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {DEMO_PERSONAS.map(candidate => {
-        const active = candidate.profile.id === selectedId;
-        return (
-          <button
-            key={candidate.profile.id}
-            onClick={() => onSelect(candidate.profile)}
-            className={`relative overflow-hidden text-left rounded-3xl border p-5 min-h-[168px] transition-all duration-300 hover:-translate-y-1 ${
-              active
-                ? 'border-cyan-300/70 bg-cyan-300/12 shadow-[0_0_34px_rgba(34,211,238,0.22)] animate-[activeProfile_1.8s_ease-in-out_infinite]'
-                : 'border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.06]'
-            }`}
-          >
-            <div className={`h-1.5 rounded-full bg-gradient-to-r ${candidate.accent} mb-4`} />
-            {active && (
-              <div className="absolute right-4 top-4 rounded-full border border-cyan-200/35 bg-cyan-200/12 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-cyan-100">
-                Viewing
-              </div>
-            )}
-            <div className="text-white font-black text-2xl leading-tight pr-20">{candidate.label}</div>
-            <div className="text-white/45 text-xs mt-1">{candidate.role}</div>
-            <div className="text-white/30 text-xs mt-1">{candidate.location}</div>
-            <p className="text-white/45 text-xs leading-relaxed mt-4">{candidate.summary}</p>
-          </button>
-        );
-      })}
+    <div className="space-y-4">
+      <div>
+        <div className="text-[10px] font-black uppercase tracking-[0.2em] text-sky-300/70 mb-2 px-1">
+          Student — Universities Module 03 subject
+        </div>
+        <div className="grid grid-cols-1 gap-4">
+          {studentPersonas.map(renderCard)}
+        </div>
+      </div>
+      <div>
+        <div className="text-[10px] font-black uppercase tracking-[0.2em] text-white/25 mb-2 px-1">
+          Alumni trajectories — where students land post-graduation
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {alumniPersonas.map(renderCard)}
+        </div>
+      </div>
     </div>
   );
 }
@@ -528,7 +570,7 @@ function ApplicationsPage({ profile, skills }: { profile: StudentProfile; skills
 }
 
 export function TalentPortal({ onViewDemo, onBuildOwn, onBack }: Props) {
-  const [selectedProfile, setSelectedProfile] = useState<StudentProfile>(priyaSharmaProfile);
+  const [selectedProfile, setSelectedProfile] = useState<StudentProfile>(danielLeeProfile);
   const [page, setPage] = useState<CandidatePage>('snapshot');
 
   const skills = useMemo(() => splitTechnologies(selectedProfile), [selectedProfile]);
@@ -577,14 +619,14 @@ export function TalentPortal({ onViewDemo, onBuildOwn, onBack }: Props) {
       <main className="max-w-7xl mx-auto px-6 py-10">
         <section className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 items-end">
           <div>
-            <div className="inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-black text-cyan-100 uppercase tracking-[0.18em]">
-              Candidate pages, not starter-kit cards
+            <div className="inline-flex rounded-full border border-sky-300/25 bg-sky-300/10 px-3 py-1 text-xs font-black text-sky-100 uppercase tracking-[0.18em]">
+              Universities Module 03 — student readiness + alumni trajectory
             </div>
             <h1 className="text-4xl md:text-6xl font-black leading-[0.95] mt-5">
-              Show what the resume actually proves.
+              From student evidence to career proof.
             </h1>
             <p className="text-white/55 text-lg leading-relaxed mt-5 max-w-2xl">
-              Pick a candidate. PathLens turns their resume into separate pages for profile summary, evidence, skills, trajectory, and application next steps.
+              Start with Daniel — a Year 4 student whose profile shows the typical readiness gap universities need to close. Then explore the alumni track to see where graduates land when they do.
             </p>
           </div>
           <CandidateSelector selectedId={selectedProfile.id} onSelect={profile => {

@@ -12,11 +12,11 @@ export interface CareerInsight {
 export const DEMO_INSIGHTS = {
   'Daniel Lee': {
     narrative:
-      "Daniel has built a strong technical foundation across Python, JavaScript, and React — skills that align with 78% of Malaysian SWE internship postings. His evidence shows consistent delivery: a deployed FYP, a real internship, and a hackathon finalist result. However, across all 5 projects, there is no mention of automated testing, CI/CD pipelines, or deployment monitoring — the exact gap that separates shortlisted candidates from those who get filtered out at the technical screening stage.",
+      "Daniel's profile tells a story that is extremely common among final-year Malaysian CS students: strong academic signal (A-grade FYP, Best FYP shortlist), one solid internship with a positive review, a hackathon finalist result that shows rapid prototyping instinct, and an AWS cert that proves awareness of deployment gaps — yet no deployed system in production. The FYP classifier (83% macro-F1 on 12K documents) is the most technically credible piece, but it runs on localhost only. The Shopee internship got him to staging, not production. The Hack KL app went down twice during judging. These are not failures — they are the exact readiness gaps Universities Module 03 is designed to surface and fix before application season.",
     keyGap:
-      "Production Practices — no evidence of automated testing, CI/CD pipelines, or deployment monitoring across any of the 5 projects. This is the #1 screening filter at tech companies in KL and Singapore.",
+      "Production Deployment Gap — no evidence item shows a system that runs in production with real traffic, monitoring, or CI/CD. All 5 projects either went offline, never left localhost, or reached staging only. Recruiters at Shopee, Grab, and Sea Group ask: 'What have you shipped to users?' The honest answer is: not yet — but the FYP is one EC2 deployment away from a real answer.",
     nextStep:
-      "Add a GitHub Actions CI pipeline to the AI Governance Classifier (FYP) this week — configure it to run pytest on every push. This single addition demonstrates production mindset, takes under 3 hours, and can be added directly to an existing project rather than starting something new.",
+      "Deploy the FYP classifier API to EC2 this week — one t3.micro instance costs under MYR 15/month. Add a GitHub Actions pipeline that runs pytest on every push to the FYP repo, then update the README with a live endpoint URL and the 83% F1 result. This converts a private academic project into public production evidence — the single highest-impact move available before KL application season opens.",
   } as CareerInsight,
   'Sarah Tan': {
     narrative:

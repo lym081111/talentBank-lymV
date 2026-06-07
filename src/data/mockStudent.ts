@@ -1,6 +1,85 @@
 import { StudentProfile, Evidence } from '../types/evidence';
 
 // ============================================================================
+// PERSONA 0: Daniel Lee  ← PRIMARY STUDENT DEMO (Universities Module 03)
+// Year 4 CS student at Universiti Malaya (UM), Kuala Lumpur
+// Career Path: student → targeting SWE internship / graduate roles
+// Key gap: no CI/CD, no monitoring, private repos — common for final-year students
+// This persona is the core Universities Track subject: readiness profile for a
+// student still in university, not yet in the workforce.
+// ============================================================================
+
+const danielEvidence: Evidence[] = [
+  {
+    id: 'daniel_fyp',
+    type: 'fyp',
+    title: 'Final Year Project — AI Governance Classifier (UM, 2025)',
+    description:
+      'Built a text classification system for automated AI policy compliance checking. Uses a fine-tuned BERT model to classify policy documents against a custom taxonomy of 14 governance categories. Dataset: 12,000 manually labelled documents from public government and corporate sources. Achieved 83% macro-F1 on held-out test set. Deployed on a local Flask server; demo runs on localhost only — not yet publicly hosted. Supervised by Dr. Lim Chee Kong (AI & ML Lab).',
+    technologies: 'Python, PyTorch, BERT, Flask, React, PostgreSQL',
+    duration: '8 months (Aug 2024 – Apr 2025)',
+    outcome:
+      'Grade: A. Shortlisted for UM Best FYP Award 2025 (CS stream). Code is private institutional repo. No CI/CD, no deployment monitoring configured.',
+    link: 'https://um.edu.my',
+  },
+  {
+    id: 'daniel_shopee_intern',
+    type: 'internship',
+    title: 'Backend Engineer Intern — Shopee Malaysia, Kuala Lumpur (Summer 2024)',
+    description:
+      'Contributed to the seller onboarding team. Built 2 internal CRUD APIs in Python/FastAPI for seller verification document upload and status tracking. Fixed 4 bugs in an existing Go microservice (read-only code review and one patch). Wrote unit tests for new Python services (coverage: 72%). Attended weekly sprint reviews and architecture walkthroughs. Did not deploy code to production — team policy requires 6-month tenure for production pushes. Staging deployment done by team lead.',
+    technologies: 'Python, FastAPI, Go (read-only), MySQL, Redis, Docker (local)',
+    duration: '3 months (Jun – Aug 2024)',
+    outcome:
+      'Performance review: "Strong learner, good test discipline, ready for independent projects." Stipend: MYR 2,800/month. No return offer — headcount freeze.',
+  },
+  {
+    id: 'daniel_hackathon',
+    type: 'hackathon',
+    title: 'Hack KL 2024 — Finalist, Education Track (Team of 4)',
+    description:
+      'Built SkillBridge in 36 hours: a tool that compares a student\'s GitHub activity against JD skill lists and generates a visual gap report. I built the Python backend (FastAPI + GitHub API scraper) and wrote the prompt engineering layer using OpenAI API. Teammates handled frontend (Vue.js) and the pitching deck. 320+ users tried the demo during judging. Judges noted: "solid idea, backend is well-structured, needs production robustness." App went down twice during demo due to no rate-limit handling.',
+    technologies: 'Python, FastAPI, OpenAI API, GitHub API, Vue.js',
+    duration: '36 hours (Oct 2024)',
+    outcome:
+      'Top 5 finalist out of 62 teams. Demo had 320+ users. Code on GitHub (public). App currently offline — no hosting budget. No monitoring or error tracking was added.',
+    link: 'https://github.com',
+  },
+  {
+    id: 'daniel_personal_project',
+    type: 'portfolio',
+    title: 'StudyRoom — Peer Study Session Booking App (Personal, 2023)',
+    description:
+      'Full-stack web app for UM students to book peer study sessions with tutors. Built with React frontend and Node.js/Express backend. PostgreSQL for data, JWT for auth. Deployed to Heroku (now offline after Heroku free tier removal). At peak: 80 registered users, 14 active sessions/week. No automated testing written — manual testing only. No monitoring. App went down several times and students complained via WhatsApp group.',
+    technologies: 'React, Node.js, Express, PostgreSQL, JWT, Heroku',
+    duration: '4 months (Jan – Apr 2023)',
+    outcome:
+      '80 registered users. App offline since Nov 2023 (Heroku free tier removed). No CI/CD or tests. Source code public on GitHub but README is incomplete.',
+  },
+  {
+    id: 'daniel_aws_cert',
+    type: 'certificate',
+    title: 'AWS Certified Cloud Practitioner',
+    issuer: 'Amazon Web Services',
+    description:
+      'Completed AWS Cloud Practitioner certification to improve deployment knowledge before internship season. Covers EC2, S3, RDS, Lambda, IAM, and basic networking concepts. Knowledge-level only — no hands-on deployment project completed post-certification. Planning to redeploy the FYP Flask API to EC2 but have not done so yet.',
+    technologies: 'AWS EC2, S3, RDS, Lambda, IAM, VPC',
+    verified: true,
+    outcome: 'Certified Mar 2025. Score: 847/1000. Valid 3 years. Deployment practice still pending.',
+  },
+];
+
+export const danielLeeProfile: StudentProfile = {
+  id: 'student_daniel_004',
+  name: 'Daniel Lee',
+  university: 'Universiti Malaya (UM), Kuala Lumpur',
+  year: 4,
+  major: 'Computer Science',
+  targetRole: 'Software Engineer',
+  evidence: danielEvidence,
+};
+
+// ============================================================================
 // PERSONA 1: Priya Sharma
 // Senior Software Engineer at Grab, Singapore
 // Career Path: Intern (2021) → SWE II (2022) → Senior SWE (2025)

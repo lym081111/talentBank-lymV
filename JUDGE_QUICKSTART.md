@@ -10,11 +10,12 @@
 
 1. Open **https://talentbank-lymv-career-os.vercel.app**
 2. Click **"Try the 2-minute demo"** → opens the Talent View
-3. Pick any persona card (Priya Sharma, Kai Chen, or Aisha Patel)
-4. Click **"Open full OS demo for [name]"** — loads their evidence instantly
+3. **Daniel Lee is selected by default** (the student — Universities Module 03 subject)
+4. Click **"Open full OS demo for Daniel Lee"** — loads his evidence instantly
 5. Watch **streaming Claude AI insights** render live on the Readiness Dashboard
-6. Navigate to **Paths Forward** — see Career OS Module 04 marketplace matches
-7. From landing, also try **Employer View** and **University View** directly
+6. Navigate to **Paths Forward** — see Career OS Module 04 marketplace matches + top readiness blockers
+7. From Talent View, also try the alumni personas (Priya/Kai/Aisha) to see the post-graduation trajectory
+8. From landing, also try **Employer View** and **University View** directly (auto-seeds Priya's profile)
 
 ---
 
@@ -27,10 +28,11 @@
 - "2-minute judge flow" breadcrumb strip
 
 ### Talent View (TalentPortal)
-- 3 demo personas: Priya Sharma (SWE, Grab), Kai Chen (Data Eng, ByteDance), Aisha Patel (PM, Lazada)
+- **Student persona (primary):** Daniel Lee — Year 4 CS at Universiti Malaya. FYP + internship + hackathon. Typical readiness gap: no CI/CD, no production deployment. This is the Universities Module 03 subject.
+- **Alumni trajectories (3 examples):** Priya Sharma (SWE, Grab), Kai Chen (Data Eng, ByteDance), Aisha Patel (PM, Lazada) — showing where students land post-graduation when they do close the gaps
 - 5 sub-tabs per persona: Profile · Evidence · Skills · Trajectory · Matches
 - Evidence cards highlight keywords, salary signals (MYR), and impact metrics
-- "Open full OS demo" button loads the persona into the full pipeline
+- "Open full OS demo" button loads the persona into the full pipeline (works for all 4)
 
 ### Evidence Page
 - Pre-loaded evidence blocks with descriptions, technologies, outcomes, links
