@@ -45,7 +45,7 @@ const PAGE_NAV: { id: CandidatePage; title: string; helper: string }[] = [
   { id: 'resume', title: 'Evidence', helper: 'proof, not claims' },
   { id: 'skills', title: 'Skills', helper: 'extracted from work' },
   { id: 'trajectory', title: 'Trajectory', helper: 'career movement' },
-  { id: 'matches', title: 'Matches', helper: 'roles this profile can explain' },
+  { id: 'matches', title: 'Applications', helper: 'turn evidence into applications' },
 ];
 
 function splitTechnologies(profile: StudentProfile) {
@@ -102,7 +102,7 @@ function highlightText(text: string, keywords: string[]) {
   });
 }
 
-function buildMarketMatches(profile: StudentProfile, skills: string[]) {
+function buildApplicationTargets(profile: StudentProfile, skills: string[]) {
   const lowerRole = profile.targetRole.toLowerCase();
 
   if (lowerRole.includes('data')) {
@@ -125,7 +125,7 @@ function buildMarketMatches(profile: StudentProfile, skills: string[]) {
   if (lowerRole.includes('product')) {
     return [
       {
-        title: 'Senior Product Manager - Marketplace Expansion',
+        title: 'Senior Product Manager - Regional Expansion',
         fit: '88%',
         why: 'Cross-border commerce, seller onboarding, P&L modeling, and multi-country research are directly aligned.',
         blocker: 'Engineering fluency is implied through collaboration. Add more technical decision examples.',
@@ -141,7 +141,7 @@ function buildMarketMatches(profile: StudentProfile, skills: string[]) {
 
   return [
     {
-      title: 'Senior Backend Engineer - Marketplace Systems',
+      title: 'Senior Backend Engineer - Transaction Systems',
       fit: '93%',
       why: `The resume shows ${skills.slice(0, 4).join(', ')} plus ownership of high-scale matching and payment systems.`,
       blocker: 'Strong private-company evidence. Add one sanitized public design case study for external trust.',
@@ -221,10 +221,10 @@ function CandidateDemoShortcut({ profile, onViewDemo }: { profile: StudentProfil
         <div>
           <div className="text-xs text-cyan-200 font-black uppercase tracking-[0.22em]">What the full OS demo shows</div>
           <h2 className="text-2xl md:text-3xl font-black text-white mt-2">
-            Analyze {profile.name}'s resume into readiness, gaps, MYR pay signal, and the five dynamic Career OS modules.
+            Analyze {profile.name}'s resume into readiness, gaps, MYR pay signal, and application next steps.
           </h2>
           <p className="text-white/45 text-sm mt-3 max-w-3xl">
-            The deeper demo starts from this selected candidate, then changes the Landscape module content based on their evidence, skills, target role, and weakest readiness signal.
+            The deeper demo starts from this selected candidate, then changes the workspace content based on their evidence, skills, target role, and weakest readiness signal.
           </p>
         </div>
         <button
@@ -487,49 +487,37 @@ function TrajectoryPage({ profile, salarySignals }: { profile: StudentProfile; s
   );
 }
 
-function MatchesPage({ profile, skills }: { profile: StudentProfile; skills: string[] }) {
-  const matches = buildMarketMatches(profile, skills);
+function ApplicationsPage({ profile, skills }: { profile: StudentProfile; skills: string[] }) {
+  const targets = buildApplicationTargets(profile, skills);
   return (
     <div className="space-y-4 animate-[fadeIn_0.25s_ease-out]">
-      {/* Silent scouting notification — marketplace bridge moment */}
-      <div className="rounded-2xl border border-emerald-300/25 bg-emerald-300/[0.07] px-5 py-3 flex items-center gap-3">
-        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
-        <p className="text-xs">
-          <span className="text-emerald-300 font-black">Silently scouted: </span>
-          <span className="text-white/50">
-            {profile.name}'s proof profile was viewed by{' '}
-            <strong className="text-white/80">3 employers</strong> in the last 24h via Career OS — before any résumé was sent.
-          </span>
-        </p>
-      </div>
-
       <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
-        <div className="text-cyan-200 text-xs font-black uppercase tracking-[0.22em]">Marketplace preview</div>
-        <h2 className="text-3xl font-black text-white mt-3">Jobs should match the candidate's proof, not keyword stuffing.</h2>
+        <div className="text-cyan-200 text-xs font-black uppercase tracking-[0.22em]">Application targets</div>
+        <h2 className="text-3xl font-black text-white mt-3">Turn evidence into application stories.</h2>
         <p className="text-white/50 mt-3 max-w-3xl">
-          These are mock marketplace matches generated from the resume evidence. They show why the profile fits and what still blocks a cleaner match.
+          These are mock application targets generated from the resume evidence. They show what the candidate can credibly claim and what to improve before applying.
         </p>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {matches.map(match => (
-          <div key={match.title} className="rounded-3xl border border-white/10 bg-slate-950/70 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-300/35">
+        {targets.map(target => (
+          <div key={target.title} className="rounded-3xl border border-white/10 bg-slate-950/70 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-300/35">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <div className="text-white font-black text-xl">{match.title}</div>
+                <div className="text-white font-black text-xl">{target.title}</div>
                 <div className="text-white/35 text-sm mt-1">Target role: {profile.targetRole}</div>
               </div>
               <div className="rounded-2xl border border-emerald-300/30 bg-emerald-300/10 px-4 py-2 text-emerald-100 font-black">
-                {match.fit}
+                {target.fit}
               </div>
             </div>
             <div className="mt-6 space-y-3">
               <div className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 p-4">
-                <div className="text-cyan-100 font-black text-sm">Why matched</div>
-                <p className="text-cyan-100/65 text-sm mt-2">{match.why}</p>
+                <div className="text-cyan-100 font-black text-sm">Application story</div>
+                <p className="text-cyan-100/65 text-sm mt-2">{target.why}</p>
               </div>
               <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4">
-                <div className="text-amber-100 font-black text-sm">What blocks a stronger match</div>
-                <p className="text-amber-100/70 text-sm mt-2">{match.blocker}</p>
+                <div className="text-amber-100 font-black text-sm">What to improve before applying</div>
+                <p className="text-amber-100/70 text-sm mt-2">{target.blocker}</p>
               </div>
             </div>
           </div>
@@ -596,7 +584,7 @@ export function TalentPortal({ onViewDemo, onBuildOwn, onBack }: Props) {
               Show what the resume actually proves.
             </h1>
             <p className="text-white/55 text-lg leading-relaxed mt-5 max-w-2xl">
-              Pick a candidate. PathLens turns their resume into separate pages for profile summary, evidence, skills, trajectory, and marketplace fit.
+              Pick a candidate. PathLens turns their resume into separate pages for profile summary, evidence, skills, trajectory, and application next steps.
             </p>
           </div>
           <CandidateSelector selectedId={selectedProfile.id} onSelect={profile => {
@@ -628,7 +616,7 @@ export function TalentPortal({ onViewDemo, onBuildOwn, onBack }: Props) {
           {page === 'resume' && <ResumePage profile={selectedProfile} />}
           {page === 'skills' && <SkillsPage profile={selectedProfile} skills={skills} />}
           {page === 'trajectory' && <TrajectoryPage profile={selectedProfile} salarySignals={salarySignals} />}
-          {page === 'matches' && <MatchesPage profile={selectedProfile} skills={skills} />}
+          {page === 'matches' && <ApplicationsPage profile={selectedProfile} skills={skills} />}
         </section>
       </main>
     </div>

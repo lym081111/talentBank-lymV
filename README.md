@@ -13,7 +13,7 @@ PathLens turns student evidence - projects, internships, certificates, hackathon
 
 Not a prediction engine. PathLens makes readiness visible from student evidence.
 
-The prototype helps students see what their evidence proves, helps universities identify cohort gaps early, and shows how this profile can later feed the wider Career OS marketplace layer without building a full marketplace in Stage 1.
+The prototype helps students see what their evidence proves, helps employers read a lightweight evidence-backed hiring brief, and helps universities identify cohort gaps early.
 
 ## For Judges
 
@@ -40,12 +40,12 @@ Supporting docs:
 1. Open https://talentbank-lymv-career-os.vercel.app
 2. Click **Try the 2-minute demo**.
 3. Choose a sample candidate: Priya Sharma, Kai Chen, or Aisha Patel.
-4. Review the candidate pages: Profile, Evidence, Skills, Trajectory, Matches.
+4. Review the candidate pages: Profile, Evidence, Skills, Trajectory, Applications.
 5. Click **Open full OS demo**.
 6. Continue through Evidence -> Extraction -> Readiness.
 7. On the dashboard, inspect the 6 dimension cards. Each shows score, status, why this score, evidence source, and matched signals.
 8. Click **View Paths Forward** for gap actions.
-9. Click **University Cohort View** for student, university, and employer perspectives. In University View, inspect recommended interventions based on top gaps.
+9. Click **University Cohort View** for the lightweight cohort intervention board and inspect recommended interventions based on top gaps.
 
 ## Architecture
 
@@ -68,8 +68,8 @@ Student evidence
 | Readiness Dashboard | Radar chart plus auditable dimension cards |
 | AI Career Explanation | Narrative insight, key gap, and next step based on entered evidence |
 | Gap Action Plan | Prioritized next actions with timeline and expected impact |
-| University Cohort View | Student benchmark, university interventions, employer-facing summary |
-| Career OS Bridge | Lightweight demo of how readiness can feed future marketplace matching |
+| Employer View | Lightweight hiring brief that answers shortlist decision and interview questions |
+| University Cohort View | Mock cohort gap board with recommended interventions |
 
 ## AI Tooling Disclosure
 
@@ -107,7 +107,7 @@ npm run build
 npm run test
 ```
 
-Tests cover readiness scoring, skill extraction, portfolio quality, ATS scoring, AI recommendations, market insights, next actions, and marketplace matching.
+Tests cover readiness scoring, skill extraction, portfolio quality, ATS scoring, AI recommendations, market insights, and next actions.
 
 ## Deployment
 
@@ -122,4 +122,4 @@ Primary module: **Universities Track - Module 03: Adaptive Readiness Profile**.
 
 Why: many students do not know whether they are internship-ready until rejection arrives. PathLens surfaces evidence-backed readiness early enough for students and universities to act.
 
-Career OS connection: the readiness profile becomes a structured input layer for future internship marketplace matching, while the Stage 1 prototype remains focused and frontend-first.
+Career OS connection: the readiness profile becomes a structured evidence layer that can be read by the student workspace, employer hiring brief, and university intervention board while the Stage 1 prototype remains focused and frontend-first.

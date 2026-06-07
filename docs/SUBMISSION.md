@@ -14,7 +14,7 @@ It is not a prediction engine. PathLens makes readiness visible from student evi
 - **University value:** universities see cohort-level gaps early enough to intervene.
 - **AI craft:** transparent evidence extraction + AI-assisted explanation.
 - **Completeness:** clickable prototype with demo persona and blank-profile path.
-- **System integration:** readiness profile can feed a later internship marketplace without adding backend scope now.
+- **System integration:** the same readiness profile powers Talent View, Employer View, and University View without adding backend scope now.
 
 ## Stage 1 Scope Boundaries
 
@@ -23,11 +23,11 @@ PathLens does not include:
 - backend
 - authentication
 - real university data integration
-- real employer marketplace
+- employer login, job posting, applicant tracking, candidate comparison, messaging, or marketplace workflows
 - real production APIs
 
 All data in the prototype is local, simulated, or entered by the user.
 
 ## Suggested Intent Form Summary
 
-PathLens turns student evidence into a transparent readiness profile for universities. Students add projects, internships, certificates, and resume items; the system extracts skills, cites the source phrase, scores six readiness dimensions, explains the score, and recommends next actions. Universities can view cohort gaps and run targeted interventions before students reach final-semester rejection cycles. The prototype demonstrates how Adaptive Readiness Profile can become the input layer for the wider Career OS and future internship marketplace, while keeping Stage 1 frontend-first and explainable.
+PathLens turns student evidence into a transparent readiness profile for universities. Students add projects, internships, certificates, and resume items; the system extracts skills, cites the source phrase, scores six readiness dimensions, explains the score, and recommends next actions. The full Talent View helps candidates improve evidence and turn it into applications. The lightweight Employer View answers whether to shortlist a candidate and what to ask in interview. The University View uses mock cohort data to recommend targeted interventions before final-semester rejection cycles. The prototype keeps Stage 1 frontend-first, evidence-backed, and explainable.

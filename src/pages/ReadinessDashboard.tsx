@@ -67,7 +67,7 @@ function CareerGuidanceSection({ profile }: { profile: ReadinessProfile }) {
       {jobRecs.length > 0 && (
         <div style={{ marginBottom: '28px' }}>
           <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--color-text)', margin: '0 0 14px 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            💼 Role Matches
+            Application Targets
           </h4>
           <div style={{ display: 'grid', gap: '12px' }}>
             {jobRecs.map((job, idx) => (

@@ -79,7 +79,7 @@ function App() {
       cohort: 'University Cohort View — PathLens',
       trajectory: 'Trajectory Simulator — PathLens',
       'talent-portal': 'Talent OS — PathLens',
-      'employer-portal': 'Recruiter Dashboard — PathLens',
+      'employer-portal': 'Employer Hiring Brief - PathLens',
     };
     document.title = PAGE_TITLES[currentPage] ?? 'PathLens';
   }, [currentPage]);
@@ -133,7 +133,7 @@ function App() {
               profileReturnPage === 'talent-portal'
                 ? 'Back to Talent OS'
                 : profileReturnPage === 'employer-portal'
-                  ? 'Back to Recruiter Dashboard'
+                  ? 'Back to Employer Brief'
                   : profileReturnPage === 'dashboard'
                     ? 'Back to Landscape'
                     : 'Back to previous page'
@@ -197,6 +197,9 @@ function App() {
       case 'employer-portal':
         return (
           <EmployerPortal
+            profile={studentProfile}
+            evidence={evidence}
+            readinessProfile={readinessProfile}
             onBuildOwn={() => handleBuildOwn('employer-portal')}
             onBack={() => handleNavigate('landing')}
           />

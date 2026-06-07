@@ -1,8 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { CohortInsight, ReadinessProfile, StudentProfile } from '../types/evidence';
 import { CohortInsightCard } from '../components/CohortInsightCard';
-import { submitToCohort } from '../utils/cohortApi';
-import styles from './CohortView.module.css';
 
 interface Props {
   cohort: CohortInsight;
@@ -11,482 +9,198 @@ interface Props {
   onBack: () => void;
 }
 
-type SubmitState = 'idle' | 'loading' | 'success' | 'error';
-type ViewMode = 'student' | 'university' | 'employer';
-
 function getUniversityIntervention(dimension: string, percentage?: number) {
-  const affected = percentage ? `${percentage}% of cohort` : 'target cohort';
+  const affected = percentage ? `${percentage}% of the mock cohort` : 'the target cohort';
 
   if (dimension.includes('Production')) {
     return {
-      title: 'Run a CI/CD proof sprint',
-      body: `${affected} needs stronger production practice evidence. Run a 2-week GitHub Actions, testing, deployment, and monitoring sprint tied to one existing student project.`,
+      title: 'Run a production proof sprint',
+      body: `${affected} lacks testing, deployment, and monitoring proof. Run a two-week sprint where students add CI, tests, live URLs, and one short incident note to an existing project.`,
       owner: 'Faculty + lab assistants',
-      measure: 'Evidence items with deployment/test links',
+      measure: 'New evidence blocks with test/deployment links',
+    };
+  }
+
+  if (dimension.includes('System')) {
+    return {
+      title: 'Add a system design clinic',
+      body: `${affected} needs clearer architecture evidence. Require a one-page design note for capstone projects: constraints, trade-offs, data flow, and failure handling.`,
+      owner: 'Programme team',
+      measure: 'Architecture notes attached to student profiles',
     };
   }
 
   if (dimension.includes('Work')) {
     return {
       title: 'Create micro-internship briefs',
-      body: `${affected} needs work-readiness proof. Convert employer problems into 10-hour micro-briefs with team roles, feedback, and deliverables.`,
+      body: `${affected} needs work-readiness proof. Convert employer problems into 10-hour briefs with roles, feedback, delivery dates, and review notes.`,
       owner: 'Career services + employer partners',
-      measure: 'New team-based evidence blocks',
+      measure: 'Team-based evidence blocks created',
     };
   }
 
   if (dimension.includes('Portfolio')) {
     return {
       title: 'Hold a portfolio evidence clinic',
-      body: `${affected} needs clearer proof. Review README quality, project outcomes, live URLs, and source links before internship applications open.`,
+      body: `${affected} needs clearer proof. Review README quality, outcomes, live URLs, source links, and screenshots before internship season opens.`,
       owner: 'Career services',
-      measure: 'Portfolio score movement after 30 days',
-    };
-  }
-
-  if (dimension.includes('Communication')) {
-    return {
-      title: 'Add technical storytelling reviews',
-      body: `${affected} needs better explanation evidence. Require a 3-minute demo, architecture note, and one reflective post for capstone work.`,
-      owner: 'Course coordinators',
-      measure: 'Documentation and presentation signals',
+      measure: 'Portfolio dimension movement after 30 days',
     };
   }
 
   return {
     title: `Target ${dimension}`,
-    body: `${affected} shows a readiness gap in ${dimension}. Create a focused workshop, collect new evidence, then rerun the cohort profile.`,
+    body: `${affected} shows a readiness gap in ${dimension}. Create a focused workshop, collect new evidence, then rerun the cohort board.`,
     owner: 'Programme team',
     measure: 'Dimension score movement',
   };
 }
 
-function getShortlistDecision(score: number): {
-  verdict: string;
-  color: string;
-  bg: string;
-  border: string;
-  reasons: string[];
-  concern: string;
-} {
-  if (score >= 70) {
-    return {
-      verdict: '✅ Shortlist',
-      color: 'var(--color-success)',
-      bg: 'var(--color-success-light)',
-      border: 'var(--color-success)',
-      reasons: [
-        'Evidence-backed skills — not just a list of buzzwords',
-        'Score indicates hands-on project depth',
-        'Portfolio/work experience demonstrates initiative',
-      ],
-      concern: 'Follow up: verify scope of projects in phone screen.',
-    };
-  }
-  if (score >= 50) {
-    return {
-      verdict: '🟡 Maybe — Phone Screen First',
-      color: 'var(--color-warning)',
-      bg: 'var(--color-warning-light)',
-      border: 'var(--color-warning)',
-      reasons: [
-        'Decent foundation but gaps in key dimensions',
-        'Could be strong with the right mentorship',
-        'Promising track record, needs verification',
-      ],
-      concern: 'Focus screen on: specific technical depth and collaboration style.',
-    };
-  }
-  return {
-    verdict: '❌ Not Yet — Encourage Reapply',
-    color: 'var(--color-danger)',
-    bg: 'var(--color-danger-light)',
-    border: 'var(--color-danger)',
-    reasons: [
-      'Score suggests gaps in core technical dimensions',
-      'Limited evidence of real-world project experience',
-      'Recommend completing 1–2 more substantial projects',
-    ],
-    concern: 'Encourage: apply again after building 1 deployed project or internship.',
-  };
-}
-
 export function CohortView({ cohort, readinessProfile, studentProfile, onBack }: Props) {
-  const [submitState, setSubmitState] = useState<SubmitState>('idle');
-  const [viewMode, setViewMode] = useState<ViewMode>('student');
-
-  const shortlist = useMemo(() => getShortlistDecision(readinessProfile.overall), [readinessProfile.overall]);
-
-  // Stable cohort benchmark averages per dimension (not random)
-  const cohortBenchmarks = useMemo<Record<string, number>>(() => ({
-    'Technical Skills': 52,
-    'Portfolio Evidence': 48,
-    'Work Readiness': 44,
-    'Communication & Documentation': 50,
-    'Production Practices': 41,
-    'Role-Specific Fit (Software Engineer)': 55,
-  }), []);
-
-  // Top 3 strong dimensions for recruiter card
-  const topDimensions = useMemo(
-    () => [...readinessProfile.dimensions].sort((a, b) => b.score - a.score).slice(0, 3),
+  const weakestDimensions = useMemo(
+    () => [...readinessProfile.dimensions].sort((a, b) => a.score - b.score).slice(0, 3),
     [readinessProfile.dimensions]
   );
 
-  // Weak dimension to flag
-  const weakDimension = useMemo(
-    () => [...readinessProfile.dimensions].sort((a, b) => a.score - b.score)[0],
-    [readinessProfile.dimensions]
+  const recommendedInterventions = useMemo(
+    () =>
+      weakestDimensions.map((dimension) => {
+        const cohortGap = cohort.topGaps.find((gap) => gap.dimension === dimension.dimension);
+        return {
+          dimension,
+          cohortGap,
+          intervention: getUniversityIntervention(dimension.dimension, cohortGap?.percentage),
+        };
+      }),
+    [cohort.topGaps, weakestDimensions]
   );
 
-  const recommendedInterventions = useMemo(() => {
-    const weakDimensions = [...readinessProfile.dimensions]
-      .sort((a, b) => a.score - b.score)
-      .slice(0, 3);
-
-    return weakDimensions.map((dimension) => {
-      const cohortGap = cohort.topGaps.find((gap) => gap.dimension === dimension.dimension);
-      return {
-        dimension,
-        cohortGap,
-        intervention: getUniversityIntervention(dimension.dimension, cohortGap?.percentage),
-      };
-    });
-  }, [cohort.topGaps, readinessProfile.dimensions]);
-
-  async function handleSubmit() {
-    setSubmitState('loading');
-    const ok = await submitToCohort(readinessProfile);
-    setSubmitState(ok ? 'success' : 'error');
-  }
+  const topGap = cohort.topGaps[0];
 
   return (
-    <div className={styles.container}>
-      <div className={styles.inner}>
-        <div className={styles.header}>
-          <h2>Cohort Intervention Board</h2>
-          <p>See which readiness blockers repeat across the cohort, then turn those patterns into targeted university actions.</p>
-        </div>
-
-        {/* Perspective Toggle */}
-        <div className={styles.toggleRow} role="tablist" aria-label="Cohort view perspective">
+    <div className="min-h-screen bg-[#07101d] px-5 py-8 text-white">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <div className="text-xs font-black uppercase tracking-[0.22em] text-cyan-200">
+              University View
+            </div>
+            <h1 className="mt-3 text-4xl font-black leading-tight md:text-5xl">
+              Cohort intervention board.
+            </h1>
+            <p className="mt-4 max-w-3xl text-sm leading-relaxed text-white/55 md:text-base">
+              This is not a university integration. It uses mock cohort data plus the same readiness profile to show where a programme should intervene before students reach application season.
+            </p>
+          </div>
           <button
-            className={viewMode === 'student' ? styles.toggleActive : styles.toggleBtn}
-            onClick={() => setViewMode('student')}
-            role="tab"
-            aria-selected={viewMode === 'student'}
-            aria-controls="cohort-panel"
+            onClick={onBack}
+            className="rounded-2xl border border-white/15 px-5 py-3 text-sm font-black text-white/70 transition-all hover:-translate-y-0.5 hover:border-cyan-300/50 hover:bg-white/[0.06] hover:text-white"
           >
-            🎓 Student View
-          </button>
-          <button
-            className={viewMode === 'university' ? styles.toggleActive : styles.toggleBtn}
-            onClick={() => setViewMode('university')}
-            role="tab"
-            aria-selected={viewMode === 'university'}
-            aria-controls="cohort-panel"
-          >
-            🏫 University View
-          </button>
-          <button
-            className={viewMode === 'employer' ? styles.toggleActive : styles.toggleBtn}
-            onClick={() => setViewMode('employer')}
-            role="tab"
-            aria-selected={viewMode === 'employer'}
-            aria-controls="cohort-panel"
-          >
-            🏢 Employer View
+            Back to readiness dashboard
           </button>
         </div>
 
-        {/* ── STUDENT VIEW ── */}
-        {viewMode === 'student' && (
-          <div id="cohort-panel" role="tabpanel" aria-label="Student perspective">
-            {/* Your score in context */}
-            <div className={styles.studentContext}>
-              <h3>📍 Where You Stand</h3>
-              <div className={styles.scoreRow}>
-                <div className={styles.scoreCard}>
-                  <div className={styles.scoreValue}>{readinessProfile.overall}/100</div>
-                  <div className={styles.scoreLabel}>Your Overall Score</div>
-                </div>
-                <div className={styles.scoreCard}>
-                  <div className={styles.scoreValue} style={{ color: 'var(--color-success)' }}>
-                    {cohort.readinessDistribution.internshipReady}%
-                  </div>
-                  <div className={styles.scoreLabel}>Cohort Internship-Ready</div>
-                </div>
-                <div className={styles.scoreCard}>
-                  <div className={styles.scoreValue} style={{ color: 'var(--color-warning)' }}>
-                    {cohort.readinessDistribution.developing}%
-                  </div>
-                  <div className={styles.scoreLabel}>Still Developing</div>
-                </div>
-              </div>
-
-              <div className={styles.dimensionCompare}>
-                <h4 style={{ margin: '0 0 14px 0', fontSize: '14px', fontWeight: '700', color: 'var(--color-text)' }}>
-                  Your Dimensions vs Cohort Average
-                </h4>
-                {readinessProfile.dimensions.map((dim) => {
-                  const cohortAvg = cohortBenchmarks[dim.dimension] ?? 48;
-                  const diff = dim.score - cohortAvg;
-                  return (
-                    <div key={dim.dimension} style={{ marginBottom: '10px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '12px' }}>
-                        <span style={{ fontWeight: '600', color: 'var(--color-text)' }}>{dim.dimension}</span>
-                        <span style={{ color: diff >= 0 ? 'var(--color-success)' : 'var(--color-danger)', fontWeight: '700' }}>
-                          You: {dim.score} &nbsp;
-                          <span style={{ opacity: 0.6, fontWeight: '400' }}>Cohort avg: {cohortAvg}</span>
-                          &nbsp; ({diff >= 0 ? '+' : ''}{diff})
-                        </span>
-                      </div>
-                      <div style={{ background: 'var(--color-surface-hover)', borderRadius: '4px', height: '6px', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: `${cohortAvg}%`, background: 'var(--color-border)', borderRadius: '4px' }} />
-                        <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: `${dim.score}%`, background: 'linear-gradient(90deg, var(--color-accent), var(--color-primary))', borderRadius: '4px', opacity: 0.85 }} />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+        <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="rounded-3xl border border-cyan-300/20 bg-cyan-300/10 p-5">
+            <div className="text-xs font-black uppercase tracking-[0.18em] text-cyan-100">
+              Current profile
             </div>
-
-            <CohortInsightCard cohort={cohort} />
-
-            <div className={styles.submitSection}>
-              <h3>Contribute Your Score</h3>
-              <p>Add your anonymous readiness scores to the live cohort — no personal data, only dimension scores. Helps future students see realistic benchmarks.</p>
-              {submitState === 'idle' && (
-                <button className={styles.submitBtn} onClick={handleSubmit}>
-                  Submit to Cohort (Anonymous)
-                </button>
-              )}
-              {submitState === 'loading' && (
-                <button className={styles.submitBtn} disabled>Submitting…</button>
-              )}
-              {submitState === 'success' && (
-                <p className={styles.submitSuccess}>✓ Submitted! Your profile has been added. Thank you.</p>
-              )}
-              {submitState === 'error' && (
-                <p className={styles.submitError}>Something went wrong — please try again.</p>
-              )}
-            </div>
+            <div className="mt-3 text-2xl font-black">{studentProfile.name || 'Unnamed student'}</div>
+            <p className="mt-2 text-sm text-white/55">
+              {studentProfile.targetRole || 'No target role yet'} · readiness {readinessProfile.overall}/100
+            </p>
           </div>
-        )}
-
-        {/* ── UNIVERSITY VIEW ── */}
-        {viewMode === 'university' && (
-          <div id="cohort-panel" role="tabpanel" aria-label="University perspective">
-            <div className={styles.context}>
-              <h3>Why Universities Need an Intervention Board</h3>
-              <p>
-                Career services typically engage students in their final semester — far too late to close meaningful gaps.
-                PathLens makes readiness visible at Year 2–3, when there's still time to intervene.
-              </p>
-              <p>
-                Cohort-level patterns reveal systemic gaps: if 60% of Year 2s lack production experience, that's not a student problem — it's a curriculum signal.
-              </p>
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
+            <div className="text-xs font-black uppercase tracking-[0.18em] text-white/35">
+              Mock cohort
             </div>
-
-            <CohortInsightCard cohort={cohort} />
-
-            <div className={styles.actionList}>
-              <h3>Recommended University Interventions</h3>
-              <p style={{ margin: '0 0 18px 0', fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
-                These are generated from the lowest readiness dimensions and cohort gap frequency. The point is action: run the intervention, collect new evidence, rerun the profile.
-              </p>
-              <div className={styles.actionGrid}>
-                {recommendedInterventions.map(({ dimension, cohortGap, intervention }, index) => (
-                  <div key={dimension.dimension} className={styles.action}>
-                    <div className={styles.actionNum}>{index + 1}</div>
-                    <div>
-                      <strong>{intervention.title}</strong>
-                      <p>{intervention.body}</p>
-                      <p style={{ marginTop: '8px', fontSize: '12px' }}>
-                        <strong>Gap:</strong> {dimension.dimension} ({dimension.score}/100)
-                        {cohortGap ? ` · ${cohortGap.studentCount} students affected` : ''}
-                      </p>
-                      <p style={{ marginTop: '6px', fontSize: '12px' }}>
-                        <strong>Owner:</strong> {intervention.owner} · <strong>Measure:</strong> {intervention.measure}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className={styles.actionList}>
-              <h3>What Universities Do With This Data</h3>
-              <div className={styles.actionGrid}>
-                {[
-                  {
-                    n: '1',
-                    title: 'Identify Priority Gaps',
-                    body: "When 64% of students lack Production Practices evidence, that's a signal to invest in testing & deployment workshops — not a generic 'career readiness' talk.",
-                  },
-                  {
-                    n: '2',
-                    title: 'Targeted Interventions',
-                    body: 'Instead of one-size-fits-all workshops, universities can offer specific programs like "GitHub Actions for Year 3s" based on what the cohort data shows.',
-                  },
-                  {
-                    n: '3',
-                    title: 'Track Impact Over Time',
-                    body: 'Re-run the analysis after an intervention. See how dimension scores shift. Prove the workshop worked with data, not just student feedback forms.',
-                  },
-                  {
-                    n: '4',
-                    title: 'Early Proactive Support',
-                    body: 'Advisors can proactively reach out to Year 2 students with low Portfolio scores — before the internship application season, not after the first rejection.',
-                  },
-                ].map((item) => (
-                  <div key={item.n} className={styles.action}>
-                    <div className={styles.actionNum}>{item.n}</div>
-                    <div>
-                      <strong>{item.title}</strong>
-                      <p>{item.body}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className={styles.endSection}>
-              <h3>PathLens as a Career OS</h3>
-              <p>
-                PathLens is built as a Career Readiness Operating System — making student readiness visible at every layer:
-              </p>
-              <ul>
-                <li><strong>Students:</strong> See your readiness landscape, find gaps, navigate your path.</li>
-                <li><strong>Universities:</strong> Identify cohort patterns and intervene before graduation.</li>
-                <li><strong>Employers:</strong> See evidence-backed candidates instead of generic resumes.</li>
-              </ul>
-            </div>
+            <div className="mt-3 text-2xl font-black">{cohort.totalStudents} students</div>
+            <p className="mt-2 text-sm text-white/55">
+              {cohort.readinessDistribution.internshipReady} internship-ready, {cohort.readinessDistribution.developing} developing, {cohort.readinessDistribution.emerging} emerging
+            </p>
           </div>
-        )}
-
-        {/* ── EMPLOYER VIEW ── */}
-        {viewMode === 'employer' && (
-          <div id="cohort-panel" role="tabpanel" aria-label="Employer perspective" className={styles.employerView}>
-            <div className={styles.employerIntro}>
-              <p>
-                This is what a recruiter sees when a student shares their PathLens profile.
-                Evidence-backed, score-verified, and transparent — not a self-rated skills list.
-              </p>
+          <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5">
+            <div className="text-xs font-black uppercase tracking-[0.18em] text-amber-100">
+              Highest cohort gap
             </div>
+            <div className="mt-3 text-2xl font-black">{topGap?.dimension ?? 'No gap data'}</div>
+            <p className="mt-2 text-sm text-white/55">
+              {topGap ? `${topGap.studentCount} students affected (${topGap.percentage}%)` : 'Add mock gap data to generate interventions.'}
+            </p>
+          </div>
+        </section>
 
-            {/* Recruiter Card */}
-            <div className={styles.recruiterCard}>
-              <div className={styles.recruiterCardHeader}>
-                <div className={styles.recruiterAvatar}>
-                  {studentProfile.name.charAt(0).toUpperCase()}
-                </div>
-                <div className={styles.recruiterCardInfo}>
-                  <h3 className={styles.recruiterName}>{studentProfile.name}</h3>
-                  <p className={styles.recruiterMeta}>
-                    {studentProfile.major} · Year {studentProfile.year}
-                    {studentProfile.university ? ` · ${studentProfile.university}` : ''}
+        <section className="mt-6 rounded-3xl border border-white/10 bg-white/[0.04] p-4 md:p-6">
+          <CohortInsightCard cohort={cohort} />
+        </section>
+
+        <section className="mt-6 rounded-3xl border border-white/10 bg-white/[0.04] p-6">
+          <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+            <div>
+              <div className="text-xs font-black uppercase tracking-[0.2em] text-cyan-200">
+                Recommended university interventions
+              </div>
+              <h2 className="mt-3 text-2xl font-black md:text-3xl">
+                Action, not another analytics chart.
+              </h2>
+            </div>
+            <p className="max-w-xl text-sm leading-relaxed text-white/55">
+              Recommendations come from the weakest readiness dimensions and cohort gap frequency. Run the intervention, collect evidence, then rerun the board.
+            </p>
+          </div>
+
+          <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+            {recommendedInterventions.map(({ dimension, cohortGap, intervention }, index) => (
+              <article
+                key={dimension.dimension}
+                className="rounded-2xl border border-cyan-300/20 bg-slate-950/55 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/45 hover:shadow-[0_0_18px_rgba(34,211,238,0.14)]"
+              >
+                <div className="text-cyan-200 text-3xl font-black">{index + 1}</div>
+                <h3 className="mt-3 text-lg font-black">{intervention.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-white/60">{intervention.body}</p>
+                <div className="mt-4 space-y-2 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-xs text-white/55">
+                  <p>
+                    <strong className="text-white">Gap:</strong> {dimension.dimension} ({dimension.score}/100)
+                    {cohortGap ? ` · ${cohortGap.studentCount} students affected` : ''}
                   </p>
-                  <p className={styles.recruiterTarget}>
-                    Targeting: <strong>{studentProfile.targetRole}</strong>
-                  </p>
+                  <p><strong className="text-white">Owner:</strong> {intervention.owner}</p>
+                  <p><strong className="text-white">Measure:</strong> {intervention.measure}</p>
                 </div>
-                <div className={styles.recruiterScore}>
-                  <div className={styles.recruiterScoreNum}>{readinessProfile.overall}</div>
-                  <div className={styles.recruiterScoreLabel}>PathLens Score</div>
-                  <div className={styles.recruiterScoreLevel}>{readinessProfile.level}</div>
-                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-6 rounded-3xl border border-white/10 bg-white/[0.04] p-6">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[0.8fr_1.2fr]">
+            <div>
+              <div className="text-xs font-black uppercase tracking-[0.2em] text-cyan-200">
+                What universities do with this data
               </div>
-
-              <div className={styles.recruiterDivider} />
-
-              {/* Top strengths */}
-              <div className={styles.recruiterSection}>
-                <div className={styles.recruiterSectionLabel}>🏆 Top Strengths (Evidence-Backed)</div>
-                <div className={styles.recruiterStrengths}>
-                  {topDimensions.map((dim) => (
-                    <div key={dim.dimension} className={styles.recruiterStrengthItem}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                        <span className={styles.recruiterStrengthName}>{dim.dimension}</span>
-                        <span className={styles.recruiterStrengthScore}
-                          style={{ color: dim.score >= 70 ? 'var(--color-success)' : dim.score >= 50 ? 'var(--color-warning)' : 'var(--color-danger)' }}>
-                          {dim.score}/100
-                        </span>
-                      </div>
-                      <div style={{ background: 'var(--color-border)', borderRadius: '4px', height: '5px', overflow: 'hidden' }}>
-                        <div style={{
-                          height: '100%',
-                          width: `${dim.score}%`,
-                          background: dim.score >= 70 ? 'var(--color-success)' : dim.score >= 50 ? 'var(--color-warning)' : 'var(--color-danger)',
-                          borderRadius: '4px',
-                          transition: 'width 0.6s ease',
-                        }} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Gap flag */}
-              {weakDimension && weakDimension.score < 60 && (
-                <div className={styles.recruiterSection}>
-                  <div className={styles.recruiterSectionLabel}>⚠️ Area to Probe in Interview</div>
-                  <div style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>
-                    <strong>{weakDimension.dimension}</strong> — Score {weakDimension.score}/100 ({weakDimension.status}).
-                    {' '}Consider asking about specific projects related to this area.
-                  </div>
-                </div>
-              )}
+              <h2 className="mt-3 text-2xl font-black">Close readiness gaps before rejection season.</h2>
+              <p className="mt-3 text-sm leading-relaxed text-white/55">
+                The board is deliberately lightweight: it tells the university what to run next, who owns it, and what evidence should improve.
+              </p>
             </div>
-
-            {/* Shortlist Decision Panel */}
-            <div
-              className={styles.shortlistPanel}
-              style={{ borderColor: shortlist.border, background: shortlist.bg }}
-            >
-              <div className={styles.shortlistVerdict} style={{ color: shortlist.color }}>
-                {shortlist.verdict}
-              </div>
-              <ul className={styles.shortlistReasons}>
-                {shortlist.reasons.map((r, i) => (
-                  <li key={i}>{r}</li>
-                ))}
-              </ul>
-              <div className={styles.shortlistConcern}>
-                <strong>Note:</strong> {shortlist.concern}
-              </div>
-            </div>
-
-            {/* Why PathLens beats resume */}
-            <div className={styles.employerWhy}>
-              <h4>Why recruiters prefer PathLens profiles over resumes</h4>
-              <div className={styles.employerWhyGrid}>
-                <div className={styles.employerWhyItem}>
-                  <strong>📋 Resume says:</strong> "Proficient in Python, React, Docker"
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {[
+                ['Identify priority gaps', 'See whether the issue is production practice, portfolio evidence, system design, or work readiness.'],
+                ['Run targeted interventions', 'Create specific workshops and micro-briefs instead of generic career talks.'],
+                ['Collect new evidence', 'Ask students to attach test links, deployment URLs, design notes, or employer feedback.'],
+                ['Re-check the cohort', 'Measure score movement after 30 days and prove whether the intervention worked.'],
+              ].map(([title, body], index) => (
+                <div key={title} className="rounded-2xl border border-white/10 bg-slate-950/55 p-5">
+                  <div className="text-cyan-200 text-xl font-black">{index + 1}</div>
+                  <h3 className="mt-3 font-black">{title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-white/55">{body}</p>
                 </div>
-                <div className={styles.employerWhyItem}>
-                  <strong>✅ PathLens shows:</strong> Python extracted from 3 verified projects; Docker used in a deployed CI/CD pipeline
-                </div>
-                <div className={styles.employerWhyItem}>
-                  <strong>📋 Resume says:</strong> "Team player with strong communication"
-                </div>
-                <div className={styles.employerWhyItem}>
-                  <strong>✅ PathLens shows:</strong> Communication dimension scored {readinessProfile.dimensions.find(d => d.dimension.includes('Communication'))?.score ?? 'N/A'}/100 from code review, documentation, and presentation evidence
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.employerDisclaimer}>
-              This view simulates how employers can use PathLens for structured candidate evaluation.
-              Module 04 (Internship Marketplace) integrates this profile directly into job matching.
+              ))}
             </div>
           </div>
-        )}
+        </section>
 
-        <div className={styles.buttons}>
-          <button className={styles.backButton} onClick={onBack}>
-            ← Back to Dashboard
-          </button>
+        <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-sm text-white/45">
+          Scope boundary: mock cohort data only. No backend, no university system integration, no employer marketplace, and no student surveillance.
         </div>
       </div>
     </div>

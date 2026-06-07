@@ -12,7 +12,7 @@ PathLens is designed for a 2-minute Stage 1 judge walkthrough.
    - Evidence
    - Skills
    - Trajectory
-   - Matches
+   - Applications
 5. Click **Open full OS demo** for the selected candidate.
 6. Continue through the main flow:
    - Evidence

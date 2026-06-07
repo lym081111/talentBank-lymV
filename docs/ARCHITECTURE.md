@@ -13,14 +13,14 @@ Included:
 - AI-assisted narrative explanation
 - Gap action plan
 - University cohort dashboard with recommended interventions
-- Lightweight Career OS bridge to show how profiles can feed marketplace matching later
+- Lightweight employer hiring brief generated from the same evidence
 
 Not included:
 
 - Backend
 - Authentication
 - Real university integration
-- Real employer marketplace
+- Employer login, job posting, applicant tracking, candidate comparison, messaging, or marketplace workflows
 - Production data ingestion
 
 ## Data Flow
@@ -69,6 +69,12 @@ AI does not decide:
 
 If the AI API is unavailable, deterministic fallback text is used.
 
-## Integration Direction
+## User-Facing Views
 
-PathLens fits Career OS as the readiness input layer. Module 04 or future marketplace work can consume the readiness profile, extracted skills, gaps, and evidence audit trail. This prototype intentionally avoids building a full marketplace in Stage 1.
+PathLens fits Career OS as the readiness input layer.
+
+- Talent View: full interactive workspace for the student or candidate. It answers what to improve next and how to turn evidence into applications.
+- Employer View: lightweight hiring brief generated from the same evidence. It answers whether to shortlist the candidate and what to ask in interview.
+- University View: lightweight intervention board using mock cohort data. It answers which cohort gaps need action.
+
+This prototype intentionally avoids building a separate employer system or full marketplace in Stage 1.
