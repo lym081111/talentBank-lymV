@@ -91,7 +91,7 @@ npm run dev
 **To run tests:**
 ```bash
 npm test
-# 8 test files — weighted scoring, skill extraction, market insights, ATS scoring, portfolio quality, edge cases
+# 9 test files, 111 tests — marketplace matching, weighted scoring, skill extraction, market insights, ATS scoring, portfolio quality, edge cases
 ```
 
 ---
@@ -126,7 +126,7 @@ npm test
 | System Design | 25% | 6-dimension scoring, transparent extraction, cohort API seam, marketplace matching engine, Career OS module connections |
 | Completeness | 20% | All views functional, AI insight, export, cohort submit, marketplace matches, trajectory simulator |
 | AI Craft | 15% | Streaming Claude AI, pre-built insights for all 3 personas, transparency panel, rule-based fallback |
-| Code Quality | 10% | TypeScript 0 errors, 8 test files, React.lazy code splitting, modular CSS Modules, clean hooks |
+| Code Quality | 10% | TypeScript 0 errors, 9 test files (111 tests), React.lazy code splitting, modular CSS Modules, clean hooks |
 
 ---
 
