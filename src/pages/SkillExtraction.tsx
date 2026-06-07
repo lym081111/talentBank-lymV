@@ -12,11 +12,6 @@ interface Props {
 }
 
 export function SkillExtraction({ evidence, extractedSkills, onContinue }: Props) {
-  const skillCounts = new Map<string, number>();
-  for (const skill of extractedSkills) {
-    skillCounts.set(skill.skill, (skillCounts.get(skill.skill) || 0) + 1);
-  }
-
   // Count unique high-demand skills detected
   // const uniqueSkillNames = Array.from(skillCounts.keys());
   // const highDemandCount = uniqueSkillNames.filter((name) => {
@@ -63,28 +58,6 @@ export function SkillExtraction({ evidence, extractedSkills, onContinue }: Props
               <p style={{ margin: 0, fontSize: '12px', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>{body}</p>
             </div>
           ))}
-        </div>
-
-        <div className={styles.summary}>
-          <div className={styles.summaryCard} style={{ gridColumn: '1 / -1' }}>
-            <div className={styles.summaryValue}>{skillCounts.size}</div>
-            <div className={styles.summaryLabel}>Unique Signals Identified</div>
-            <p style={{ margin: '12px 0 0 0', fontSize: '13px', color: 'var(--color-text-secondary)' }}>
-              These are traceable skill signals, not keywords copied from a resume summary.
-            </p>
-          </div>
-          <div className={styles.summaryCard}>
-            <div className={styles.summaryValue}>
-              {extractedSkills.filter((s) => s.confidence === 'high').length}
-            </div>
-            <div className={styles.summaryLabel}>High Confidence</div>
-          </div>
-          <div className={styles.summaryCard}>
-            <div className={styles.summaryValue}>
-              {extractedSkills.filter((s) => s.confidence === 'medium').length}
-            </div>
-            <div className={styles.summaryLabel}>Medium Confidence Signals</div>
-          </div>
         </div>
 
         {/* Market Alignment Panel */}
