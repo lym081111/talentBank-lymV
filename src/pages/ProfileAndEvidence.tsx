@@ -197,13 +197,13 @@ export function ProfileAndEvidence({
                   color: '#67e8f9',
                   marginBottom: '8px',
                 }}>
-                  Guided demo profile
+                  Internship readiness workspace
                 </div>
                 <h2 style={{ margin: 0, color: 'white', fontSize: '24px', fontWeight: 900, letterSpacing: '-0.04em' }}>
-                  {profile.name}'s resume has already been converted into a Career OS.
+                  {profile.name}'s resume is now a Proof Passport.
                 </h2>
                 <p style={{ margin: '10px 0 0 0', color: 'rgba(255,255,255,0.62)', fontSize: '14px', lineHeight: 1.7 }}>
-                  Review the evidence, extracted skills, readiness landscape, and next actions as if this were a real submitted resume.
+                  Inspect each proof block, then follow the same flow a student would use: evidence, lens scan, readiness map, blockers, sprint, and university insight.
                 </p>
               </div>
               {onClearAndStart && (
@@ -232,9 +232,9 @@ export function ProfileAndEvidence({
               marginTop: '18px',
             }}>
               {[
-                ['1', 'Resume evidence', 'Work history is split into proof blocks.'],
-                ['2', 'Skill signal', 'Tools and capabilities are traceable to source.'],
-                ['3', 'Readiness view', 'Scores explain gaps and next moves.'],
+                ['1', 'Proof Passport', 'Resume content is split into inspectable evidence blocks.'],
+                ['2', 'Lens Scan', 'Tools and capabilities cite the source phrase.'],
+                ['3', 'Career Signal Map', 'Scores explain blockers and next actions.'],
               ].map(([num, title, body]) => (
                 <div key={num} style={{
                   border: '1px solid rgba(255,255,255,0.1)',
@@ -388,7 +388,7 @@ export function ProfileAndEvidence({
                   <strong>Evidence Items:</strong> {evidence.length}
                 </div>
               </div>
-              <p className={styles.subtitle}>Your career profile — built during university, carried through your entire career.</p>
+              <p className={styles.subtitle}>Your Proof Passport: evidence first, claims second. Keep adding source-backed work as your career changes.</p>
             </>
           )}
 
@@ -398,7 +398,7 @@ export function ProfileAndEvidence({
                 Evidence collected: <strong>{evidence.length}/5</strong>
               </span>
               <span className={styles.progressHint}>
-                {evidence.length === 0 ? 'Add at least 3 items for best results' : evidence.length < 3 ? 'Keep adding - 3+ items recommended' : evidence.length >= 5 ? 'Perfect! Ready to assess' : 'Great! You can continue adding more'}
+                {evidence.length === 0 ? 'Add at least 3 proof blocks for the clearest scan' : evidence.length < 3 ? 'Keep adding - 3+ proof blocks recommended' : evidence.length >= 5 ? 'Strong proof passport. Ready to scan.' : 'Good start. You can continue adding more proof.'}
               </span>
             </div>
             <div className={styles.progressTrack}>
@@ -415,9 +415,9 @@ export function ProfileAndEvidence({
           )}
           <div className={styles.evidenceHeader}>
             <div>
-              <h3>Build Your Evidence</h3>
+              <h3>Build Your Proof Passport</h3>
               <p className={styles.evidenceIntro}>
-                Add your best work. We'll extract skills automatically and score your readiness across dimensions that matter for internships.
+                Add projects, internships, certificates, and outcomes. PathLens scans the evidence for skill signals, missing proof, and readiness blockers before it shows any score.
               </p>
             </div>
           </div>
@@ -458,9 +458,9 @@ export function ProfileAndEvidence({
 
           {evidence.length === 0 ? (
             <div className={styles.emptyState}>
-              <p className={styles.emptyTitle}>Ready to show what you've built?</p>
+              <p className={styles.emptyTitle}>Ready to show what your resume actually proves?</p>
               <p className={styles.emptyHint}>
-                Choose a template below to get started — we'll pre-fill the form so you only need to fill in the specifics.
+                Choose a template below. The form asks for source-backed evidence, not polished claims.
               </p>
               <div className={styles.templateGrid}>
                 {EVIDENCE_TEMPLATES.map((tmpl) => (
@@ -500,7 +500,7 @@ export function ProfileAndEvidence({
                     marginBottom: '20px',
                   }}>
                     <h3 style={{ margin: '0 0 20px 0', fontSize: '16px', fontWeight: '700', color: 'var(--color-text)' }}>
-                      📊 Skills Summary (by Demand Level)
+                      Proof Signals Summary by Market Demand
                     </h3>
                     <SkillsByDemandVisualization extractedSkills={allExtractedSkills} />
                   </div>
@@ -541,7 +541,7 @@ export function ProfileAndEvidence({
               onClick={onAnalyze}
               disabled={evidence.length === 0}
             >
-              See My Readiness
+              Run Lens Scan
             </button>
           </div>
         </div>

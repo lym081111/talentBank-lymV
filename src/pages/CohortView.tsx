@@ -164,8 +164,8 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack }:
     <div className={styles.container}>
       <div className={styles.inner}>
         <div className={styles.header}>
-          <h2>University Cohort Dashboard</h2>
-          <p>See how your readiness compares, and how universities use PathLens to support students early.</p>
+          <h2>Cohort Intervention Board</h2>
+          <p>See which readiness blockers repeat across the cohort, then turn those patterns into targeted university actions.</p>
         </div>
 
         {/* Perspective Toggle */}
@@ -278,7 +278,7 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack }:
         {viewMode === 'university' && (
           <div id="cohort-panel" role="tabpanel" aria-label="University perspective">
             <div className={styles.context}>
-              <h3>Why Universities Care About Readiness</h3>
+              <h3>Why Universities Need an Intervention Board</h3>
               <p>
                 Career services typically engage students in their final semester — far too late to close meaningful gaps.
                 PathLens makes readiness visible at Year 2–3, when there's still time to intervene.

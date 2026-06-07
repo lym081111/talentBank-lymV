@@ -104,6 +104,65 @@
   color: var(--color-text-secondary);
 }
 
+.passportStrip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.passportStrip > div {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+}
+
+.passportLabel {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
+}
+
+.passportValue {
+  display: block;
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.signalBlock {
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.signalBlock strong {
+  color: var(--color-text);
+  font-weight: 800;
+  margin-right: 4px;
+}
+
+.techPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 8px;
+}
+
+.techPills span {
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .tech,
 .meta {
   font-size: 13px;
@@ -116,4 +175,23 @@
   color: var(--color-text);
   font-weight: 700;
   margin-right: 4px;
+}
+
+.missingProof {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.missingProof strong {
+  color: var(--color-text);
+}
+
+@media (max-width: 560px) {
+  .passportStrip {
+    grid-template-columns: 1fr;
+  }
 }

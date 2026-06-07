@@ -13,7 +13,7 @@ const MILESTONES = [
   { year: 'University', role: 'Intervention view', salary: 'Top gaps to actions', skill: 'Career services can act early' },
 ];
 
-const DEMO_STEPS = ['Evidence', 'Extraction', 'Readiness', 'Gaps', 'University Insight'];
+const DEMO_STEPS = ['Evidence', 'Skill Signals', 'Readiness Map', 'Blockers', 'Action Sprint', 'Hiring / University Insight'];
 
 function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
@@ -44,12 +44,12 @@ export function Landing({ onNavigate, onBuildOwn }: Props) {
             </span>
 
             <h1 className="text-5xl lg:text-6xl font-black leading-[1.05] tracking-tight mb-6">
-              Make student readiness
-              <span className="block text-emerald-400">visible from evidence.</span>
+              Turn student evidence
+              <span className="block text-emerald-400">into career readiness.</span>
             </h1>
 
             <p className="text-lg text-white/60 leading-relaxed mb-4 max-w-xl">
-              PathLens is a Stage 1 Career OS prototype that turns student projects, internships, certificates, and resumes into a transparent readiness profile universities can act on.
+              PathLens is a Stage 1 Career OS prototype that turns student projects, internships, certificates, and resumes into a transparent readiness profile, blocker plan, application pack, and university intervention board.
             </p>
             <p className="text-base text-emerald-200/90 leading-relaxed mb-5 max-w-xl font-bold">
               Not a prediction engine. PathLens makes readiness visible from student evidence.

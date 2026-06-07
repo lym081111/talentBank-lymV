@@ -44,9 +44,10 @@ function findQuickWin(gaps: Gap[]): { gap: Gap; action: NextAction } | null {
 
 export function Gaps({ gaps, onBackToDashboard, onViewCohort, onUpdateEvidence }: Props) {
   const quickWin = findQuickWin(gaps);
+  const topBlockers = gaps.slice(0, 3);
 
   return (
-    <div className={styles.container} role="main" aria-label="Paths Forward — growth opportunities">
+    <div className={styles.container} role="main" aria-label="3 blockers before you apply">
       <div className={styles.inner}>
         {onBackToDashboard && (
           <button
@@ -67,14 +68,49 @@ export function Gaps({ gaps, onBackToDashboard, onViewCohort, onUpdateEvidence }
               transition: 'all var(--transition)',
             }}
           >
-            Back to Landscape
+            Back to Career Signal Map
           </button>
         )}
 
         <div className={styles.header}>
-          <h2>Your Paths Forward</h2>
-          <p>Here's where your landscape has room to grow. Each dimension includes concrete actions for the next 30–90 days — pick one and start navigating.</p>
+          <h2>3 Blockers Before You Apply</h2>
+          <p>These are the weakest readiness signals visible from your evidence. Fixing them matters more than polishing another generic resume sentence.</p>
         </div>
+
+        {topBlockers.length > 0 && (
+          <div role="region" aria-label="30-day readiness sprint" style={{
+            background: 'var(--color-surface)',
+            border: '1.5px solid var(--color-border)',
+            borderRadius: 'var(--radius-xl)',
+            padding: '22px 24px',
+            marginBottom: '28px',
+          }}>
+            <div style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--color-primary)', marginBottom: '8px' }}>
+              30-Day Readiness Sprint
+            </div>
+            <h3 style={{ margin: '0 0 10px 0', color: 'var(--color-text)', fontSize: '20px', fontWeight: 900 }}>
+              Turn blockers into new proof blocks.
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+              {topBlockers.map((gap, index) => (
+                <div key={gap.dimension} style={{
+                  border: '1px solid var(--color-border)',
+                  borderRadius: 'var(--radius-lg)',
+                  padding: '16px',
+                  background: 'var(--color-surface-hover)',
+                }}>
+                  <div style={{ color: 'var(--color-accent)', fontSize: '12px', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                    Sprint focus {index + 1}
+                  </div>
+                  <strong style={{ display: 'block', marginTop: '8px', color: 'var(--color-text)' }}>{gap.dimension}</strong>
+                  <p style={{ margin: '8px 0 0 0', color: 'var(--color-text-secondary)', fontSize: '13px', lineHeight: 1.6 }}>
+                    {gap.nextActions[0]?.title || 'Add source-backed evidence'} - {gap.projectedImpact} if improved.
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Quick Win Highlight */}
         {quickWin && (
@@ -112,8 +148,8 @@ export function Gaps({ gaps, onBackToDashboard, onViewCohort, onUpdateEvidence }
         )}
 
         {gaps.length > 0 ? (
-          <div className={styles.gapsList} role="list" aria-label={`${gaps.length} growth gap${gaps.length !== 1 ? 's' : ''} identified`}>
-            {gaps.map((gap, idx) => (
+          <div className={styles.gapsList} role="list" aria-label={`${topBlockers.length} application blocker${topBlockers.length !== 1 ? 's' : ''} identified`}>
+            {topBlockers.map((gap, idx) => (
               <GapActionCard key={idx} gap={gap} index={idx} />
             ))}
           </div>
@@ -129,19 +165,19 @@ export function Gaps({ gaps, onBackToDashboard, onViewCohort, onUpdateEvidence }
         )}
 
         <div className={styles.reflection}>
-          <h3>How to Navigate This</h3>
+          <h3>How to Use This Before Applying</h3>
           <ol>
             <li>
-              <strong>Pick one gap.</strong> Start with the highest-impact dimension. Don't try to move everything at once.
+              <strong>Pick one blocker.</strong> Start with the highest-impact dimension. Do not try to fix every signal at once.
             </li>
             <li>
               <strong>Choose an action.</strong> Pick what fits your timeline and excites you. <em style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>(Timelines are estimates; some actions can run in parallel)</em>
             </li>
             <li>
-              <strong>Build and ship it.</strong> Add the result as new evidence — a deployed project, a certificate, a role description.
+              <strong>Build and ship it.</strong> Add the result as new evidence: a deployed project, a certificate, or a role description with outcomes.
             </li>
             <li>
-              <strong>Re-check your landscape.</strong> Go back to "Update Evidence" and add your new items to see your dimensions shift.
+              <strong>Re-check your map.</strong> Go back to "Update Evidence" and add your new items to see your dimensions shift.
             </li>
           </ol>
         </div>
@@ -194,7 +230,7 @@ export function Gaps({ gaps, onBackToDashboard, onViewCohort, onUpdateEvidence }
                 transition: 'all var(--transition)',
               }}
             >
-              Back to Landscape
+              Back to Career Signal Map
             </button>
           )}
           {onUpdateEvidence && (

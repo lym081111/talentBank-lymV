@@ -6,6 +6,13 @@ import { AICareerInsight } from '../components/AICareerInsight';
 import { RadarChart } from '../components/RadarChart';
 import { ATSScoreCard } from '../components/ATSScoreCard';
 import { PortfolioQualityCard } from '../components/PortfolioQualityCard';
+import {
+  ApplicationPack,
+  EvidenceBackedHiringBrief,
+  JobDescriptionMatch,
+  ReadinessSprint,
+  ReadinessWorkspacePanel,
+} from '../components/CareerWorkspaceArtifacts';
 // pdfExport (~940 KB) is loaded on demand — only when the user clicks Export PDF
 type ExportFn = typeof import('../utils/pdfExport').exportProfileToPDF;
 import { analyzePortfolioQuality } from '../utils/portfolioQuality';
@@ -541,10 +548,36 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
     <div className={styles.container}>
       <div className={styles.inner}>
         {/* AI Career Intelligence — first, most prominent */}
+        <section style={{
+          background: 'linear-gradient(135deg, var(--color-surface) 0%, var(--color-primary-light) 100%)',
+          border: '1px solid var(--color-border)',
+          borderRadius: 'var(--radius-xl)',
+          padding: '30px',
+          marginBottom: '28px',
+          boxShadow: 'var(--shadow-md)',
+        }}>
+          <div style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--color-primary)', marginBottom: '10px' }}>
+            Career Signal Map
+          </div>
+          <h1 style={{ margin: 0, color: 'var(--color-text)', fontSize: '32px', fontWeight: 900, letterSpacing: '-0.05em', lineHeight: 1.08 }}>
+            {studentName}'s readiness, blockers, and application assets.
+          </h1>
+          <p style={{ margin: '12px 0 0 0', color: 'var(--color-text-secondary)', lineHeight: 1.7, fontSize: '15px', maxWidth: '760px' }}>
+            The score is diagnostic. The product value is the visible trail from proof to skill signal, readiness dimension, blocker, 30-day sprint, application pack, and university intervention.
+          </p>
+        </section>
+
         <AICareerInsight evidence={evidence} profile={studentProfile} />
 
+        <ReadinessWorkspacePanel
+          profile={profile}
+          studentProfile={studentProfile}
+          evidence={evidence}
+          onViewGaps={onViewGaps}
+        />
+
         <div className={styles.overallSection}>
-          <h2 style={{ color: 'var(--color-text)', fontWeight: '800', fontSize: '28px', marginBottom: '20px' }}>Your Career Landscape</h2>
+          <h2 style={{ color: 'var(--color-text)', fontWeight: '800', fontSize: '28px', marginBottom: '20px' }}>Diagnostic Readiness Score</h2>
 
           <div className={`${styles.overallCard} ${scoreDone ? styles.scorePulse : ''}`}>
             <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', fontWeight: '600', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
@@ -586,6 +619,14 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
           onBackToProfile={onBackToProfile}
           onViewTrajectory={onViewTrajectory}
         />
+
+        <ReadinessSprint dimensions={profile.dimensions} evidence={evidence} />
+
+        <ApplicationPack profile={profile} studentProfile={studentProfile} evidence={evidence} />
+
+        <JobDescriptionMatch profile={profile} studentProfile={studentProfile} evidence={evidence} />
+
+        <EvidenceBackedHiringBrief profile={profile} studentProfile={studentProfile} evidence={evidence} />
 
         {/* Visual Score Range Indicators */}
         <div style={{

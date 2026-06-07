@@ -34,16 +34,43 @@ export function SkillExtraction({ evidence, extractedSkills, onContinue }: Props
     <div className={styles.container}>
       <div className={styles.inner}>
         <div className={styles.header}>
-          <h2>We Found Your Skills</h2>
+          <h2>Lens Scan: Skill Signals Found</h2>
           <p>Transparent evidence extraction + AI-assisted explanation. PathLens shows the extracted skill, evidence source, matched phrase, and confidence before any readiness score is calculated.</p>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+          gap: '12px',
+          marginBottom: '24px',
+        }}>
+          {[
+            ['Evidence scanned', evidence.length.toString(), 'Proof Passport blocks read'],
+            ['Skill signals', extractedSkills.length.toString(), 'Each one cites a source phrase'],
+            ['High confidence', extractedSkills.filter((s) => s.confidence === 'high').length.toString(), 'Strong phrase-level match'],
+            ['Mapped next', '6 dimensions', 'Readiness, blockers, sprint'],
+          ].map(([label, value, body]) => (
+            <div key={label} style={{
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+              borderRadius: 'var(--radius-lg)',
+              padding: '18px',
+            }}>
+              <div style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--color-text-muted)', marginBottom: '8px' }}>
+                {label}
+              </div>
+              <div style={{ fontSize: '24px', fontWeight: 900, color: 'var(--color-text)', marginBottom: '4px' }}>{value}</div>
+              <p style={{ margin: 0, fontSize: '12px', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>{body}</p>
+            </div>
+          ))}
         </div>
 
         <div className={styles.summary}>
           <div className={styles.summaryCard} style={{ gridColumn: '1 / -1' }}>
             <div className={styles.summaryValue}>{skillCounts.size}</div>
-            <div className={styles.summaryLabel}>Unique Skills Identified</div>
+            <div className={styles.summaryLabel}>Unique Signals Identified</div>
             <p style={{ margin: '12px 0 0 0', fontSize: '13px', color: 'var(--color-text-secondary)' }}>
-              You've demonstrated {skillCounts.size} distinct technical competencies across your evidence
+              These are traceable skill signals, not keywords copied from a resume summary.
             </p>
           </div>
           <div className={styles.summaryCard}>
@@ -56,7 +83,7 @@ export function SkillExtraction({ evidence, extractedSkills, onContinue }: Props
             <div className={styles.summaryValue}>
               {extractedSkills.filter((s) => s.confidence === 'medium').length}
             </div>
-            <div className={styles.summaryLabel}>Emerging Skills</div>
+            <div className={styles.summaryLabel}>Medium Confidence Signals</div>
           </div>
         </div>
 
@@ -157,7 +184,7 @@ export function SkillExtraction({ evidence, extractedSkills, onContinue }: Props
           marginBottom: '24px',
         }}>
           <h3 style={{ margin: '0 0 20px 0', fontSize: '18px', fontWeight: '700', color: 'var(--color-text)' }}>
-            Your Skills Organized by Market Value
+            Skill Signals Organized by Market Value
           </h3>
           <SkillsByDemandVisualization extractedSkills={extractedSkills} />
         </div>
@@ -190,13 +217,13 @@ export function SkillExtraction({ evidence, extractedSkills, onContinue }: Props
           textAlign: 'center',
         }}>
           <h3 style={{ margin: '0 0 12px 0', fontSize: '18px', fontWeight: '700', color: 'var(--color-text)' }}>
-            Ready to See Your Readiness?
+            Ready to Open Your Career Signal Map?
           </h3>
           <p style={{ margin: '0 0 20px 0', fontSize: '14px', color: 'var(--color-text-secondary)', maxWidth: '500px', marginLeft: 'auto', marginRight: 'auto' }}>
-            Your skills map to 6 dimensions that matter: <strong>Technical Depth</strong> • <strong>Portfolio Strength</strong> • <strong>Work Readiness</strong> • <strong>Communication</strong> • <strong>Production Mindset</strong> • <strong>Role Fit</strong>
+            The scan now maps into 6 readiness dimensions: <strong>Technical Depth</strong> • <strong>Portfolio Strength</strong> • <strong>Work Readiness</strong> • <strong>Communication</strong> • <strong>Production Mindset</strong> • <strong>Role Fit</strong>
           </p>
           <button className={styles.continueButton} onClick={onContinue}>
-            See Your Readiness Score →
+            Open Career Signal Map
           </button>
         </div>
       </div>

@@ -22,6 +22,24 @@ export function EvidenceCard({ evidence, onEdit, onDelete }: Props) {
     }
   };
 
+  const technologies = evidence.technologies
+    ? evidence.technologies.split(',').map((tech) => tech.trim()).filter(Boolean)
+    : [];
+  const hasOutcome = Boolean(evidence.outcome);
+  const hasSource = Boolean(evidence.link || evidence.verified);
+  const text = `${evidence.description} ${evidence.outcome || ''} ${evidence.technologies || ''}`.toLowerCase();
+  const hasProductionSignal = ['deploy', 'production', 'user', 'merged', 'reduced', 'improved'].some((signal) => text.includes(signal));
+  const quality = hasOutcome && hasSource
+    ? 'Verified'
+    : hasOutcome || hasProductionSignal
+      ? 'Needs source link'
+      : 'Needs stronger proof';
+  const missingProof = [
+    !hasSource ? 'source URL' : '',
+    !hasOutcome ? 'measurable outcome' : '',
+    !hasProductionSignal ? 'production or user signal' : '',
+  ].filter(Boolean);
+
   return (
     <article className={styles.card} aria-label={`${typeLabels[evidence.type]}: ${evidence.title}`}>
       <div className={styles.header}>
@@ -52,10 +70,26 @@ export function EvidenceCard({ evidence, onEdit, onDelete }: Props) {
           )}
         </div>
       </div>
+      <div className={styles.passportStrip}>
+        <div>
+          <span className={styles.passportLabel}>Evidence quality</span>
+          <strong className={styles.passportValue}>{quality}</strong>
+        </div>
+        <div>
+          <span className={styles.passportLabel}>Why it matters</span>
+          <strong className={styles.passportValue}>{hasProductionSignal ? 'Shows applied work' : 'Needs external proof'}</strong>
+        </div>
+      </div>
+
       <p className={styles.description}>{evidence.description}</p>
-      {evidence.technologies && (
-        <div className={styles.tech}>
-          <strong>Tech:</strong> {evidence.technologies}
+      {technologies.length > 0 && (
+        <div className={styles.signalBlock}>
+          <strong>Detected signals:</strong>
+          <div className={styles.techPills}>
+            {technologies.map((tech) => (
+              <span key={tech}>{tech}</span>
+            ))}
+          </div>
         </div>
       )}
       {evidence.duration && (
@@ -68,6 +102,10 @@ export function EvidenceCard({ evidence, onEdit, onDelete }: Props) {
           <strong>Outcome:</strong> {evidence.outcome}
         </div>
       )}
+      <div className={styles.missingProof}>
+        <strong>Missing proof:</strong>{' '}
+        {missingProof.length ? missingProof.join(', ') : 'none flagged for this demo block'}
+      </div>
     </article>
   );
 }
