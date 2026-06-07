@@ -1,5 +1,11 @@
 import { useMemo, useState, useEffect } from 'react';
 import { ReadinessProfile, Evidence, StudentProfile } from '../types/evidence';
+import {
+  ReadinessSnapshot,
+  getSnapshotsForStudent,
+  saveSnapshot,
+  seedDemoSnapshots,
+} from '../utils/profileSnapshots';
 import { DimensionScoreGauge } from '../components/DimensionScoreGauge';
 import { SkillProgressionRoad } from '../components/SkillProgressionRoad';
 import { AICareerInsight } from '../components/AICareerInsight';
@@ -149,6 +155,214 @@ function CareerGuidanceSection({ profile }: { profile: ReadinessProfile }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Profile History — evolving profile timeline (Issue #6)
+// ---------------------------------------------------------------------------
+
+function ProfileHistorySection({
+  profile,
+  studentName,
+}: {
+  profile: ReadinessProfile;
+  studentName: string;
+}) {
+  const [snapshots, setSnapshots] = useState<ReadinessSnapshot[]>([]);
+  const [saved, setSaved] = useState(false);
+
+  // Seed demo history for Daniel on first load, then fetch all snapshots for this student
+  useEffect(() => {
+    seedDemoSnapshots(studentName);
+    setSnapshots(getSnapshotsForStudent(studentName));
+  }, [studentName]);
+
+  const handleSave = () => {
+    saveSnapshot(profile, studentName);
+    setSnapshots(getSnapshotsForStudent(studentName));
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2500);
+  };
+
+  // Build the timeline: all historical snapshots + the current live score at the end
+  const timeline: Array<ReadinessSnapshot & { isCurrent?: boolean }> = [
+    ...snapshots,
+    {
+      id: 'current',
+      savedAt: new Date().toISOString(),
+      label: snapshots.length === 0 ? 'Now (first snapshot)' : 'Now',
+      overall: profile.overall,
+      dimensions: profile.dimensions.map((d) => ({ dimension: d.dimension, score: d.score })),
+      studentName,
+      isCurrent: true,
+    },
+  ].sort((a, b) => new Date(a.savedAt).getTime() - new Date(b.savedAt).getTime());
+
+  // Need at least one historical point to show meaningful evolution
+  if (timeline.length < 2) {
+    return (
+      <div style={{
+        background: 'var(--color-surface)',
+        border: '1px solid var(--color-border)',
+        borderRadius: 'var(--radius-xl)',
+        padding: '22px 24px',
+        marginBottom: '28px',
+      }}>
+        <div style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--color-primary)', marginBottom: '6px' }}>
+          Career OS — Evolving Profile
+        </div>
+        <h3 style={{ margin: '0 0 8px 0', color: 'var(--color-text)', fontSize: '18px', fontWeight: 900 }}>
+          Your profile grows with you.
+        </h3>
+        <p style={{ margin: '0 0 14px 0', color: 'var(--color-text-secondary)', fontSize: '13px', lineHeight: 1.6 }}>
+          Save a snapshot now, then add evidence after your next internship, FYP submission, or certification — and watch your readiness timeline build.
+        </p>
+        <button
+          onClick={handleSave}
+          disabled={saved}
+          style={{
+            padding: '10px 20px',
+            background: saved ? 'var(--color-success-light)' : 'var(--color-primary)',
+            color: saved ? 'var(--color-success)' : 'white',
+            border: 'none',
+            borderRadius: 'var(--radius-lg)',
+            fontSize: '13px',
+            fontWeight: 800,
+            cursor: saved ? 'default' : 'pointer',
+            transition: 'all var(--transition)',
+          }}
+        >
+          {saved ? '✓ Snapshot saved' : 'Save current snapshot'}
+        </button>
+      </div>
+    );
+  }
+
+  const maxScore = Math.max(...timeline.map((s) => s.overall), 100);
+  const gain = profile.overall - (snapshots[0]?.overall ?? profile.overall);
+
+  return (
+    <div style={{
+      background: 'var(--color-surface)',
+      border: '1px solid var(--color-border)',
+      borderRadius: 'var(--radius-xl)',
+      padding: '22px 24px',
+      marginBottom: '28px',
+    }}>
+      <div style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--color-primary)', marginBottom: '6px' }}>
+        Career OS — Evolving Profile
+      </div>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '16px' }}>
+        <div>
+          <h3 style={{ margin: '0 0 4px 0', color: 'var(--color-text)', fontSize: '18px', fontWeight: 900 }}>
+            Readiness grows with evidence.
+          </h3>
+          <p style={{ margin: 0, color: 'var(--color-text-secondary)', fontSize: '13px', lineHeight: 1.5 }}>
+            This profile stays current post-graduation — save a snapshot after every role, project, or certification.
+            {gain > 0 && (
+              <span style={{ color: 'var(--color-success)', fontWeight: 700, marginLeft: '6px' }}>
+                +{gain} points since first snapshot.
+              </span>
+            )}
+          </p>
+        </div>
+        <button
+          onClick={handleSave}
+          disabled={saved}
+          style={{
+            padding: '8px 16px',
+            background: saved ? 'var(--color-success-light)' : 'transparent',
+            color: saved ? 'var(--color-success)' : 'var(--color-primary)',
+            border: `1.5px solid ${saved ? 'var(--color-success)' : 'var(--color-primary)'}`,
+            borderRadius: 'var(--radius-lg)',
+            fontSize: '12px',
+            fontWeight: 800,
+            cursor: saved ? 'default' : 'pointer',
+            flexShrink: 0,
+            transition: 'all var(--transition)',
+          }}
+        >
+          {saved ? '✓ Saved' : '+ Save snapshot'}
+        </button>
+      </div>
+
+      {/* Bar chart timeline */}
+      <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end', height: '96px' }}>
+        {timeline.map((snap) => {
+          const barH = Math.max(8, Math.round((snap.overall / maxScore) * 80));
+          const isCurr = snap.isCurrent;
+          return (
+            <div
+              key={snap.id}
+              style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}
+              title={`${snap.label}: ${snap.overall}/100`}
+            >
+              <div style={{ fontSize: '11px', fontWeight: 900, color: isCurr ? 'var(--color-primary)' : 'var(--color-text-secondary)' }}>
+                {snap.overall}
+              </div>
+              <div style={{
+                width: '100%',
+                height: `${barH}px`,
+                background: isCurr
+                  ? 'linear-gradient(to top, var(--color-primary), var(--color-accent))'
+                  : 'var(--color-border)',
+                borderRadius: '3px 3px 0 0',
+                transition: 'height 0.5s ease',
+                position: 'relative',
+              }}>
+                {isCurr && (
+                  <div style={{
+                    position: 'absolute', top: '-4px', left: '50%', transform: 'translateX(-50%)',
+                    width: '8px', height: '8px', borderRadius: '50%',
+                    background: 'var(--color-primary)',
+                  }} />
+                )}
+              </div>
+              <div style={{
+                fontSize: '9px',
+                textAlign: 'center',
+                lineHeight: 1.3,
+                color: isCurr ? 'var(--color-primary)' : 'var(--color-text-muted)',
+                fontWeight: isCurr ? 900 : 500,
+                maxWidth: '60px',
+              }}>
+                {snap.label}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Strongest dimension growth callout */}
+      {snapshots.length > 0 && (() => {
+        const first = snapshots[0];
+        const gains = profile.dimensions.map((d) => {
+          const prev = first.dimensions.find((fd) => fd.dimension === d.dimension);
+          return { dimension: d.dimension, delta: prev ? d.score - prev.score : 0 };
+        }).sort((a, b) => b.delta - a.delta);
+        const top = gains[0];
+        if (!top || top.delta <= 0) return null;
+        return (
+          <div style={{
+            marginTop: '14px',
+            padding: '10px 14px',
+            background: 'var(--color-success-light)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--color-success)',
+            fontSize: '12px',
+            color: 'var(--color-success)',
+            fontWeight: 700,
+          }}>
+            Biggest gain: <strong>{top.dimension}</strong> +{top.delta} points since {first.label}.
+          </div>
+        );
+      })()}
+
+      <p style={{ margin: '10px 0 0 0', fontSize: '11px', color: 'var(--color-text-muted)', fontStyle: 'italic' }}>
+        Snapshots stored in localStorage — no account needed. In production this syncs to a university alumni database so the profile persists post-graduation.
+      </p>
     </div>
   );
 }
@@ -610,6 +824,8 @@ View Full Profile: https://path-lens-wine.vercel.app`.trim();
             </span>
           </div>
         </div>
+
+        <ProfileHistorySection profile={profile} studentName={studentName} />
 
         <DynamicOSModules
           profile={profile}

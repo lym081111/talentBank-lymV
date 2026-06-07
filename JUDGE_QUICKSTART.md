@@ -47,9 +47,10 @@
 
 ### Readiness Dashboard (main feature)
 - **Streaming Claude AI insight** — narrative, key gap, next step render token-by-token
-  - Pre-built insights for all 3 demo personas (instant, no API latency)
+  - Pre-built insights for all 4 demo personas (instant, no API latency)
   - Falls back to rule-based engine if API key absent
   - "How this AI works" transparency panel
+- **Evolving Profile Timeline** — "Career OS: Evolving Profile" section shows Daniel's readiness history: Year 2 (27/100) → Year 3 (44/100) → Year 4 (current live score). Auto-seeded on first demo load. "Save snapshot" button writes to localStorage. This directly addresses the "remains current post-graduation" spec requirement.
 - Hexagonal radar chart across 6 weighted dimensions
 - Animated score counter (0 → actual score)
 - ATS Compatibility Score with missing keyword chips
