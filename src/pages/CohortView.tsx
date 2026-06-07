@@ -1,6 +1,7 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { CohortInsight, ReadinessProfile, StudentProfile } from '../types/evidence';
 import { CohortInsightCard } from '../components/CohortInsightCard';
+import { submitToCohort, getCohortSubmissionCount } from '../utils/cohortApi';
 
 interface Props {
   cohort: CohortInsight;
@@ -58,6 +59,17 @@ function getUniversityIntervention(dimension: string, percentage?: number) {
 }
 
 export function CohortView({ cohort, readinessProfile, studentProfile, onBack, backLabel }: Props) {
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const submissionCount = getCohortSubmissionCount();
+
+  async function handleSubmitToCohort() {
+    setSubmitting(true);
+    await submitToCohort(readinessProfile);
+    setSubmitted(true);
+    setSubmitting(false);
+  }
+
   const weakestDimensions = useMemo(
     () => [...readinessProfile.dimensions].sort((a, b) => a.score - b.score).slice(0, 3),
     [readinessProfile.dimensions]
@@ -200,8 +212,40 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack, b
           </div>
         </section>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-sm text-white/45">
-          Scope boundary: mock cohort data only. No backend, no university system integration, no employer marketplace, and no student surveillance.
+        {/* Career OS Data Layer — localStorage seam showing backend integration pattern */}
+        <section className="mt-6 rounded-3xl border border-cyan-300/15 bg-cyan-300/[0.06] p-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <div className="text-xs font-black uppercase tracking-[0.2em] text-cyan-200 mb-2">
+                Career OS — Cohort Data Layer
+              </div>
+              <h3 className="text-lg font-black text-white">
+                Submit your profile to the cohort anonymously
+              </h3>
+              <p className="mt-1 text-sm text-white/50 max-w-xl">
+                In production, this writes to a university API. Here it uses localStorage —
+                the same interface, a different transport.{' '}
+                {submissionCount > 0 && (
+                  <span className="text-cyan-200 font-bold">{submissionCount} submission{submissionCount !== 1 ? 's' : ''} stored locally.</span>
+                )}
+              </p>
+            </div>
+            <button
+              onClick={handleSubmitToCohort}
+              disabled={submitted || submitting || readinessProfile.overall === 0}
+              className="rounded-2xl border border-cyan-300/30 bg-cyan-300/10 px-6 py-3 text-sm font-black text-cyan-100 transition-all hover:-translate-y-0.5 hover:bg-cyan-300/20 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+            >
+              {submitted ? '✓ Submitted to cohort' : submitting ? 'Submitting…' : 'Submit to cohort (anonymous)'}
+            </button>
+          </div>
+          <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-xs text-white/40 font-mono leading-relaxed">
+            <span className="text-cyan-300/70">// Integration seam — swap transport to go live</span><br />
+            <span className="text-white/30">{'// localStorage → '}</span><span className="text-emerald-300/70">await fetch('/api/cohort/submit', {'{ method: "POST", body: JSON.stringify(profile) }'})</span>
+          </div>
+        </section>
+
+        <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-sm text-white/45">
+          Cohort data is mock + locally submitted profiles only. No backend, no real university integration, no student surveillance.
         </div>
       </div>
     </div>
