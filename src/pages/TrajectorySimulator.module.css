@@ -1,0 +1,664 @@
+.container {
+  min-height: 100vh;
+  padding: 40px 20px;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(34, 211, 238, 0.14), transparent 30%),
+    radial-gradient(circle at 90% 20%, rgba(167, 139, 250, 0.12), transparent 28%),
+    #07111f;
+  color: #fff;
+}
+
+.inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 9px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.backBtn:hover {
+  color: #fff;
+  border-color: rgba(103, 232, 249, 0.45);
+  background: rgba(103, 232, 249, 0.08);
+  transform: translateY(-1px);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 132px;
+  gap: 24px;
+  align-items: center;
+  margin-top: 26px;
+  padding: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 32px;
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(8, 47, 73, 0.64)),
+    rgba(255, 255, 255, 0.04);
+  box-shadow: 0 24px 70px rgba(2, 6, 23, 0.28);
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: #67e8f9;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.hero h2,
+.mapHeader h3,
+.panel h3,
+.sectionHeader h3,
+.outputPanel h3 {
+  margin: 0;
+  color: #fff;
+  font-weight: 950;
+  letter-spacing: -0.05em;
+  line-height: 1.02;
+}
+
+.hero h2 {
+  max-width: 760px;
+  font-size: clamp(42px, 7vw, 82px);
+}
+
+.hero p,
+.mapHeader p,
+.panel p,
+.outputPanel p {
+  max-width: 780px;
+  margin: 16px 0 0;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.scoreDial {
+  aspect-ratio: 1;
+  border-radius: 36px;
+  border: 1px solid rgba(103, 232, 249, 0.32);
+  background: rgba(103, 232, 249, 0.10);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  box-shadow: inset 0 0 26px rgba(103, 232, 249, 0.10);
+}
+
+.scoreDial span {
+  display: block;
+  color: #fff;
+  font-size: 46px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.scoreDial small {
+  display: block;
+  margin-top: 7px;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.destinationGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.destinationCard,
+.routeChoice,
+.actionCard {
+  cursor: pointer;
+  text-align: left;
+  transition: all 220ms ease;
+}
+
+.destinationCard {
+  min-height: 160px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 24px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.64);
+}
+
+.destinationCard:hover {
+  transform: translateY(-3px);
+  border-color: rgba(103, 232, 249, 0.40);
+  background: rgba(103, 232, 249, 0.08);
+}
+
+.destinationActive {
+  color: #fff;
+  border-color: rgba(103, 232, 249, 0.78);
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.18), rgba(96, 165, 250, 0.12));
+  box-shadow: 0 18px 48px rgba(34, 211, 238, 0.14);
+}
+
+.destinationCard span,
+.routeChoice span,
+.claimBox span,
+.claimBoxStrong span,
+.outputGrid span {
+  display: block;
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.destinationCard strong {
+  display: block;
+  margin-top: 10px;
+  color: inherit;
+  font-size: 21px;
+  font-weight: 950;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.destinationCard small {
+  display: block;
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.50);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.routeMap,
+.panel,
+.sprintSection,
+.outputPanel {
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: 0 20px 60px rgba(2, 6, 23, 0.20);
+}
+
+.routeMap {
+  padding: 28px;
+  overflow: hidden;
+}
+
+.mapHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 190px;
+  gap: 20px;
+  align-items: start;
+}
+
+.mapHeader h3,
+.panel h3,
+.sectionHeader h3,
+.outputPanel h3 {
+  font-size: clamp(26px, 4vw, 42px);
+}
+
+.projectionCard {
+  border: 1px solid rgba(52, 211, 153, 0.26);
+  border-radius: 24px;
+  padding: 18px;
+  background: rgba(52, 211, 153, 0.10);
+  text-align: center;
+}
+
+.projectionCard span,
+.projectionCard strong {
+  color: #fff;
+  font-size: 42px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.projectionCard b {
+  display: block;
+  margin: 7px 0;
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.projectionCard small {
+  display: block;
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.routeLine {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.routeLine::before {
+  content: '';
+  position: absolute;
+  top: 29px;
+  left: 4%;
+  right: 4%;
+  height: 3px;
+  background: linear-gradient(90deg, #34d399, #67e8f9, #a78bfa);
+  opacity: 0.55;
+}
+
+.routeStop {
+  position: relative;
+  z-index: 1;
+  min-height: 150px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 22px;
+  padding: 16px;
+  background: rgba(2, 6, 23, 0.70);
+}
+
+.routeDot {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: #67e8f9;
+  color: #020617;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.routeStop strong,
+.routeStop span {
+  display: block;
+}
+
+.routeStop strong {
+  margin-top: 18px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.routeStop span {
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.routeBlocked {
+  border-color: rgba(251, 113, 133, 0.42);
+  background: rgba(251, 113, 133, 0.10);
+}
+
+.routeBlocked .routeDot {
+  background: #fb7185;
+}
+
+.twoColumn {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.panel {
+  padding: 24px;
+}
+
+.panel strong,
+.outputPanel strong {
+  color: #fff;
+}
+
+.gateClosed {
+  border-color: rgba(251, 191, 36, 0.36);
+  background: rgba(251, 191, 36, 0.08);
+}
+
+.gateOpen {
+  border-color: rgba(52, 211, 153, 0.36);
+  background: rgba(52, 211, 153, 0.08);
+}
+
+.primaryBtn {
+  margin-top: 20px;
+  border: 0;
+  border-radius: 999px;
+  padding: 13px 18px;
+  background: linear-gradient(135deg, #67e8f9, #a78bfa);
+  color: #020617;
+  font-size: 13px;
+  font-weight: 950;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.primaryBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(103, 232, 249, 0.18);
+}
+
+.claimBox,
+.claimBoxStrong {
+  margin-top: 14px;
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.claimBox {
+  border: 1px solid rgba(251, 191, 36, 0.24);
+  background: rgba(251, 191, 36, 0.07);
+}
+
+.claimBoxStrong {
+  border: 1px solid rgba(52, 211, 153, 0.28);
+  background: rgba(52, 211, 153, 0.08);
+}
+
+.claimBox p,
+.claimBoxStrong p {
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.routeChoices {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.routeChoice {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 24px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.70);
+}
+
+.routeChoice:hover,
+.routeChoiceActive {
+  transform: translateY(-3px);
+  border-color: rgba(167, 139, 250, 0.52);
+  background: rgba(167, 139, 250, 0.12);
+}
+
+.routeChoice strong {
+  display: block;
+  margin-top: 8px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 950;
+}
+
+.routeChoice p {
+  margin: 10px 0 0;
+  color: rgba(255, 255, 255, 0.54);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.routeChoice small {
+  display: block;
+  margin-top: 14px;
+  color: #67e8f9;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sprintSection {
+  margin-top: 18px;
+  padding: 26px;
+}
+
+.sectionHeader {
+  margin-bottom: 18px;
+}
+
+.sprintGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.dimensionLane {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 24px;
+  padding: 18px;
+  background: rgba(2, 6, 23, 0.42);
+}
+
+.laneHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.laneHeader strong,
+.laneHeader span {
+  display: block;
+}
+
+.laneHeader strong {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.laneHeader span {
+  margin-top: 5px;
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.laneHeader i {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+  margin-top: 3px;
+}
+
+.barTrack {
+  position: relative;
+  height: 9px;
+  margin: 16px 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.barFill,
+.barProjected {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transition: all 260ms ease;
+}
+
+.barFill {
+  left: 0;
+  border-radius: 999px;
+}
+
+.barProjected {
+  border-radius: 0 999px 999px 0;
+  background: linear-gradient(90deg, rgba(52, 211, 153, 0.35), #34d399);
+}
+
+.barTarget {
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: 15px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.10);
+}
+
+.actionList {
+  display: grid;
+  gap: 10px;
+}
+
+.actionCard {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 18px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.64);
+}
+
+.actionCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(103, 232, 249, 0.36);
+  background: rgba(103, 232, 249, 0.07);
+}
+
+.actionChecked {
+  color: #fff;
+  border-color: rgba(52, 211, 153, 0.50);
+  background: rgba(52, 211, 153, 0.12);
+  box-shadow: 0 16px 42px rgba(52, 211, 153, 0.10);
+}
+
+.actionCard span,
+.actionCard strong,
+.actionCard p,
+.actionCard small {
+  display: block;
+}
+
+.actionCard span {
+  color: #67e8f9;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.actionCard strong {
+  margin-top: 8px;
+  color: inherit;
+  font-size: 14px;
+  font-weight: 950;
+  line-height: 1.2;
+}
+
+.actionCard p {
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.50);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.actionCard small {
+  margin-top: 10px;
+  color: #bbf7d0;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.outputPanel {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 24px;
+  margin-top: 18px;
+  padding: 28px;
+}
+
+.outputGrid {
+  display: grid;
+  gap: 12px;
+}
+
+.outputGrid div {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 18px;
+  padding: 16px;
+  background: rgba(2, 6, 23, 0.44);
+}
+
+.outputGrid p {
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.footerNav {
+  padding-top: 26px;
+  text-align: center;
+}
+
+@media (max-width: 960px) {
+  .hero,
+  .mapHeader,
+  .twoColumn,
+  .outputPanel {
+    grid-template-columns: 1fr;
+  }
+
+  .destinationGrid,
+  .routeChoices,
+  .sprintGrid,
+  .routeLine {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .routeLine::before {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 24px 14px;
+  }
+
+  .hero,
+  .routeMap,
+  .panel,
+  .sprintSection,
+  .outputPanel {
+    border-radius: 24px;
+    padding: 20px;
+  }
+
+  .destinationGrid,
+  .routeChoices,
+  .sprintGrid,
+  .routeLine {
+    grid-template-columns: 1fr;
+  }
+
+  .scoreDial {
+    width: 118px;
+  }
+}

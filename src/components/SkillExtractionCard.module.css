@@ -1,0 +1,156 @@
+.card {
+  background: var(--color-surface-hover);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: all var(--transition);
+}
+
+.card:hover {
+  background: var(--color-surface);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+
+.header h4 {
+  margin: 0;
+  font-size: 15px;
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.badge {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+
+.skills {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skill {
+  background: var(--color-surface);
+  border-left: 3px solid var(--color-primary);
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition);
+}
+
+.skill:hover {
+  border-left-color: var(--color-secondary);
+  background: var(--color-primary-light);
+}
+
+.skillTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.skillName {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.fieldLabel {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.demandBadge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.demandHigh {
+  background: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.demandMedium {
+  background: var(--color-warning-light);
+  color: var(--color-warning);
+}
+
+.demandLow {
+  background: var(--color-surface-hover);
+  color: var(--color-text-muted);
+}
+
+.skillConfidence {
+  font-size: 12px;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.skillSource {
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.45;
+}
+
+.skillSource strong {
+  display: block;
+  color: var(--color-text);
+}
+
+.high {
+  color: var(--color-success);
+}
+
+.medium {
+  color: var(--color-warning);
+}
+
+.low {
+  color: var(--color-danger);
+}
+
+.skillPhrase {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.skillPhrase em {
+  color: var(--color-primary);
+  font-style: italic;
+  font-weight: 600;
+}
+
+.empty {
+  color: var(--color-text-muted);
+  font-size: 13px;
+  padding: 8px;
+  text-align: center;
+}
