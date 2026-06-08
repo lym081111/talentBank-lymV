@@ -824,17 +824,18 @@ View Full Profile: https://talentbank-lymv-career-os.vercel.app`.trim();
 
         {/* Market Impact Section */}
         <div style={{
-          background: 'linear-gradient(135deg, #ecfdf5 0%, #eff6ff 100%)',
-          border: '1px solid var(--color-accent)',
-          borderRadius: 'var(--radius-lg)',
+          background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(8, 47, 73, 0.88) 100%)',
+          border: '1px solid rgba(103, 232, 249, 0.28)',
+          borderRadius: 'var(--radius-xl)',
           padding: '24px',
-          marginBottom: '32px'
+          marginBottom: '32px',
+          boxShadow: '0 18px 55px rgba(2, 6, 23, 0.22)',
         }}>
-          <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '700', color: 'var(--color-text)' }}>
+          <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '900', color: '#ffffff' }}>
             💰 What This Score Means for Your Career
           </h3>
           {profile.overall >= 75 && (
-            <div style={{ fontSize: '14px', color: 'var(--color-text-secondary)', lineHeight: '1.6' }}>
+            <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.72)', lineHeight: '1.6' }}>
               <p style={{ margin: '0 0 8px 0' }}>
                 <strong style={{ color: 'var(--color-success)' }}>You're market-ready for senior roles.</strong> Similar to Priya Sharma (Senior SWE at Grab with score 88/100).
               </p>
@@ -847,7 +848,7 @@ View Full Profile: https://talentbank-lymv-career-os.vercel.app`.trim();
             </div>
           )}
           {profile.overall >= 55 && profile.overall < 75 && (
-            <div style={{ fontSize: '14px', color: 'var(--color-text-secondary)', lineHeight: '1.6' }}>
+            <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.72)', lineHeight: '1.6' }}>
               <p style={{ margin: '0 0 8px 0' }}>
                 <strong style={{ color: 'var(--color-warning)' }}>You're on a good trajectory.</strong> Similar to Kai Chen (3 years in, score 70/100 → Data Engineer at ByteDance).
               </p>
@@ -860,7 +861,7 @@ View Full Profile: https://talentbank-lymv-career-os.vercel.app`.trim();
             </div>
           )}
           {profile.overall < 55 && (
-            <div style={{ fontSize: '14px', color: 'var(--color-text-secondary)', lineHeight: '1.6' }}>
+            <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.72)', lineHeight: '1.6' }}>
               <p style={{ margin: '0 0 8px 0' }}>
                 <strong style={{ color: 'var(--color-text-secondary)' }}>You're building your foundation.</strong> This is where 95% of students start.
               </p>

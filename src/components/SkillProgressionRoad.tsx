@@ -11,53 +11,69 @@ interface Props {
 }
 
 export function SkillProgressionRoad({ skills }: Props) {
-  const highPriority = skills.filter(s => s.priority === 'high');
-  const mediumPriority = skills.filter(s => s.priority === 'medium');
+  const highPriority = skills.filter((s) => s.priority === 'high');
+  const mediumPriority = skills.filter((s) => s.priority === 'medium');
+  const orderedSkills = [
+    ...highPriority,
+    ...mediumPriority,
+    ...skills.filter((s) => s.priority === 'low'),
+  ].slice(0, 5);
 
-  const getMilestoneColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return { bg: '#dc2626', text: '#ffffff', light: '#fee2e2' };
-      case 'medium': return { bg: '#ea580c', text: '#ffffff', light: '#fed7aa' };
-      default: return { bg: '#059669', text: '#ffffff', light: '#d1fae5' };
-    }
-  };
+  const totalWeeks = orderedSkills.reduce((sum, skill) => sum + skill.weeksToLearn, 0);
+  const totalImpact = orderedSkills.reduce((sum, skill) => {
+    const match = skill.salaryImpact.match(/\+(\d+)/);
+    return sum + (match ? Number(match[1]) : 0);
+  }, 0);
+
+  const marketSignals = [
+    {
+      label: 'Malaysia SWE 75th',
+      value: 'MYR 119K',
+      note: 'Levels.fyi annual total comp benchmark',
+    },
+    {
+      label: 'Digital pay pressure',
+      value: '+10.81%',
+      note: 'PIKOM 2026 advertised salary outlook',
+    },
+    {
+      label: 'IT readiness constraint',
+      value: 'AI confidence -7pp',
+      note: 'Manpower Malaysia IT Talent Snapshot',
+    },
+  ];
 
   return (
     <div style={{ marginTop: '32px', marginBottom: '32px' }}>
-      {/* Road Title */}
-      <div style={{
-        textAlign: 'center',
-        marginBottom: '40px'
-      }}>
+      <div style={{ textAlign: 'center', marginBottom: '26px' }}>
         <h3 style={{
           fontSize: '28px',
-          fontWeight: '900',
+          fontWeight: 900,
           margin: '0 0 8px 0',
           color: 'var(--color-text)',
-          letterSpacing: '-0.5px'
+          letterSpacing: '-0.5px',
         }}>
-          🛣️ Your Learning Road
+          Readiness Route Map
         </h3>
         <p style={{
           fontSize: '14px',
           color: 'var(--color-text-secondary)',
           margin: 0,
-          fontWeight: '500'
+          fontWeight: 500,
         }}>
-          Follow the path from START to MASTERY. Each milestone builds your career.
+          A visual sprint from current evidence to a stronger application story. The route uses gaps from this profile, not a generic roadmap.
         </p>
       </div>
 
-      {/* Main Road with Milestones */}
       <div style={{
         position: 'relative',
-        padding: '40px 20px',
-        background: 'linear-gradient(135deg, #f0f9ff 0%, #ecfdf5 100%)',
-        borderRadius: 'var(--radius-lg)',
-        border: '2px solid var(--color-accent)',
-        overflow: 'hidden'
+        padding: '28px',
+        background: 'linear-gradient(135deg, rgba(2, 6, 23, 0.96) 0%, rgba(15, 23, 42, 0.96) 58%, rgba(8, 47, 73, 0.82) 100%)',
+        borderRadius: '24px',
+        border: '1px solid rgba(103, 232, 249, 0.24)',
+        boxShadow: '0 24px 70px rgba(2, 6, 23, 0.28)',
+        overflow: 'hidden',
       }}>
-        {/* Road background lines */}
         <svg
           style={{
             position: 'absolute',
@@ -66,291 +82,170 @@ export function SkillProgressionRoad({ skills }: Props) {
             width: '100%',
             height: '100%',
             pointerEvents: 'none',
-            opacity: 0.3
+            opacity: 0.42,
           }}
-          viewBox={`0 0 1200 ${60 + (highPriority.length + mediumPriority.length) * 120}`}
+          viewBox="0 0 1200 620"
           preserveAspectRatio="none"
         >
-          {/* Road path */}
           <path
-            d={`M 600 30 Q 400 ${60 + highPriority.length * 60} 600 ${60 + (highPriority.length + mediumPriority.length) * 120}`}
-            stroke="#10b981"
-            strokeWidth="60"
+            d="M 90 520 C 250 280, 360 360, 510 210 S 800 100, 1085 82"
+            stroke="#22d3ee"
+            strokeWidth="30"
             fill="none"
             strokeLinecap="round"
           />
-          {/* Road center line (dashed) */}
           <path
-            d={`M 600 30 Q 400 ${60 + highPriority.length * 60} 600 ${60 + (highPriority.length + mediumPriority.length) * 120}`}
-            stroke="#fbbf24"
-            strokeWidth="4"
+            d="M 90 520 C 250 280, 360 360, 510 210 S 800 100, 1085 82"
+            stroke="#fef08a"
+            strokeWidth="5"
             fill="none"
-            strokeDasharray="20,20"
+            strokeDasharray="18,24"
             strokeLinecap="round"
-            opacity="0.6"
           />
         </svg>
 
-        {/* Content */}
         <div style={{ position: 'relative', zIndex: 1 }}>
-          {/* START marker */}
-          <div style={{
-            textAlign: 'center',
-            marginBottom: '60px'
-          }}>
-            <div style={{
-              display: 'inline-block',
-              background: 'var(--color-success)',
-              color: 'white',
-              padding: '12px 24px',
-              borderRadius: '50px',
-              fontWeight: '700',
-              fontSize: '14px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em'
-            }}>
-              🚀 START HERE
-            </div>
-          </div>
-
-          {/* HIGH PRIORITY Road Milestones */}
-          {highPriority.map((skill, idx) => {
-            const colors = getMilestoneColor(skill.priority);
-            const isLast = idx === highPriority.length - 1;
-
-            return (
-              <div key={skill.skill} style={{ marginBottom: '80px' }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: '24px',
-                  position: 'relative'
-                }}>
-                  {/* Milestone Badge */}
-                  <div style={{
-                    position: 'relative',
-                    zIndex: 2,
-                    flexShrink: 0
-                  }}>
-                    <div style={{
-                      width: '80px',
-                      height: '80px',
-                      background: colors.bg,
-                      borderRadius: '50%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: colors.text,
-                      fontWeight: '900',
-                      fontSize: '32px',
-                      boxShadow: '0 8px 20px rgba(0, 0, 0, 0.15)',
-                      border: '4px solid white'
-                    }}>
-                      {idx + 1}
-                    </div>
-                  </div>
-
-                  {/* Milestone Card */}
-                  <div style={{
-                    flex: 1,
-                    background: 'white',
-                    border: `3px solid ${colors.bg}`,
-                    borderRadius: 'var(--radius-lg)',
-                    padding: '20px',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)'
-                  }}>
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'flex-start',
-                      marginBottom: '12px'
-                    }}>
-                      <div>
-                        <h4 style={{
-                          margin: '0 0 6px 0',
-                          fontSize: '16px',
-                          fontWeight: '900',
-                          color: 'var(--color-text)',
-                          letterSpacing: '-0.3px'
-                        }}>
-                          {skill.skill}
-                        </h4>
-                        <div style={{
-                          fontSize: '12px',
-                          color: colors.bg,
-                          fontWeight: '700',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.03em'
-                        }}>
-                          ⏱️ {skill.weeksToLearn} weeks
-                        </div>
-                      </div>
-                      <div style={{
-                        background: colors.light,
-                        color: colors.bg,
-                        padding: '8px 12px',
-                        borderRadius: 'var(--radius-md)',
-                        fontSize: '13px',
-                        fontWeight: '700',
-                        whiteSpace: 'nowrap'
-                      }}>
-                        💰 {skill.salaryImpact}
-                      </div>
-                    </div>
-
-                    <div style={{
-                      fontSize: '12px',
-                      color: 'var(--color-text-secondary)',
-                      lineHeight: '1.6'
-                    }}>
-                      {skill.resources.slice(0, 2).join(' • ')}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Road segment between milestones */}
-                {!isLast && (
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    height: '40px',
-                    margin: '20px 0',
-                    position: 'relative',
-                    left: '40px'
-                  }}>
-                    <div style={{
-                      width: '3px',
-                      background: 'linear-gradient(180deg, var(--color-success), var(--color-accent))',
-                      borderRadius: '2px'
-                    }} />
-                  </div>
-                )}
-              </div>
-            );
-          })}
-
-          {/* PHASE 2 Marker - Branch off the road */}
-          {mediumPriority.length > 0 && (
-            <>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px', alignItems: 'start' }}>
+            <div>
               <div style={{
-                margin: '60px 0 40px 0',
-                textAlign: 'center'
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                border: '1px solid rgba(52, 211, 153, 0.35)',
+                background: 'rgba(52, 211, 153, 0.12)',
+                color: '#bbf7d0',
+                padding: '10px 14px',
+                borderRadius: '999px',
+                fontSize: '12px',
+                fontWeight: 900,
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
               }}>
-                <div style={{
-                  display: 'inline-block',
-                  background: 'var(--color-warning)',
-                  color: 'white',
-                  padding: '10px 20px',
-                  borderRadius: '50px',
-                  fontWeight: '700',
-                  fontSize: '12px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
-                }}>
-                  🛣️ NEXT LEVEL (Optional Branch)
-                </div>
+                Start: current evidence profile
               </div>
 
-              {/* MEDIUM PRIORITY as side branch */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '20px',
-                marginLeft: '120px'
-              }}>
-                {mediumPriority.map((skill) => {
-                  const colors = getMilestoneColor(skill.priority);
+              <div style={{ display: 'grid', gap: '14px', marginTop: '28px' }}>
+                {orderedSkills.map((skill, idx) => {
+                  const isHigh = skill.priority === 'high';
+                  const color = isHigh ? '#fb7185' : skill.priority === 'medium' ? '#fbbf24' : '#34d399';
 
                   return (
                     <div
-                      key={skill.skill}
+                      key={`${skill.skill}-${idx}`}
                       style={{
-                        background: 'white',
-                        border: `2px solid ${colors.bg}`,
-                        borderRadius: 'var(--radius-lg)',
-                        padding: '16px',
-                        position: 'relative'
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: '14px',
+                        alignItems: 'center',
+                        border: `1px solid ${color}55`,
+                        background: isHigh ? 'rgba(251, 113, 133, 0.10)' : 'rgba(255, 255, 255, 0.055)',
+                        borderRadius: '18px',
+                        padding: '14px',
+                        boxShadow: isHigh ? '0 18px 45px rgba(251, 113, 133, 0.12)' : 'none',
                       }}
                     >
-                      {/* Branch connector */}
                       <div style={{
-                        position: 'absolute',
-                        top: '24px',
-                        left: '-40px',
-                        width: '40px',
-                        height: '2px',
-                        background: colors.bg,
-                        opacity: 0.5
-                      }} />
-
-                      <h5 style={{
-                        margin: '0 0 6px 0',
-                        fontSize: '14px',
-                        fontWeight: '800',
-                        color: 'var(--color-text)'
+                        width: '46px',
+                        height: '46px',
+                        borderRadius: '16px',
+                        background: `${color}22`,
+                        border: `1px solid ${color}66`,
+                        color,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 900,
+                        fontSize: '18px',
                       }}>
-                        {skill.skill}
-                      </h5>
-                      <div style={{
-                        fontSize: '11px',
-                        color: colors.bg,
-                        fontWeight: '600',
-                        marginBottom: '8px',
-                        textTransform: 'uppercase'
-                      }}>
-                        ⏱️ {skill.weeksToLearn} weeks · 💰 {skill.salaryImpact}
+                        {idx + 1}
                       </div>
-                      <div style={{
-                        fontSize: '11px',
-                        color: 'var(--color-text-secondary)'
-                      }}>
-                        {skill.resources[0]}
+                      <div style={{ flex: '1 1 230px', minWidth: 0 }}>
+                        <div style={{ color: '#ffffff', fontSize: '16px', fontWeight: 900, lineHeight: 1.2 }}>
+                          {skill.skill}
+                        </div>
+                        <div style={{ marginTop: '6px', color: 'rgba(255,255,255,0.52)', fontSize: '12px', lineHeight: 1.45 }}>
+                          {skill.resources.slice(0, 2).join(' | ')}
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'right', marginLeft: 'auto' }}>
+                        <div style={{ color, fontSize: '12px', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                          {skill.priority} priority
+                        </div>
+                        <div style={{ color: '#ffffff', fontSize: '13px', fontWeight: 800, marginTop: '5px' }}>
+                          {skill.weeksToLearn} weeks | {skill.salaryImpact}
+                        </div>
                       </div>
                     </div>
                   );
                 })}
               </div>
-            </>
-          )}
 
-          {/* FINISH LINE */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            marginTop: '80px'
-          }}>
-            <div style={{
-              textAlign: 'center',
-              background: 'linear-gradient(135deg, var(--color-success), var(--color-accent))',
-              color: 'white',
-              padding: '20px 40px',
-              borderRadius: '50px',
-              fontWeight: '900',
-              fontSize: '16px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              boxShadow: '0 8px 20px rgba(16, 185, 129, 0.3)'
-            }}>
-              🏁 MASTERY ACHIEVED
+              <div style={{
+                marginTop: '22px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '10px',
+                border: '1px solid rgba(103, 232, 249, 0.34)',
+                background: 'linear-gradient(135deg, rgba(103, 232, 249, 0.18), rgba(167, 139, 250, 0.16))',
+                color: '#e0f2fe',
+                padding: '12px 16px',
+                borderRadius: '999px',
+                fontSize: '13px',
+                fontWeight: 900,
+              }}>
+                Finish line: +{totalImpact || 20} readiness points in about {totalWeeks || 8} weeks
+              </div>
             </div>
+
+            <aside style={{
+              border: '1px solid rgba(255,255,255,0.10)',
+              background: 'rgba(2, 6, 23, 0.64)',
+              borderRadius: '22px',
+              padding: '18px',
+            }}>
+              <div style={{ color: '#93c5fd', fontSize: '11px', fontWeight: 900, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                Market context
+              </div>
+              <div style={{ display: 'grid', gap: '12px', marginTop: '14px' }}>
+                {marketSignals.map((signal) => (
+                  <div key={signal.label} style={{
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    background: 'rgba(255,255,255,0.045)',
+                    borderRadius: '16px',
+                    padding: '13px',
+                  }}>
+                    <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '10px', fontWeight: 900, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                      {signal.label}
+                    </div>
+                    <div style={{ color: '#ffffff', fontSize: '22px', fontWeight: 900, marginTop: '5px' }}>
+                      {signal.value}
+                    </div>
+                    <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: '11px', lineHeight: 1.4, marginTop: '5px' }}>
+                      {signal.note}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '11px', lineHeight: 1.55, margin: '14px 0 0 0' }}>
+                These are external market signals. PathLens still scores only the candidate evidence you entered.
+              </p>
+            </aside>
           </div>
         </div>
       </div>
 
-      {/* Strategic Tip */}
       <div style={{
-        background: 'var(--color-bg)',
-        border: '2px dashed var(--color-accent)',
+        background: 'rgba(103, 232, 249, 0.06)',
+        border: '1px dashed rgba(103, 232, 249, 0.38)',
         borderRadius: 'var(--radius-lg)',
         padding: '20px',
         marginTop: '24px',
         textAlign: 'center',
         fontSize: '13px',
         color: 'var(--color-text-secondary)',
-        fontWeight: '500'
+        fontWeight: 500,
       }}>
-        💡 Follow the main road first (high priority) to reach mastery quickly. Then explore optional branches (medium priority) to specialize.
+        Follow high-priority gaps first. Optional branches become useful only after the weak evidence no longer blocks applications.
       </div>
     </div>
   );

@@ -13,6 +13,93 @@ interface Props {
 
 const DEMO_CANDIDATES = [danielLeeProfile, priyaSharmaProfile, kaiChenProfile, aishaPatelProfile];
 
+type HiringRoleId = 'software' | 'data' | 'product' | 'ai-platform' | 'technical-ba';
+
+const HIRING_ROLES: Array<{
+  id: HiringRoleId;
+  title: string;
+  brief: string;
+  salary: string;
+  requiredSkills: string[];
+  dimensionWeights: Record<string, number>;
+}> = [
+  {
+    id: 'software',
+    title: 'Software Engineer',
+    brief: 'Backend or full-stack graduate role',
+    salary: 'MYR 5K-8K/mo',
+    requiredSkills: ['Python', 'JavaScript / TypeScript', 'React', 'Node.js / Express', 'RESTful APIs', 'SQL', 'Docker'],
+    dimensionWeights: {
+      'Technical Skills': 0.26,
+      'Production Practices': 0.22,
+      'Work Readiness': 0.18,
+      'Portfolio Evidence': 0.16,
+      'Communication & Documentation': 0.10,
+      'Role-Specific Fit (Software Engineer)': 0.08,
+    },
+  },
+  {
+    id: 'data',
+    title: 'Data Engineer',
+    brief: 'Pipelines, warehouse, streaming data',
+    salary: 'MYR 7K-12K/mo',
+    requiredSkills: ['SQL', 'Python', 'Kafka', 'Apache Flink', 'Spark', 'ClickHouse', 'Data Pipeline Architecture'],
+    dimensionWeights: {
+      'Technical Skills': 0.25,
+      'Production Practices': 0.20,
+      'Portfolio Evidence': 0.16,
+      'Work Readiness': 0.16,
+      'Communication & Documentation': 0.11,
+      'Role-Specific Fit (Software Engineer)': 0.12,
+    },
+  },
+  {
+    id: 'product',
+    title: 'Product Manager',
+    brief: 'Market, discovery, launch execution',
+    salary: 'MYR 6K-10K/mo',
+    requiredSkills: ['Product Strategy', 'Market Analysis', 'User Research', 'Data Analysis', 'Stakeholder Management', 'P&L Modeling'],
+    dimensionWeights: {
+      'Communication & Documentation': 0.24,
+      'Work Readiness': 0.22,
+      'Portfolio Evidence': 0.18,
+      'Technical Skills': 0.13,
+      'Production Practices': 0.08,
+      'Role-Specific Fit (Software Engineer)': 0.15,
+    },
+  },
+  {
+    id: 'ai-platform',
+    title: 'AI Platform Engineer',
+    brief: 'LLM systems, reliability, data infra',
+    salary: 'MYR 9K-15K/mo',
+    requiredSkills: ['Python', 'PyTorch', 'BERT', 'Machine Learning', 'AWS', 'Kubernetes', 'Data Architecture', 'System Design & Architecture'],
+    dimensionWeights: {
+      'Technical Skills': 0.28,
+      'Production Practices': 0.24,
+      'Portfolio Evidence': 0.18,
+      'Work Readiness': 0.12,
+      'Communication & Documentation': 0.08,
+      'Role-Specific Fit (Software Engineer)': 0.10,
+    },
+  },
+  {
+    id: 'technical-ba',
+    title: 'Technical Business Analyst',
+    brief: 'SQL, dashboards, stakeholder translation',
+    salary: 'MYR 4.5K-7K/mo',
+    requiredSkills: ['SQL', 'Python', 'Tableau', 'Excel', 'Statistical Analysis', 'Data Analysis', 'User Research'],
+    dimensionWeights: {
+      'Communication & Documentation': 0.24,
+      'Work Readiness': 0.20,
+      'Technical Skills': 0.18,
+      'Portfolio Evidence': 0.16,
+      'Production Practices': 0.06,
+      'Role-Specific Fit (Software Engineer)': 0.16,
+    },
+  },
+];
+
 function splitTechnologies(evidence: Evidence[]) {
   return Array.from(
     new Set(
@@ -58,6 +145,29 @@ function getDecision(score: number) {
   };
 }
 
+function calculateRoleFit(profile: StudentProfile, evidence: Evidence[], readiness: ReadinessProfile, role: typeof HIRING_ROLES[number]) {
+  const skills = splitTechnologies(evidence).map((skill) => skill.toLowerCase());
+  const skillHits = role.requiredSkills.filter((skill) =>
+    skills.some((candidateSkill) => candidateSkill.includes(skill.toLowerCase()) || skill.toLowerCase().includes(candidateSkill))
+  );
+  const skillScore = Math.round((skillHits.length / role.requiredSkills.length) * 100);
+  const weightedReadiness = Math.round(
+    readiness.dimensions.reduce((sum, dimension) => {
+      const weight = role.dimensionWeights[dimension.dimension] ?? 0.10;
+      return sum + dimension.score * weight;
+    }, 0)
+  );
+  const targetAlignment = profile.targetRole.toLowerCase().includes(role.title.toLowerCase().split(' ')[0]) ? 12 : 0;
+  const evidenceDepth = Math.min(12, evidence.length * 3);
+  const verifiedDepth = Math.min(8, evidence.filter((item) => item.link || item.verified).length * 3);
+
+  return {
+    score: Math.min(100, Math.round(weightedReadiness * 0.52 + skillScore * 0.30 + targetAlignment + evidenceDepth + verifiedDepth)),
+    skillHits,
+    skillScore,
+  };
+}
+
 function toneClasses(tone: string) {
   if (tone === 'emerald') return 'border-emerald-300/25 bg-emerald-300/10 text-emerald-100';
   if (tone === 'amber') return 'border-amber-300/25 bg-amber-300/10 text-amber-100';
@@ -79,6 +189,9 @@ function buildQuestions(profile: ReadinessProfile, evidence: Evidence[]) {
 }
 
 export function EmployerPortal({ profile, evidence, readinessProfile, onBuildOwn, onBack }: Props) {
+  const [selectedRoleId, setSelectedRoleId] = useState<HiringRoleId>('software');
+  const selectedRole = HIRING_ROLES.find((role) => role.id === selectedRoleId) ?? HIRING_ROLES[0];
+
   const candidateOptions = useMemo(() => {
     const demoOptions = DEMO_CANDIDATES.map((candidate) => ({
       profile: candidate,
@@ -96,15 +209,21 @@ export function EmployerPortal({ profile, evidence, readinessProfile, onBuildOwn
   }, [evidence, profile, readinessProfile]);
 
   const [selectedId, setSelectedId] = useState(candidateOptions[0]?.profile.id ?? profile.id);
-  const selectedCandidate = candidateOptions.find((candidate) => candidate.profile.id === selectedId) ?? candidateOptions[0];
-  const bestCandidate = candidateOptions.reduce((best, candidate) =>
-    candidate.readiness.overall > best.readiness.overall ? candidate : best
-  , candidateOptions[0]);
+  const roleRankedCandidates = useMemo(() => {
+    return candidateOptions
+      .map((candidate) => ({
+        ...candidate,
+        roleFit: calculateRoleFit(candidate.profile, candidate.evidence, candidate.readiness, selectedRole),
+      }))
+      .sort((a, b) => b.roleFit.score - a.roleFit.score);
+  }, [candidateOptions, selectedRole]);
+  const selectedCandidate = roleRankedCandidates.find((candidate) => candidate.profile.id === selectedId) ?? roleRankedCandidates[0];
+  const bestCandidate = roleRankedCandidates[0];
 
   const activeProfile = selectedCandidate.profile;
   const activeEvidence = selectedCandidate.evidence;
   const activeReadiness = selectedCandidate.readiness;
-  const decision = getDecision(activeReadiness.overall);
+  const decision = getDecision(selectedCandidate.roleFit.score);
   const skills = splitTechnologies(activeEvidence);
   const strongest = strongestEvidence(activeEvidence);
   const topDimensions = [...activeReadiness.dimensions].sort((a, b) => b.score - a.score).slice(0, 2);
@@ -140,14 +259,49 @@ export function EmployerPortal({ profile, evidence, readinessProfile, onBuildOwn
               <p className="mt-1 text-sm text-white/45">Switch personas to compare the hiring brief generated from each resume.</p>
             </div>
             <div className="text-xs font-black text-emerald-200">
-              Top choice: {bestCandidate.profile.name} ({bestCandidate.readiness.overall}/100)
+              Top choice for {selectedRole.title}: {bestCandidate.profile.name} ({bestCandidate.roleFit.score}/100)
             </div>
           </div>
+
+          <div className="mb-4 rounded-3xl border border-blue-300/15 bg-blue-300/[0.06] p-4">
+            <div className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-blue-200">Recruiting for</div>
+            <div className="grid grid-cols-1 gap-2 md:grid-cols-3 xl:grid-cols-5">
+              {HIRING_ROLES.map((role) => {
+                const active = role.id === selectedRole.id;
+                return (
+                  <button
+                    key={role.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedRoleId(role.id);
+                      const nextBest = candidateOptions
+                        .map((candidate) => ({
+                          ...candidate,
+                          roleFit: calculateRoleFit(candidate.profile, candidate.evidence, candidate.readiness, role),
+                        }))
+                        .sort((a, b) => b.roleFit.score - a.roleFit.score)[0];
+                      if (nextBest) setSelectedId(nextBest.profile.id);
+                    }}
+                    className={`rounded-2xl border p-3 text-left transition-all duration-300 hover:-translate-y-0.5 ${
+                      active
+                        ? 'border-cyan-300/70 bg-cyan-300/15 text-white shadow-[0_0_24px_rgba(34,211,238,0.16)]'
+                        : 'border-white/10 bg-slate-950/45 text-white/55 hover:border-cyan-300/35 hover:text-white'
+                    }`}
+                  >
+                    <div className="text-sm font-black">{role.title}</div>
+                    <div className="mt-1 text-[11px] leading-snug opacity-65">{role.brief}</div>
+                    <div className="mt-2 text-[10px] font-black uppercase tracking-[0.12em] text-cyan-200">{role.salary}</div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
-            {candidateOptions.map((candidate) => {
+            {roleRankedCandidates.map((candidate, rank) => {
               const active = candidate.profile.id === activeProfile.id;
               const topChoice = candidate.profile.id === bestCandidate.profile.id;
-              const candidateDecision = getDecision(candidate.readiness.overall);
+              const candidateDecision = getDecision(candidate.roleFit.score);
               return (
                 <button
                   key={candidate.profile.id}
@@ -163,16 +317,19 @@ export function EmployerPortal({ profile, evidence, readinessProfile, onBuildOwn
                       Best fit
                     </div>
                   )}
+                  <div className="mb-3 text-[10px] font-black uppercase tracking-[0.14em] text-white/30">
+                    Rank {rank + 1} for {selectedRole.title}
+                  </div>
                   <div className="pr-20 text-xl font-black text-white">{candidate.profile.name}</div>
                   <div className="mt-1 text-xs text-white/40">{candidate.profile.targetRole}</div>
                   <div className="mt-4 flex items-end justify-between gap-3">
                     <div>
-                      <div className="text-3xl font-black text-white">{candidate.readiness.overall}</div>
-                      <div className="text-[10px] font-black uppercase tracking-[0.14em] text-white/30">readiness</div>
+                      <div className="text-3xl font-black text-white">{candidate.roleFit.score}</div>
+                      <div className="text-[10px] font-black uppercase tracking-[0.14em] text-white/30">role fit</div>
                     </div>
                     <div className="text-right">
                       <div className="text-xs font-black text-blue-100">{candidateDecision.label}</div>
-                      <div className="text-[11px] text-white/35">{candidate.evidence.length} evidence blocks</div>
+                      <div className="text-[11px] text-white/35">{candidate.roleFit.skillHits.length}/{selectedRole.requiredSkills.length} skill hits</div>
                     </div>
                   </div>
                 </button>
@@ -191,7 +348,7 @@ export function EmployerPortal({ profile, evidence, readinessProfile, onBuildOwn
                 Should I shortlist {activeProfile.name || 'this candidate'}?
               </h1>
               <p className="text-white/55 text-lg leading-relaxed mt-5 max-w-3xl">
-                This is not an employer product suite. It is a lightweight hiring brief generated from the same student evidence used in Talent View.
+                Hiring role: <span className="font-black text-cyan-100">{selectedRole.title}</span>. This is not an employer product suite. It is a lightweight hiring brief generated from the same student evidence used in Talent View.
               </p>
             </div>
             <div className={`rounded-3xl border p-5 ${toneClasses(decision.tone)}`}>
@@ -202,11 +359,16 @@ export function EmployerPortal({ profile, evidence, readinessProfile, onBuildOwn
           </div>
         </section>
 
-        <section className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <section className="mt-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
             <div className="text-white/35 text-xs font-black uppercase tracking-[0.18em]">Readiness</div>
             <div className="text-5xl font-black mt-3">{activeReadiness.overall}/100</div>
             <div className="text-white/45 text-sm mt-2">{activeReadiness.level}</div>
+          </div>
+          <div className="rounded-3xl border border-cyan-300/15 bg-cyan-300/[0.06] p-5">
+            <div className="text-white/35 text-xs font-black uppercase tracking-[0.18em]">Role fit</div>
+            <div className="text-5xl font-black mt-3">{selectedCandidate.roleFit.score}/100</div>
+            <div className="text-white/45 text-sm mt-2">{selectedCandidate.roleFit.skillScore}% required-skill coverage</div>
           </div>
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
             <div className="text-white/35 text-xs font-black uppercase tracking-[0.18em]">Evidence</div>
@@ -214,9 +376,9 @@ export function EmployerPortal({ profile, evidence, readinessProfile, onBuildOwn
             <div className="text-white/45 text-sm mt-2">proof blocks from the candidate profile</div>
           </div>
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
-            <div className="text-white/35 text-xs font-black uppercase tracking-[0.18em]">Target role</div>
-            <div className="text-2xl font-black mt-3">{activeProfile.targetRole || 'Not specified'}</div>
-            <div className="text-white/45 text-sm mt-2">{activeProfile.major || 'Candidate profile'}</div>
+            <div className="text-white/35 text-xs font-black uppercase tracking-[0.18em]">Hiring role</div>
+            <div className="text-2xl font-black mt-3">{selectedRole.title}</div>
+            <div className="text-white/45 text-sm mt-2">{selectedRole.brief}</div>
           </div>
         </section>
 
@@ -272,11 +434,14 @@ export function EmployerPortal({ profile, evidence, readinessProfile, onBuildOwn
               {strongest?.outcome || strongest?.description || 'Add evidence in Talent View before using the employer brief.'}
             </p>
             <div className="flex flex-wrap gap-2 mt-5">
-              {(skills.length ? skills : ['No extracted skills yet']).map((skill) => (
+              {(skills.length ? skills : ['No extracted skills yet']).map((skill) => {
+                const matched = selectedCandidate.roleFit.skillHits.some((hit) => hit.toLowerCase() === skill.toLowerCase());
+                return (
                 <span key={skill} className="rounded-full border border-blue-300/20 bg-blue-300/10 px-3 py-1 text-xs font-black text-blue-100">
-                  {skill}
+                  {matched ? 'match: ' : ''}{skill}
                 </span>
-              ))}
+                );
+              })}
             </div>
           </aside>
         </section>
