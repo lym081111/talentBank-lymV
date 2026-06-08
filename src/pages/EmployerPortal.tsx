@@ -1,4 +1,7 @@
+import { useMemo, useState } from 'react';
 import { Evidence, ReadinessProfile, StudentProfile } from '../types/evidence';
+import { danielLeeProfile, priyaSharmaProfile, kaiChenProfile, aishaPatelProfile } from '../data/mockStudent';
+import { calculateReadinessProfile } from '../utils/readinessScoring';
 
 interface Props {
   profile: StudentProfile;
@@ -7,6 +10,8 @@ interface Props {
   onBuildOwn: () => void;
   onBack: () => void;
 }
+
+const DEMO_CANDIDATES = [danielLeeProfile, priyaSharmaProfile, kaiChenProfile, aishaPatelProfile];
 
 function splitTechnologies(evidence: Evidence[]) {
   return Array.from(
@@ -74,12 +79,37 @@ function buildQuestions(profile: ReadinessProfile, evidence: Evidence[]) {
 }
 
 export function EmployerPortal({ profile, evidence, readinessProfile, onBuildOwn, onBack }: Props) {
-  const decision = getDecision(readinessProfile.overall);
-  const skills = splitTechnologies(evidence);
-  const strongest = strongestEvidence(evidence);
-  const topDimensions = [...readinessProfile.dimensions].sort((a, b) => b.score - a.score).slice(0, 2);
-  const weakDimensions = [...readinessProfile.dimensions].sort((a, b) => a.score - b.score).slice(0, 2);
-  const questions = buildQuestions(readinessProfile, evidence);
+  const candidateOptions = useMemo(() => {
+    const demoOptions = DEMO_CANDIDATES.map((candidate) => ({
+      profile: candidate,
+      evidence: candidate.evidence,
+      readiness: calculateReadinessProfile(candidate.evidence),
+    }));
+
+    const hasCustomProfile = profile.name && evidence.length > 0 && !demoOptions.some((item) => item.profile.id === profile.id);
+    if (!hasCustomProfile) return demoOptions;
+
+    return [
+      { profile, evidence, readiness: readinessProfile },
+      ...demoOptions,
+    ];
+  }, [evidence, profile, readinessProfile]);
+
+  const [selectedId, setSelectedId] = useState(candidateOptions[0]?.profile.id ?? profile.id);
+  const selectedCandidate = candidateOptions.find((candidate) => candidate.profile.id === selectedId) ?? candidateOptions[0];
+  const bestCandidate = candidateOptions.reduce((best, candidate) =>
+    candidate.readiness.overall > best.readiness.overall ? candidate : best
+  , candidateOptions[0]);
+
+  const activeProfile = selectedCandidate.profile;
+  const activeEvidence = selectedCandidate.evidence;
+  const activeReadiness = selectedCandidate.readiness;
+  const decision = getDecision(activeReadiness.overall);
+  const skills = splitTechnologies(activeEvidence);
+  const strongest = strongestEvidence(activeEvidence);
+  const topDimensions = [...activeReadiness.dimensions].sort((a, b) => b.score - a.score).slice(0, 2);
+  const weakDimensions = [...activeReadiness.dimensions].sort((a, b) => a.score - b.score).slice(0, 2);
+  const questions = buildQuestions(activeReadiness, activeEvidence);
 
   return (
     <div className="min-h-screen bg-[#070b13] text-white">
@@ -103,6 +133,54 @@ export function EmployerPortal({ profile, evidence, readinessProfile, onBuildOwn
       </div>
 
       <main className="max-w-6xl mx-auto px-6 py-10">
+        <section className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.035] p-5">
+          <div className="mb-4 flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
+            <div>
+              <div className="text-xs text-blue-200 font-black uppercase tracking-[0.22em]">Candidate shortlist set</div>
+              <p className="mt-1 text-sm text-white/45">Switch personas to compare the hiring brief generated from each resume.</p>
+            </div>
+            <div className="text-xs font-black text-emerald-200">
+              Top choice: {bestCandidate.profile.name} ({bestCandidate.readiness.overall}/100)
+            </div>
+          </div>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+            {candidateOptions.map((candidate) => {
+              const active = candidate.profile.id === activeProfile.id;
+              const topChoice = candidate.profile.id === bestCandidate.profile.id;
+              const candidateDecision = getDecision(candidate.readiness.overall);
+              return (
+                <button
+                  key={candidate.profile.id}
+                  onClick={() => setSelectedId(candidate.profile.id)}
+                  className={`relative min-h-[150px] rounded-2xl border p-4 text-left transition-all duration-300 hover:-translate-y-1 ${
+                    active
+                      ? 'border-blue-300/70 bg-blue-300/12 shadow-[0_0_26px_rgba(96,165,250,0.18)]'
+                      : 'border-white/10 bg-slate-950/55 hover:border-white/25 hover:bg-white/[0.05]'
+                  }`}
+                >
+                  {topChoice && (
+                    <div className="absolute right-3 top-3 rounded-full border border-emerald-300/30 bg-emerald-300/10 px-2 py-1 text-[9px] font-black uppercase tracking-[0.12em] text-emerald-100">
+                      Best fit
+                    </div>
+                  )}
+                  <div className="pr-20 text-xl font-black text-white">{candidate.profile.name}</div>
+                  <div className="mt-1 text-xs text-white/40">{candidate.profile.targetRole}</div>
+                  <div className="mt-4 flex items-end justify-between gap-3">
+                    <div>
+                      <div className="text-3xl font-black text-white">{candidate.readiness.overall}</div>
+                      <div className="text-[10px] font-black uppercase tracking-[0.14em] text-white/30">readiness</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xs font-black text-blue-100">{candidateDecision.label}</div>
+                      <div className="text-[11px] text-white/35">{candidate.evidence.length} evidence blocks</div>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
         <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-7 md:p-9">
           <div className="text-xs text-blue-200 font-black uppercase tracking-[0.22em]">
             Same evidence, employer readout
@@ -110,7 +188,7 @@ export function EmployerPortal({ profile, evidence, readinessProfile, onBuildOwn
           <div className="mt-5 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-7 items-start">
             <div>
               <h1 className="text-4xl md:text-6xl font-black leading-[0.95]">
-                Should I shortlist {profile.name || 'this candidate'}?
+                Should I shortlist {activeProfile.name || 'this candidate'}?
               </h1>
               <p className="text-white/55 text-lg leading-relaxed mt-5 max-w-3xl">
                 This is not an employer product suite. It is a lightweight hiring brief generated from the same student evidence used in Talent View.
@@ -127,18 +205,18 @@ export function EmployerPortal({ profile, evidence, readinessProfile, onBuildOwn
         <section className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
             <div className="text-white/35 text-xs font-black uppercase tracking-[0.18em]">Readiness</div>
-            <div className="text-5xl font-black mt-3">{readinessProfile.overall}/100</div>
-            <div className="text-white/45 text-sm mt-2">{readinessProfile.level}</div>
+            <div className="text-5xl font-black mt-3">{activeReadiness.overall}/100</div>
+            <div className="text-white/45 text-sm mt-2">{activeReadiness.level}</div>
           </div>
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
             <div className="text-white/35 text-xs font-black uppercase tracking-[0.18em]">Evidence</div>
-            <div className="text-5xl font-black mt-3">{evidence.length}</div>
+            <div className="text-5xl font-black mt-3">{activeEvidence.length}</div>
             <div className="text-white/45 text-sm mt-2">proof blocks from the candidate profile</div>
           </div>
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
             <div className="text-white/35 text-xs font-black uppercase tracking-[0.18em]">Target role</div>
-            <div className="text-2xl font-black mt-3">{profile.targetRole || 'Not specified'}</div>
-            <div className="text-white/45 text-sm mt-2">{profile.major || 'Candidate profile'}</div>
+            <div className="text-2xl font-black mt-3">{activeProfile.targetRole || 'Not specified'}</div>
+            <div className="text-white/45 text-sm mt-2">{activeProfile.major || 'Candidate profile'}</div>
           </div>
         </section>
 

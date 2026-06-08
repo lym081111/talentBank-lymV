@@ -1,6 +1,6 @@
 import { Gap, NextAction, ReadinessProfile } from '../types/evidence';
 import { GapActionCard } from '../components/GapActionCard';
-import { matchMarketplaceRoles, MarketplaceMatch } from '../utils/marketplaceMatching';
+import { matchApplicationTargets, ApplicationTargetMatch } from '../utils/applicationTargets';
 import styles from './Gaps.module.css';
 
 interface Props {
@@ -47,8 +47,8 @@ function findQuickWin(gaps: Gap[]): { gap: Gap; action: NextAction } | null {
 export function Gaps({ gaps, readinessProfile, onBackToDashboard, onViewCohort, onUpdateEvidence }: Props) {
   const quickWin = findQuickWin(gaps);
   const topBlockers = gaps.slice(0, 3);
-  const marketplaceMatches: MarketplaceMatch[] = readinessProfile
-    ? matchMarketplaceRoles(readinessProfile, gaps).slice(0, 3)
+  const applicationTargetMatches: ApplicationTargetMatch[] = readinessProfile
+    ? matchApplicationTargets(readinessProfile, gaps).slice(0, 3)
     : [];
 
   return (
@@ -187,8 +187,8 @@ export function Gaps({ gaps, readinessProfile, onBackToDashboard, onViewCohort, 
           </ol>
         </div>
 
-        {/* Career Marketplace Bridge — Module 04 */}
-        {marketplaceMatches.length > 0 && (
+        {/* Application target guidance */}
+        {applicationTargetMatches.length > 0 && (
           <div style={{
             background: 'var(--color-surface)',
             border: '1.5px solid var(--color-border)',
@@ -197,16 +197,16 @@ export function Gaps({ gaps, readinessProfile, onBackToDashboard, onViewCohort, 
             marginBottom: '28px',
           }}>
             <div style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--color-primary)', marginBottom: '6px' }}>
-              Career OS — Module 04: Internship Marketplace
+              Application Targets
             </div>
             <h3 style={{ margin: '0 0 6px 0', color: 'var(--color-text)', fontSize: '18px', fontWeight: 900 }}>
-              How your profile matches live roles
+              How your evidence can support real applications
             </h3>
             <p style={{ margin: '0 0 18px 0', color: 'var(--color-text-secondary)', fontSize: '13px', lineHeight: 1.6 }}>
-              These are mock marketplace roles matched against your readiness profile — the same signal a Career OS employer would see before reaching out.
+              These are mock application targets matched against your readiness profile. They show what you can credibly claim now and what still blocks a stronger application.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px' }}>
-              {marketplaceMatches.map((match) => {
+              {applicationTargetMatches.map((match) => {
                 const fitColor =
                   match.fit === 'Strong match' ? 'var(--color-success)' :
                   match.fit === 'Stretch match' ? 'var(--color-accent)' :
@@ -221,7 +221,7 @@ export function Gaps({ gaps, readinessProfile, onBackToDashboard, onViewCohort, 
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '8px' }}>
                       <div>
                         <div style={{ fontWeight: 900, color: 'var(--color-text)', fontSize: '14px', marginBottom: '2px' }}>{match.role.title}</div>
-                        <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>{match.role.company} · {match.role.market}</div>
+                        <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>{match.role.company} - {match.role.market}</div>
                       </div>
                       <div style={{ textAlign: 'right', flexShrink: 0 }}>
                         <div style={{ fontWeight: 900, fontSize: '20px', color: fitColor }}>{match.score}%</div>
@@ -230,12 +230,12 @@ export function Gaps({ gaps, readinessProfile, onBackToDashboard, onViewCohort, 
                     </div>
                     {match.whyMatched.length > 0 && (
                       <div style={{ fontSize: '12px', color: 'var(--color-success)', marginBottom: '6px' }}>
-                        ✓ {match.whyMatched[0]}
+                        OK: {match.whyMatched[0]}
                       </div>
                     )}
                     {match.blockers.length > 0 && (
                       <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: '8px' }}>
-                        ⚠ {match.blockers[0]}
+                        Check: {match.blockers[0]}
                       </div>
                     )}
                     <div style={{ fontSize: '12px', color: 'var(--color-text-muted)', borderTop: '1px solid var(--color-border)', paddingTop: '8px', marginTop: '4px' }}>
@@ -248,34 +248,34 @@ export function Gaps({ gaps, readinessProfile, onBackToDashboard, onViewCohort, 
           </div>
         )}
 
-        {/* Career OS Inter-Module Connections */}
+        {/* Shared evidence view connections */}
         <div className={styles.careerOsSection}>
-          <div className={styles.careerOsLabel}>🌏 Asia's Career OS — What Comes Next</div>
+          <div className={styles.careerOsLabel}>PathLens - What Comes Next</div>
           <p className={styles.careerOsDesc}>
-            Your PathLens profile feeds directly into the rest of the Career OS. Close your gaps here, and these modules unlock.
+            Your PathLens profile powers three focused readouts. Close your gaps here, then reuse the same evidence for applications, hiring briefs, and university support.
           </p>
           <div className={styles.careerOsFlow}>
             <div className={`${styles.careerOsModule} ${styles.careerOsModuleCurrent}`}>
               <div className={styles.careerOsModuleNum}>03</div>
               <div className={styles.careerOsModuleTitle}>Adaptive Readiness Profile</div>
-              <div className={styles.careerOsModuleDesc}>You are here — score {'>'}75 to unlock strong matches</div>
-              <div className={styles.careerOsModuleYou}>← You are here</div>
+              <div className={styles.careerOsModuleDesc}>You are here - close the highest-impact blockers first</div>
+              <div className={styles.careerOsModuleYou}>You are here</div>
             </div>
 
-            <div className={styles.careerOsArrow}>→</div>
+            <div className={styles.careerOsArrow}>-&gt;</div>
 
             <div className={`${styles.careerOsModule} ${styles.careerOsModuleNext}`}>
-              <div className={styles.careerOsModuleNum}>04</div>
-              <div className={styles.careerOsModuleTitle}>Internship Marketplace</div>
-              <div className={styles.careerOsModuleDesc}>Your score surfaces you to employers seeking your exact skill profile — no cold applications</div>
+              <div className={styles.careerOsModuleNum}>A</div>
+              <div className={styles.careerOsModuleTitle}>Application Targets</div>
+              <div className={styles.careerOsModuleDesc}>Turn the same evidence into role-specific claims, blockers, and next steps</div>
             </div>
 
-            <div className={styles.careerOsArrow}>→</div>
+            <div className={styles.careerOsArrow}>-&gt;</div>
 
             <div className={`${styles.careerOsModule} ${styles.careerOsModuleNext}`}>
-              <div className={styles.careerOsModuleNum}>05</div>
-              <div className={styles.careerOsModuleTitle}>Lifelong Learning Wallet</div>
-              <div className={styles.careerOsModuleDesc}>Your evidence becomes a verifiable credential — portable across Asia, updated forever</div>
+              <div className={styles.careerOsModuleNum}>U</div>
+              <div className={styles.careerOsModuleTitle}>University Intervention</div>
+              <div className={styles.careerOsModuleDesc}>Aggregate recurring blockers into cohort actions, owners, and measures</div>
             </div>
           </div>
         </div>

@@ -175,16 +175,13 @@ function CandidateSelector({
   selectedId: string;
   onSelect: (profile: StudentProfile) => void;
 }) {
-  const studentPersonas = DEMO_PERSONAS.filter(c => c.type === 'student');
-  const alumniPersonas = DEMO_PERSONAS.filter(c => c.type === 'alumni');
-
   const renderCard = (candidate: typeof DEMO_PERSONAS[0]) => {
     const active = candidate.profile.id === selectedId;
     return (
       <button
         key={candidate.profile.id}
         onClick={() => onSelect(candidate.profile)}
-        className={`relative overflow-hidden text-left rounded-3xl border p-5 min-h-[168px] transition-all duration-300 hover:-translate-y-1 ${
+        className={`relative overflow-hidden text-left rounded-3xl border p-5 min-h-[218px] transition-all duration-300 hover:-translate-y-1 ${
           active
             ? 'border-cyan-300/70 bg-cyan-300/12 shadow-[0_0_34px_rgba(34,211,238,0.22)] animate-[activeProfile_1.8s_ease-in-out_infinite]'
             : 'border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.06]'
@@ -214,22 +211,20 @@ function CandidateSelector({
   };
 
   return (
-    <div className="space-y-4">
-      <div>
-        <div className="text-[10px] font-black uppercase tracking-[0.2em] text-sky-300/70 mb-2 px-1">
-          Student — Universities Module 03 subject
+    <div className="rounded-[2rem] border border-white/10 bg-white/[0.025] p-4">
+      <div className="flex flex-col gap-1 px-1 pb-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <div className="text-[10px] font-black uppercase tracking-[0.2em] text-sky-300/70">
+            Choose a profile
+          </div>
+          <p className="mt-1 text-sm text-white/40">
+            Daniel shows the student readiness case. Alumni profiles show where stronger evidence can lead.
+          </p>
         </div>
-        <div className="grid grid-cols-1 gap-4">
-          {studentPersonas.map(renderCard)}
-        </div>
+        <div className="text-xs font-bold text-white/25">Click a card to switch the workspace</div>
       </div>
-      <div>
-        <div className="text-[10px] font-black uppercase tracking-[0.2em] text-white/25 mb-2 px-1">
-          Alumni trajectories — where students land post-graduation
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {alumniPersonas.map(renderCard)}
-        </div>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {DEMO_PERSONAS.map(renderCard)}
       </div>
     </div>
   );
@@ -617,8 +612,8 @@ export function TalentPortal({ onViewDemo, onBuildOwn, onBack }: Props) {
       </div>
 
       <main className="max-w-7xl mx-auto px-6 py-10">
-        <section className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 items-end">
-          <div>
+        <section className="space-y-8">
+          <div className="max-w-4xl">
             <div className="inline-flex rounded-full border border-sky-300/25 bg-sky-300/10 px-3 py-1 text-xs font-black text-sky-100 uppercase tracking-[0.18em]">
               Universities Module 03 — student readiness + alumni trajectory
             </div>

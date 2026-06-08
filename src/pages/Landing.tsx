@@ -122,7 +122,7 @@ export function Landing({ onNavigate, onBuildOwn }: Props) {
               </div>
             </div>
             <p className="mt-5 text-xs text-white/25 italic border-t border-white/10 pt-4">
-              Stage 1 prototype — frontend only, localStorage persistence. Marketplace matching and cohort data are seeded mocks showing the Career OS integration pattern.
+              Stage 1 prototype - frontend only, localStorage persistence. Application targets and cohort data are seeded mocks showing the shared evidence pattern.
             </p>
           </Card>
         </div>
@@ -151,28 +151,6 @@ export function Landing({ onNavigate, onBuildOwn }: Props) {
               <div className="text-xs text-white/30 mt-1">{s.label}</div>
             </div>
           ))}
-        </div>
-      </div>
-
-      <div className="py-14 px-6 bg-[#080d18]">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-10">
-            <p className="text-xs text-white/30 font-black uppercase tracking-widest mb-2">How It Works</p>
-            <h2 className="text-2xl font-black text-white">One evidence profile. Three focused views.</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/[0.08] rounded-2xl overflow-hidden">
-            {([
-              { step: '01', title: 'Talent View', desc: 'Students see what to improve next and how to turn evidence into applications.', color: 'text-emerald-400' },
-              { step: '02', title: 'Employer View', desc: 'A lightweight hiring brief answers: shortlist or not, and what to ask in interview.', color: 'text-cyan-400' },
-              { step: '03', title: 'University View', desc: 'Mock cohort data becomes targeted intervention actions for career services.', color: 'text-blue-400' },
-            ] as const).map((s) => (
-              <div key={s.step} className="bg-[#080d18] p-7">
-                <div className={`text-xs font-black uppercase tracking-widest mb-2 ${s.color}`}>View {s.step}</div>
-                <h3 className="text-white font-black text-lg leading-snug mb-3">{s.title}</h3>
-                <p className="text-white/35 text-sm leading-relaxed">{s.desc}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 
@@ -259,7 +237,7 @@ export function Landing({ onNavigate, onBuildOwn }: Props) {
           </div>
 
           <p className="text-center text-xs text-white/20 mt-8">
-            Talentbank Tech Hackathon 2026 · Stage 1 prototype · Universities Module 03 · Career Marketplace bridge included
+            Talentbank Tech Hackathon 2026 - Stage 1 prototype - Universities Module 03 - Shared evidence views
           </p>
         </div>
       </div>

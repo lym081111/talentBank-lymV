@@ -1,6 +1,6 @@
 import { Gap, ReadinessProfile } from '../types/evidence';
 
-export interface InternshipRole {
+export interface ApplicationTargetRole {
   id: string;
   title: string;
   company: string;
@@ -13,8 +13,8 @@ export interface InternshipRole {
   growthPath: string;
 }
 
-export interface MarketplaceMatch {
-  role: InternshipRole;
+export interface ApplicationTargetMatch {
+  role: ApplicationTargetRole;
   score: number;
   fit: 'Strong match' | 'Stretch match' | 'Build toward';
   whyMatched: string[];
@@ -22,7 +22,7 @@ export interface MarketplaceMatch {
   nextStep: string;
 }
 
-export const MOCK_INTERNSHIP_ROLES: InternshipRole[] = [
+export const MOCK_APPLICATION_TARGETS: ApplicationTargetRole[] = [
   {
     id: 'swe-platform-kl',
     title: 'Software Engineering Intern, Platform',
@@ -56,11 +56,11 @@ export const MOCK_INTERNSHIP_ROLES: InternshipRole[] = [
     growthPath: 'Add one quantified data project with model accuracy, data volume, or business impact.',
   },
   {
-    id: 'frontend-marketplace-regional',
-    title: 'Frontend Intern, Career Marketplace',
+    id: 'frontend-application-regional',
+    title: 'Frontend Intern, Candidate Applications',
     company: 'Regional talent platform',
     market: 'Remote, Southeast Asia',
-    description: 'Create candidate-facing marketplace screens and evidence-backed profile cards.',
+    description: 'Create candidate-facing application screens and evidence-backed profile cards.',
     requiredSkills: ['React', 'JavaScript / TypeScript', 'HTML / CSS'],
     niceToHaveSkills: ['Documentation & Communication', 'Testing & Test Automation', 'Next.js'],
     dimensionThresholds: {
@@ -102,11 +102,11 @@ function findBestGapAction(gaps: Gap[], dimension: string): string | undefined {
   return gap?.nextActions[0]?.title;
 }
 
-export function matchMarketplaceRoles(
+export function matchApplicationTargets(
   profile: ReadinessProfile,
   gaps: Gap[],
-  roles: InternshipRole[] = MOCK_INTERNSHIP_ROLES
-): MarketplaceMatch[] {
+  roles: ApplicationTargetRole[] = MOCK_APPLICATION_TARGETS
+): ApplicationTargetMatch[] {
   const skillSet = new Set(profile.allExtractedSkills.map((item) => normalizeSkill(item.skill)));
 
   return roles
@@ -152,10 +152,10 @@ export function matchMarketplaceRoles(
       const firstDimensionBlocker = dimensionsBelow[0]?.[0];
       const gapAction = firstDimensionBlocker ? findBestGapAction(gaps, firstDimensionBlocker) : undefined;
       const nextStep = gapAction
-        ? `${gapAction}. Then re-check this marketplace fit.`
+        ? `${gapAction}. Then re-check this application fit.`
         : role.growthPath;
 
-      const fit: MarketplaceMatch['fit'] =
+      const fit: ApplicationTargetMatch['fit'] =
         score >= 75 && blockers.length === 0
           ? 'Strong match'
           : score >= 55

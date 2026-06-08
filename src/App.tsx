@@ -248,7 +248,7 @@ function App() {
         <Navigation
           currentPage={currentPage}
           onNavigate={handleNavigate}
-          showNav={currentPage !== 'landing' && currentPage !== 'talent-portal' && currentPage !== 'employer-portal'}
+          showNav={currentPage !== 'landing' && currentPage !== 'talent-portal' && currentPage !== 'employer-portal' && currentPage !== 'cohort'}
           onResetDemo={resetToDemo}
           onGoHome={handleGoHome}
           isDark={isDark}
@@ -264,7 +264,7 @@ function App() {
         }>
           <div key={currentPage} className="pageWrapper">
             {renderPage()}
-            {currentPage !== 'landing' && <AppFooter />}
+            {currentPage !== 'landing' && currentPage !== 'cohort' && <AppFooter />}
           </div>
         </Suspense>
       </div>

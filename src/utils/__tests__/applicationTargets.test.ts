@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import {
-  matchMarketplaceRoles,
-  MOCK_INTERNSHIP_ROLES,
-  InternshipRole,
-} from '../marketplaceMatching';
+  matchApplicationTargets,
+  MOCK_APPLICATION_TARGETS,
+  ApplicationTargetRole,
+} from '../applicationTargets';
 import { calculateReadinessProfile } from '../readinessScoring';
 import { generateGaps } from '../nextActions';
 import { mockCohortInsight } from '../../data/mockCohort';
@@ -22,7 +22,7 @@ const makeEvidence = (overrides: Partial<Evidence> = {}): Evidence => ({
   ...overrides,
 });
 
-const makeRole = (overrides: Partial<InternshipRole> = {}): InternshipRole => ({
+const makeRole = (overrides: Partial<ApplicationTargetRole> = {}): ApplicationTargetRole => ({
   id: 'test-role',
   title: 'Test Intern',
   company: 'Test Co',
@@ -50,16 +50,16 @@ function buildGaps(profile: ReadinessProfile): Gap[] {
 // Basic shape & invariants
 // ---------------------------------------------------------------------------
 
-describe('matchMarketplaceRoles — basic shape', () => {
-  it('returns one result per role when using default MOCK_INTERNSHIP_ROLES', () => {
+describe('matchApplicationTargets — basic shape', () => {
+  it('returns one result per role when using default MOCK_APPLICATION_TARGETS', () => {
     const profile = buildProfile([makeEvidence()]);
-    const results = matchMarketplaceRoles(profile, []);
-    expect(results).toHaveLength(MOCK_INTERNSHIP_ROLES.length);
+    const results = matchApplicationTargets(profile, []);
+    expect(results).toHaveLength(MOCK_APPLICATION_TARGETS.length);
   });
 
   it('every result contains required fields', () => {
     const profile = buildProfile([makeEvidence()]);
-    const results = matchMarketplaceRoles(profile, []);
+    const results = matchApplicationTargets(profile, []);
     for (const match of results) {
       expect(match.role).toBeDefined();
       expect(typeof match.score).toBe('number');
@@ -72,7 +72,7 @@ describe('matchMarketplaceRoles — basic shape', () => {
 
   it('all scores are within 0–100', () => {
     const profile = buildProfile([makeEvidence()]);
-    const results = matchMarketplaceRoles(profile, []);
+    const results = matchApplicationTargets(profile, []);
     for (const match of results) {
       expect(match.score).toBeGreaterThanOrEqual(0);
       expect(match.score).toBeLessThanOrEqual(100);
@@ -81,7 +81,7 @@ describe('matchMarketplaceRoles — basic shape', () => {
 
   it('results are sorted descending by score', () => {
     const profile = buildProfile([makeEvidence()]);
-    const results = matchMarketplaceRoles(profile, []);
+    const results = matchApplicationTargets(profile, []);
     for (let i = 1; i < results.length; i++) {
       expect(results[i - 1].score).toBeGreaterThanOrEqual(results[i].score);
     }
@@ -92,11 +92,11 @@ describe('matchMarketplaceRoles — basic shape', () => {
 // Custom roles
 // ---------------------------------------------------------------------------
 
-describe('matchMarketplaceRoles — custom roles', () => {
-  it('uses provided roles array instead of MOCK_INTERNSHIP_ROLES', () => {
+describe('matchApplicationTargets — custom roles', () => {
+  it('uses provided roles array instead of MOCK_APPLICATION_TARGETS', () => {
     const profile = buildProfile([makeEvidence()]);
     const custom = [makeRole({ id: 'custom-1' }), makeRole({ id: 'custom-2' })];
-    const results = matchMarketplaceRoles(profile, [], custom);
+    const results = matchApplicationTargets(profile, [], custom);
     expect(results).toHaveLength(2);
     expect(results.map((r) => r.role.id)).toEqual(
       expect.arrayContaining(['custom-1', 'custom-2'])
@@ -105,7 +105,7 @@ describe('matchMarketplaceRoles — custom roles', () => {
 
   it('returns empty array when roles array is empty', () => {
     const profile = buildProfile([makeEvidence()]);
-    const results = matchMarketplaceRoles(profile, [], []);
+    const results = matchApplicationTargets(profile, [], []);
     expect(results).toHaveLength(0);
   });
 });
@@ -114,7 +114,7 @@ describe('matchMarketplaceRoles — custom roles', () => {
 // Skill matching
 // ---------------------------------------------------------------------------
 
-describe('matchMarketplaceRoles — skill matching', () => {
+describe('matchApplicationTargets — skill matching', () => {
   it('a profile with all required skills scores higher than one with none', () => {
     const richEvidence = [
       makeEvidence({
@@ -139,8 +139,8 @@ describe('matchMarketplaceRoles — skill matching', () => {
       niceToHaveSkills: ['Docker'],
     });
 
-    const [richMatch] = matchMarketplaceRoles(richProfile, [], [role]);
-    const [poorMatch] = matchMarketplaceRoles(poorProfile, [], [role]);
+    const [richMatch] = matchApplicationTargets(richProfile, [], [role]);
+    const [poorMatch] = matchApplicationTargets(poorProfile, [], [role]);
 
     expect(richMatch.score).toBeGreaterThan(poorMatch.score);
   });
@@ -155,8 +155,8 @@ describe('matchMarketplaceRoles — skill matching', () => {
 
     const role = makeRole({ requiredSkills: ['React', 'Node.js'] });
 
-    const [lower] = matchMarketplaceRoles(lowerProfile, [], [role]);
-    const [upper] = matchMarketplaceRoles(upperProfile, [], [role]);
+    const [lower] = matchApplicationTargets(lowerProfile, [], [role]);
+    const [upper] = matchApplicationTargets(upperProfile, [], [role]);
 
     // Both should hit the same required-skill count (case-insensitive normalisation)
     expect(lower.score).toBe(upper.score);
@@ -167,7 +167,7 @@ describe('matchMarketplaceRoles — skill matching', () => {
       makeEvidence({ technologies: 'React, Node.js', description: 'Built React app with Node.js backend.' }),
     ]);
     const role = makeRole({ requiredSkills: ['React', 'Node.js'] });
-    const [match] = matchMarketplaceRoles(profile, [], [role]);
+    const [match] = matchApplicationTargets(profile, [], [role]);
     const reasons = match.whyMatched.join(' ');
     // At least one required skill should surface in the reasoning
     expect(reasons.toLowerCase()).toMatch(/react|node/);
@@ -178,7 +178,7 @@ describe('matchMarketplaceRoles — skill matching', () => {
       makeEvidence({ technologies: 'Python', description: 'Python data pipeline.' }),
     ]);
     const role = makeRole({ requiredSkills: ['React', 'Node.js'], minimumOverall: 0, dimensionThresholds: {} });
-    const [match] = matchMarketplaceRoles(profile, [], [role]);
+    const [match] = matchApplicationTargets(profile, [], [role]);
     const blockerText = match.blockers.join(' ');
     expect(blockerText).toMatch(/missing required evidence/i);
   });
@@ -188,7 +188,7 @@ describe('matchMarketplaceRoles — skill matching', () => {
 // Fit label thresholds
 // ---------------------------------------------------------------------------
 
-describe('matchMarketplaceRoles — fit labels', () => {
+describe('matchApplicationTargets — fit labels', () => {
   it('Build toward label when score is low', () => {
     const profile = buildProfile([]); // zero evidence → low score
     const role = makeRole({
@@ -201,7 +201,7 @@ describe('matchMarketplaceRoles — fit labels', () => {
       },
       minimumOverall: 90,
     });
-    const [match] = matchMarketplaceRoles(profile, [], [role]);
+    const [match] = matchApplicationTargets(profile, [], [role]);
     expect(match.fit).toBe('Build toward');
   });
 
@@ -215,7 +215,7 @@ describe('matchMarketplaceRoles — fit labels', () => {
       ]),
     ];
     for (const profile of profiles) {
-      const results = matchMarketplaceRoles(profile, []);
+      const results = matchApplicationTargets(profile, []);
       for (const match of results) {
         expect(['Strong match', 'Stretch match', 'Build toward']).toContain(match.fit);
       }
@@ -227,7 +227,7 @@ describe('matchMarketplaceRoles — fit labels', () => {
 // nextStep wiring
 // ---------------------------------------------------------------------------
 
-describe('matchMarketplaceRoles — nextStep', () => {
+describe('matchApplicationTargets — nextStep', () => {
   it('falls back to role growthPath when no matching gap action exists', () => {
     const profile = buildProfile([makeEvidence()]);
     const role = makeRole({
@@ -236,11 +236,11 @@ describe('matchMarketplaceRoles — nextStep', () => {
       requiredSkills: [],        // no skill blockers
       growthPath: 'UNIQUE_GROWTH_PATH_STRING',
     });
-    const [match] = matchMarketplaceRoles(profile, [], [role]);
+    const [match] = matchApplicationTargets(profile, [], [role]);
     expect(match.nextStep).toContain('UNIQUE_GROWTH_PATH_STRING');
   });
 
-  it('appends "re-check this marketplace fit" when a gap action is used', () => {
+  it('appends "re-check this application fit" when a gap action is used', () => {
     // Zero evidence gives low scores on every dimension, so gaps will exist
     const profile = buildProfile([]);
     const gaps = buildGaps(profile);
@@ -251,8 +251,8 @@ describe('matchMarketplaceRoles — nextStep', () => {
       minimumOverall: 0,
       requiredSkills: [],
     });
-    const [match] = matchMarketplaceRoles(profile, gaps, [role]);
-    // If a gap action was wired in, the nextStep ends with "re-check this marketplace fit."
+    const [match] = matchApplicationTargets(profile, gaps, [role]);
+    // If a gap action was wired in, the nextStep ends with "re-check this application fit."
     // If no action found, falls back to growthPath — either way the string is non-empty.
     expect(match.nextStep.length).toBeGreaterThan(0);
   });
@@ -262,15 +262,15 @@ describe('matchMarketplaceRoles — nextStep', () => {
 // Edge cases
 // ---------------------------------------------------------------------------
 
-describe('matchMarketplaceRoles — edge cases', () => {
+describe('matchApplicationTargets — edge cases', () => {
   it('handles zero-evidence profile without throwing', () => {
     const profile = buildProfile([]);
-    expect(() => matchMarketplaceRoles(profile, [])).not.toThrow();
+    expect(() => matchApplicationTargets(profile, [])).not.toThrow();
   });
 
   it('whyMatched is never an empty array', () => {
     const profile = buildProfile([]);
-    const results = matchMarketplaceRoles(profile, []);
+    const results = matchApplicationTargets(profile, []);
     for (const match of results) {
       expect(match.whyMatched.length).toBeGreaterThan(0);
     }
@@ -278,7 +278,7 @@ describe('matchMarketplaceRoles — edge cases', () => {
 
   it('blockers is never an empty array', () => {
     const profile = buildProfile([]);
-    const results = matchMarketplaceRoles(profile, []);
+    const results = matchApplicationTargets(profile, []);
     for (const match of results) {
       expect(match.blockers.length).toBeGreaterThan(0);
     }
@@ -295,7 +295,7 @@ describe('matchMarketplaceRoles — edge cases', () => {
       })
     );
     const profile = buildProfile(richEvidence);
-    const results = matchMarketplaceRoles(profile, []);
+    const results = matchApplicationTargets(profile, []);
     for (const match of results) {
       expect(match.score).toBeLessThanOrEqual(100);
     }
@@ -304,7 +304,7 @@ describe('matchMarketplaceRoles — edge cases', () => {
   it('role with no dimension thresholds still produces valid results', () => {
     const profile = buildProfile([makeEvidence()]);
     const role = makeRole({ dimensionThresholds: {}, requiredSkills: [] });
-    const results = matchMarketplaceRoles(profile, [], [role]);
+    const results = matchApplicationTargets(profile, [], [role]);
     expect(results).toHaveLength(1);
     expect(results[0].score).toBeGreaterThanOrEqual(0);
   });

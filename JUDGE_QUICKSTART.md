@@ -13,7 +13,7 @@
 3. **Daniel Lee is selected by default** (the student — Universities Module 03 subject)
 4. Click **"Open full OS demo for Daniel Lee"** — loads his evidence instantly
 5. Watch **streaming Claude AI insights** render live on the Readiness Dashboard
-6. Navigate to **Paths Forward** — see Career OS Module 04 marketplace matches + top readiness blockers
+6. Navigate to **Paths Forward** - see application targets + top readiness blockers
 7. From Talent View, also try the alumni personas (Priya/Kai/Aisha) to see the post-graduation trajectory
 8. From landing, also try **Employer View** and **University View** directly (auto-seeds Priya's profile)
 
@@ -30,7 +30,7 @@
 ### Talent View (TalentPortal)
 - **Student persona (primary):** Daniel Lee — Year 4 CS at Universiti Malaya. FYP + internship + hackathon. Typical readiness gap: no CI/CD, no production deployment. This is the Universities Module 03 subject.
 - **Alumni trajectories (3 examples):** Priya Sharma (SWE, Grab), Kai Chen (Data Eng, ByteDance), Aisha Patel (PM, Lazada) — showing where students land post-graduation when they do close the gaps
-- 5 sub-tabs per persona: Profile · Evidence · Skills · Trajectory · Matches
+- 5 sub-tabs per persona: Profile / Evidence / Skills / Trajectory / Applications
 - Evidence cards highlight keywords, salary signals (MYR), and impact metrics
 - "Open full OS demo" button loads the persona into the full pipeline (works for all 4)
 
@@ -58,8 +58,8 @@
 
 ### Paths Forward (Gaps)
 - Top 3 readiness blockers with concrete 30–90 day actions
-- **Career OS Module 04 — Marketplace bridge:** 3 live mock role matches scored against the readiness profile, showing why the candidate fits and what blocks a stronger match
-- Career OS inter-module flow: Module 03 → 04 → 05
+- **Application target guidance:** 3 mock role targets scored against the readiness profile, showing what the candidate can credibly claim and what blocks a stronger application
+- Shared evidence flow: readiness profile -> application targets -> university intervention
 - "Update Evidence & Re-check" closes the loop
 
 ### University View (CohortView)
@@ -91,7 +91,7 @@ npm run dev
 **To run tests:**
 ```bash
 npm test
-# 9 test files, 111 tests — marketplace matching, weighted scoring, skill extraction, market insights, ATS scoring, portfolio quality, edge cases
+# 9 test files, 111 tests — application target matching, weighted scoring, skill extraction, market insights, ATS scoring, portfolio quality, edge cases
 ```
 
 ---
@@ -111,7 +111,7 @@ npm test
 | Real Claude AI streaming | ✅ (+ rule-based fallback) | ❌ or generic |
 | Transparent skill extraction | ✅ (every skill traced to evidence) | ❌ black box |
 | 3 distinct audience views | ✅ Talent · Employer · University | Student only |
-| Career Marketplace bridge | ✅ (Module 04 mock matching) | ❌ |
+| Application target guidance | Yes (mock application targets) | No |
 | Cohort API seam | ✅ (localStorage → real API swap) | ❌ |
 | Works offline / no account | ✅ | Usually requires sign-up |
 | 0 TypeScript errors | ✅ | — |
@@ -122,9 +122,9 @@ npm test
 
 | Criterion | Weight | PathLens Implementation |
 |---|---|---|
-| Product & UX | 30% | Dark palette, animations, radar chart, 3 audience views, marketplace cards, employer brief |
-| System Design | 25% | 6-dimension scoring, transparent extraction, cohort API seam, marketplace matching engine, Career OS module connections |
-| Completeness | 20% | All views functional, AI insight, export, cohort submit, marketplace matches, trajectory simulator |
+| Product & UX | 30% | Dark palette, animations, radar chart, 3 audience views, application target cards, employer brief |
+| System Design | 25% | 6-dimension scoring, transparent extraction, cohort API seam, application target matching engine, Career OS module connections |
+| Completeness | 20% | All views functional, AI insight, export, cohort submit, application targets, trajectory simulator |
 | AI Craft | 15% | Streaming Claude AI, pre-built insights for all 3 personas, transparency panel, rule-based fallback |
 | Code Quality | 10% | TypeScript 0 errors, 9 test files (111 tests), React.lazy code splitting, modular CSS Modules, clean hooks |
 

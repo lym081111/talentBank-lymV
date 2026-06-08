@@ -337,7 +337,7 @@ export function JobDescriptionMatch({
             {studentProfile.targetRole || 'Software Engineer Intern'} match, based only on evidence.
           </h3>
           <p style={{ margin: '10px 0 0 0', color: 'var(--color-text-secondary)', fontSize: '14px', lineHeight: 1.7 }}>
-            A mocked JD scanner shows how Module 04 could consume the readiness profile later. It is intentionally lightweight for Stage 1.
+            A mocked JD scanner shows how the same readiness profile can become application guidance. It is intentionally lightweight for Stage 1.
           </p>
         </div>
         <div style={{ textAlign: 'center', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '16px', background: 'var(--color-surface-hover)' }}>

@@ -2,8 +2,8 @@
  * Profile export utilities for PathLens.
  *
  * Provides JSON export of a student's profile and evidence, producing a
- * portable, machine-readable file that could be consumed by Module 04
- * (Internship Marketplace) or other Career OS components.
+ * portable, machine-readable file that can be reused by the Talent,
+ * Employer, and University views.
  *
  * Output format: { profile, evidence[], exportedAt }
  * File naming: pathlens-profile-{name}-{date}.json
