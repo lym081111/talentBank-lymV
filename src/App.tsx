@@ -170,6 +170,7 @@ function App() {
           <SkillExtraction
             evidence={evidence}
             extractedSkills={readinessProfile.allExtractedSkills}
+            studentProfile={studentProfile}
             onContinue={() => handleNavigate('dashboard')}
           />
         );
@@ -191,6 +192,7 @@ function App() {
           <Gaps
             gaps={gaps}
             readinessProfile={readinessProfile}
+            studentProfile={studentProfile}
             onBackToDashboard={() => handleNavigate('dashboard')}
             onViewCohort={() => handleNavigateToLightweightView('cohort')}
             onUpdateEvidence={handleUpdateEvidenceFromDashboard}

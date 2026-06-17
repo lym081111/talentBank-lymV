@@ -29,6 +29,21 @@ The prototype helps students see what their evidence proves, helps employers rea
 
 **Stage 1 scope:** frontend prototype only. No backend, authentication, real university integration, or real employer marketplace.
 
+## Starter Kit Alignment
+
+PathLens is submitted as **Career OS + Challenge Module**. The compulsory Career OS layer is represented through a clickable frontend prototype:
+
+| Starter Kit feature | PathLens implementation |
+|---|---|
+| Profile and resume builder | Students turn projects, internships, certificates, hackathons, and FYPs into an editable evidence profile |
+| Job matching | Paths Forward and application targets compare readiness, skills, blockers, and role requirements |
+| Candidate dashboard | Talent View shows evidence, extracted skills, readiness dimensions, gaps, and application next steps |
+| Employer dashboard | Employer View generates a lightweight hiring brief from the same evidence |
+| Job applications | Application Pack turns evidence into role claims, interview probes, and blockers to fix |
+| Search and discovery | Recruiters switch hiring roles and see which demo candidate fits that role best |
+
+The Challenge Module is **Adaptive Readiness Profile**. Career Path Navigator and Living Portfolio are represented inside the Talent workspace as evidence-backed paths, proof blocks, and application targets. The prototype intentionally avoids backend/auth scope so Stage 1 stays focused on product clarity and explainable AI craft.
+
 Supporting docs:
 
 - `docs/DEMO_FLOW.md`

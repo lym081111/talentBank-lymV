@@ -588,6 +588,83 @@ function DynamicOSModules({
   );
 }
 
+function CareerScoreMeaning({
+  profile,
+  studentProfile,
+  evidence,
+}: {
+  profile: ReadinessProfile;
+  studentProfile: StudentProfile;
+  evidence: Evidence[];
+}) {
+  const weakDimension = [...profile.dimensions].sort((a, b) => a.score - b.score)[0];
+  const strongDimension = [...profile.dimensions].sort((a, b) => b.score - a.score)[0];
+  const verifiedCount = evidence.filter((item) => item.verified || item.link).length;
+
+  const band =
+    profile.overall >= 75
+      ? {
+          label: 'Market-ready',
+          salary: 'MYR 630K-875K/year',
+          action: 'Use the application pack to defend senior or high-growth roles with specific proof.',
+          color: '#34d399',
+        }
+      : profile.overall >= 55
+        ? {
+            label: 'Good trajectory',
+            salary: 'MYR 420K-560K/year',
+            action: `Close ${weakDimension?.dimension ?? 'the weakest gap'} before claiming higher bands.`,
+            color: '#67e8f9',
+          }
+        : {
+            label: 'Foundation-building',
+            salary: 'MYR 168K-252K/year',
+            action: 'Build one verifiable project with tests, deployment, and a clear outcome.',
+            color: '#fbbf24',
+          };
+
+  return (
+    <section className={styles.scoreMeaning}>
+      <div className={styles.scoreMeaningHeader}>
+        <div>
+          <p className={styles.scoreMeaningEyebrow}>Diagnostic readiness score</p>
+          <h3>{profile.overall}/100 - {band.label}</h3>
+          <p>
+            This is not a career prediction. It is the evidence trail for {studentProfile.name || 'this candidate'}: what is proven, what is weak, and what should change before applying.
+          </p>
+        </div>
+        <div className={styles.scoreMeaningBand}>
+          <span style={{ color: band.color }}>{band.salary}</span>
+          <small>MYR market signal, evidence-dependent</small>
+        </div>
+      </div>
+
+      <div className={styles.scoreMeaningGrid}>
+        <div>
+          <span>Strongest proof</span>
+          <strong>{strongDimension?.dimension ?? 'No signal yet'}</strong>
+          <p>{strongDimension?.explanation ?? 'Add evidence before interpreting the score.'}</p>
+        </div>
+        <div>
+          <span>First blocker</span>
+          <strong>{weakDimension?.dimension ?? 'No blocker yet'}</strong>
+          <p>{weakDimension?.explanation ?? 'The weakest dimension will appear after evidence is added.'}</p>
+        </div>
+        <div>
+          <span>Evidence quality</span>
+          <strong>{verifiedCount}/{evidence.length} verified</strong>
+          <p>Linked or verified evidence carries more trust than claims copied from a resume summary.</p>
+        </div>
+        <div>
+          <span>Next move</span>
+          <strong>{band.action}</strong>
+          <p>Use Paths Forward for the sprint, application target, and interview plan.</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 interface Props {
   profile: ReadinessProfile;
   studentProfile: StudentProfile;
@@ -750,96 +827,7 @@ View Full Profile: https://talentbank-lymv-career-os.vercel.app`.trim();
 
         <EvidenceBackedHiringBrief profile={profile} studentProfile={studentProfile} evidence={evidence} />
 
-        {/* Visual Score Range Indicators */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '12px',
-          marginBottom: '32px',
-        }}>
-          {[
-            { label: '75+', emoji: '🏆', color: 'var(--color-success)', desc: 'Market Ready', salary: 'MYR 630k+' },
-            { label: '55-74', emoji: '📈', color: 'var(--color-accent)', desc: 'Good Progress', salary: 'MYR 420-560k' },
-            { label: '30-54', emoji: '⚙️', color: 'var(--color-warning)', desc: 'Building', salary: 'MYR 168-252k' },
-            { label: '<30', emoji: '🌱', color: 'var(--color-danger)', desc: 'Starting Out', salary: 'Entry Level' },
-          ].map((range, idx) => (
-            <div
-              key={idx}
-              style={{
-                background: 'var(--color-surface)',
-                border: `2px solid ${range.color}`,
-                borderRadius: 'var(--radius-lg)',
-                padding: '20px 16px',
-                textAlign: 'center',
-                opacity: profile.overall >= (idx === 3 ? 0 : idx === 2 ? 30 : idx === 1 ? 55 : 75) ? 1 : 0.5,
-              }}
-            >
-              <div style={{ fontSize: '32px', marginBottom: '8px' }}>{range.emoji}</div>
-              <div style={{ fontSize: '16px', fontWeight: '900', color: range.color, marginBottom: '4px', letterSpacing: '-0.5px' }}>
-                {range.label}
-              </div>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '6px', letterSpacing: '0.02em' }}>
-                {range.desc}
-              </div>
-              <div style={{ fontSize: '11px', fontWeight: '600', color: range.color, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                {range.salary}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Market Impact Section */}
-        <div style={{
-          background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(8, 47, 73, 0.88) 100%)',
-          border: '1px solid rgba(103, 232, 249, 0.28)',
-          borderRadius: 'var(--radius-xl)',
-          padding: '24px',
-          marginBottom: '32px',
-          boxShadow: '0 18px 55px rgba(2, 6, 23, 0.22)',
-        }}>
-          <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '900', color: '#ffffff' }}>
-            💰 What This Score Means for Your Career
-          </h3>
-          {profile.overall >= 75 && (
-            <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.72)', lineHeight: '1.6' }}>
-              <p style={{ margin: '0 0 8px 0' }}>
-                <strong style={{ color: 'var(--color-success)' }}>You're market-ready for senior roles.</strong> Similar to Priya Sharma (Senior SWE at Grab with score 88/100).
-              </p>
-              <p style={{ margin: '0 0 8px 0' }}>
-                Expected salary range (Asia tech): <strong>MYR 630K-875K/year</strong> for Singapore-facing senior profiles, with equity/RSU packages.
-              </p>
-              <p style={{ margin: 0 }}>
-                Next: Focus on system design, leadership, or specialized domains to unlock Staff Engineer trajectory (+30-50% salary).
-              </p>
-            </div>
-          )}
-          {profile.overall >= 55 && profile.overall < 75 && (
-            <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.72)', lineHeight: '1.6' }}>
-              <p style={{ margin: '0 0 8px 0' }}>
-                <strong style={{ color: 'var(--color-warning)' }}>You're on a good trajectory.</strong> Similar to Kai Chen (3 years in, score 70/100 → Data Engineer at ByteDance).
-              </p>
-              <p style={{ margin: '0 0 8px 0' }}>
-                Expected salary range: <strong>MYR 420K-560K/year</strong> for Singapore-facing mid-level profiles.
-              </p>
-              <p style={{ margin: 0 }}>
-                <strong>Quick wins:</strong> Closing 1-2 skill gaps can unlock +20-30% salary uplift (MYR 84K-168K additional). See "Skills to Develop" below for estimated timelines and ROI.
-              </p>
-            </div>
-          )}
-          {profile.overall < 55 && (
-            <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.72)', lineHeight: '1.6' }}>
-              <p style={{ margin: '0 0 8px 0' }}>
-                <strong style={{ color: 'var(--color-text-secondary)' }}>You're building your foundation.</strong> This is where 95% of students start.
-              </p>
-              <p style={{ margin: '0 0 8px 0' }}>
-                Entry-level salary expectations: <strong>MYR 168K-252K/year</strong> for Singapore-facing internship/junior roles.
-              </p>
-              <p style={{ margin: 0 }}>
-                <strong>Strategy:</strong> 1-2 solid projects + 1 high-impact skill = 55+ score in 3-6 months. Priya went from 45 → 88 in 4 years (18% YoY growth).
-              </p>
-            </div>
-          )}
-        </div>
+        <CareerScoreMeaning profile={profile} studentProfile={studentProfile} evidence={evidence} />
 
         {/* Success Story - Real Career Example */}
         {(() => {

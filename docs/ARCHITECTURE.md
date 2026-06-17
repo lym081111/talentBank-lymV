@@ -71,10 +71,12 @@ If the AI API is unavailable, deterministic fallback text is used.
 
 ## User-Facing Views
 
-PathLens fits Career OS as the readiness input layer.
+PathLens fits Career OS as the readiness input layer and a focused frontend prototype for the compulsory jobsite surfaces.
 
-- Talent View: full interactive workspace for the student or candidate. It answers what to improve next and how to turn evidence into applications.
-- Employer View: lightweight hiring brief generated from the same evidence. It answers whether to shortlist the candidate and what to ask in interview.
+- Talent View: full interactive workspace for the student or candidate. It covers profile/resume building, proof passport, skill extraction, readiness dashboard, path guidance, and application targets.
+- Employer View: lightweight hiring brief generated from the same evidence. It answers whether to shortlist a candidate for a selected role and what to ask in interview.
 - University View: lightweight intervention board using mock cohort data. It answers which cohort gaps need action.
+
+The prototype maps to the Starter Kit jobsite examples without becoming a backend product: profile builder, job matching, candidate dashboard, employer dashboard, applications, and discovery are all represented as evidence-backed UI flows.
 
 This prototype intentionally avoids building a separate employer system or full marketplace in Stage 1.

@@ -14,6 +14,33 @@ const MILESTONES = [
 
 const DEMO_STEPS = ['Evidence', 'Skill Signals', 'Readiness Map', 'Blockers', 'Action Sprint', 'Hiring / University Insight'];
 
+const CAREER_OS_COVERAGE = [
+  {
+    title: 'Profile + Resume Builder',
+    detail: 'Students build a profile from projects, internships, certificates, and resume evidence.',
+  },
+  {
+    title: 'Job Matching',
+    detail: 'Paths and application targets are matched against readiness, skills, and proof gaps.',
+  },
+  {
+    title: 'Candidate Dashboard',
+    detail: 'The Talent View shows readiness, evidence quality, gaps, and next actions.',
+  },
+  {
+    title: 'Employer Dashboard',
+    detail: 'A lightweight hiring brief answers shortlist decision and interview questions.',
+  },
+  {
+    title: 'Applications',
+    detail: 'The application pack turns evidence into claims, blockers, and talking points.',
+  },
+  {
+    title: 'Search / Discovery',
+    detail: 'Recruiters can switch hiring roles and discover the best-fit candidate from the same evidence.',
+  },
+];
+
 function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
     <div className={`bg-white/5 border border-white/10 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-white/20 ${className}`}>
@@ -52,6 +79,9 @@ export function Landing({ onNavigate, onBuildOwn }: Props) {
             </p>
             <p className="text-base text-emerald-200/90 leading-relaxed mb-5 max-w-xl font-bold">
               Not a prediction engine. PathLens makes readiness visible from student evidence.
+            </p>
+            <p className="text-sm text-white/45 leading-relaxed mb-5 max-w-xl">
+              PathLens is the evidence and readiness layer inside Career OS: it gives the jobsite profile enough proof to support matching, applications, candidate dashboards, and employer briefs without pretending to be a full backend job board.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-7 max-w-xl">
@@ -138,19 +168,26 @@ export function Landing({ onNavigate, onBuildOwn }: Props) {
         </button>
       </section>
 
-      <div className="border-y border-white/10 bg-white/[0.02] py-5">
-        <div className="max-w-4xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          {[
-            { num: '1 engine', label: 'shared evidence profile' },
-            { num: '3 views', label: 'talent, employer, university' },
-            { num: '34 skills', label: 'tracked across Malaysia tech' },
-            { num: '100%', label: 'explainable scoring trail' },
-          ].map((s) => (
-            <div key={s.label}>
-              <div className="text-2xl font-black text-white">{s.num}</div>
-              <div className="text-xs text-white/30 mt-1">{s.label}</div>
+      <div className="border-y border-white/10 bg-white/[0.02] py-10">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between mb-6">
+            <div>
+              <p className="text-xs text-emerald-300 font-black uppercase tracking-[0.2em] mb-2">Career OS coverage</p>
+              <h2 className="text-2xl md:text-3xl font-black text-white">The compulsory jobsite features, powered by one evidence profile.</h2>
             </div>
-          ))}
+            <p className="text-sm text-white/40 max-w-xl">
+              Stage 1 stays frontend-only, but the prototype shows how readiness evidence feeds the required Career OS surfaces.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            {CAREER_OS_COVERAGE.map((item) => (
+              <div key={item.title} className="rounded-2xl border border-white/10 bg-slate-950/45 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-300/35 hover:bg-white/[0.05]">
+                <div className="text-sm font-black text-white">{item.title}</div>
+                <p className="mt-2 text-xs leading-relaxed text-white/45">{item.detail}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

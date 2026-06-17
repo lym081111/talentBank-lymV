@@ -1,4 +1,4 @@
-import { Evidence, ExtractedSkill } from '../types/evidence';
+import { Evidence, ExtractedSkill, StudentProfile } from '../types/evidence';
 import { SkillExtractionCard } from '../components/SkillExtractionCard';
 import { SkillsByDemandVisualization } from '../components/SkillsByDemandVisualization';
 import { skillTaxonomy } from '../data/skillTaxonomy';
@@ -8,10 +8,11 @@ import styles from './SkillExtraction.module.css';
 interface Props {
   evidence: Evidence[];
   extractedSkills: ExtractedSkill[];
+  studentProfile: StudentProfile;
   onContinue: () => void;
 }
 
-export function SkillExtraction({ evidence, extractedSkills, onContinue }: Props) {
+export function SkillExtraction({ evidence, extractedSkills, studentProfile, onContinue }: Props) {
   // Count unique high-demand skills detected
   // const uniqueSkillNames = Array.from(skillCounts.keys());
   // const highDemandCount = uniqueSkillNames.filter((name) => {
@@ -28,6 +29,14 @@ export function SkillExtraction({ evidence, extractedSkills, onContinue }: Props
   return (
     <div className={styles.container}>
       <div className={styles.inner}>
+        <div className={styles.profileBanner}>
+          <div>
+            <span>Currently viewing</span>
+            <strong>{studentProfile.name || 'Unnamed student'}</strong>
+            <p>{studentProfile.targetRole || 'No target role yet'} - {evidence.length} evidence blocks scanned</p>
+          </div>
+        </div>
+
         <div className={styles.header}>
           <h2>Lens Scan: Skill Signals Found</h2>
           <p>Transparent evidence extraction + AI-assisted explanation. PathLens shows the extracted skill, evidence source, matched phrase, and confidence before any readiness score is calculated.</p>

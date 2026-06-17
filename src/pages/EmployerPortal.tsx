@@ -344,6 +344,9 @@ export function EmployerPortal({ profile, evidence, readinessProfile, onBuildOwn
           </div>
           <div className="mt-5 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-7 items-start">
             <div>
+              <div className="mb-4 inline-flex flex-wrap items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-cyan-100">
+                Viewing {activeProfile.name} for {selectedRole.title}
+              </div>
               <h1 className="text-4xl md:text-6xl font-black leading-[0.95]">
                 Should I shortlist {activeProfile.name || 'this candidate'}?
               </h1>

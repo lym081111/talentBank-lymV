@@ -23,12 +23,22 @@ PathLens is designed for a 2-minute Stage 1 judge walkthrough.
 
 ## What Judges Should Notice
 
+- PathLens is **Career OS + Challenge Module**: the Career OS layer is the evidence-backed profile, dashboard, matching, application, and employer brief flow.
 - The prototype is focused on **Universities Module 03: Adaptive Readiness Profile**.
 - PathLens is **not a prediction engine**. It makes readiness visible from student evidence.
 - Skills are extracted with source evidence, matched phrase, and confidence.
 - Readiness scoring is deterministic and auditable.
 - AI is used for explanation only: transparent evidence extraction + AI-assisted explanation.
 - University view recommends interventions based on top readiness gaps.
+
+## Starter Kit Coverage
+
+- Profile and resume builder: Proof Passport profile and evidence editor.
+- Job matching: Paths Forward and application targets.
+- Candidate dashboard: Talent View readiness, skill extraction, gaps, and application next steps.
+- Employer dashboard: lightweight role-specific shortlist brief and interview probes.
+- Applications: evidence-backed application claims, blockers, and talking points.
+- Search and discovery: employer role selector changes the best-fit candidate ranking.
 
 ## Build Your Own Path
 

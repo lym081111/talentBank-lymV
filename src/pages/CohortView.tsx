@@ -172,12 +172,12 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack, b
             {recommendedInterventions.map(({ dimension, cohortGap, intervention }, index) => (
               <article
                 key={dimension.dimension}
-                className="rounded-2xl border border-cyan-300/20 bg-slate-950/55 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/45 hover:shadow-[0_0_18px_rgba(34,211,238,0.14)]"
+                className="flex min-h-[320px] flex-col rounded-2xl border border-cyan-300/20 bg-slate-950/55 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/45 hover:shadow-[0_0_18px_rgba(34,211,238,0.14)]"
               >
                 <div className="text-cyan-200 text-3xl font-black">{index + 1}</div>
                 <h3 className="mt-3 text-lg font-black">{intervention.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-white/60">{intervention.body}</p>
-                <div className="mt-4 space-y-2 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-xs text-white/55">
+                <div className="mt-auto space-y-2 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-xs text-white/55">
                   <p>
                     <strong className="text-white">Gap:</strong> {dimension.dimension} ({dimension.score}/100)
                     {cohortGap ? ` · ${cohortGap.studentCount} students affected` : ''}

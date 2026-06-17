@@ -1,4 +1,4 @@
-import { Gap, NextAction, ReadinessProfile } from '../types/evidence';
+import { Gap, NextAction, ReadinessProfile, StudentProfile } from '../types/evidence';
 import { GapActionCard } from '../components/GapActionCard';
 import { matchApplicationTargets, ApplicationTargetMatch } from '../utils/applicationTargets';
 import styles from './Gaps.module.css';
@@ -6,6 +6,7 @@ import styles from './Gaps.module.css';
 interface Props {
   gaps: Gap[];
   readinessProfile?: ReadinessProfile;
+  studentProfile?: StudentProfile;
   onBackToDashboard?: () => void;
   onViewCohort: () => void;
   onUpdateEvidence?: () => void;
@@ -44,7 +45,7 @@ function findQuickWin(gaps: Gap[]): { gap: Gap; action: NextAction } | null {
   return best ? { gap: best.gap, action: best.action } : null;
 }
 
-export function Gaps({ gaps, readinessProfile, onBackToDashboard, onViewCohort, onUpdateEvidence }: Props) {
+export function Gaps({ gaps, readinessProfile, studentProfile, onBackToDashboard, onViewCohort, onUpdateEvidence }: Props) {
   const quickWin = findQuickWin(gaps);
   const topBlockers = gaps.slice(0, 3);
   const applicationTargetMatches: ApplicationTargetMatch[] = readinessProfile
@@ -75,6 +76,14 @@ export function Gaps({ gaps, readinessProfile, onBackToDashboard, onViewCohort, 
           >
             Back to Career Signal Map
           </button>
+        )}
+
+        {studentProfile && (
+          <div className={styles.profileBanner}>
+            <span>Currently viewing</span>
+            <strong>{studentProfile.name || 'Unnamed student'}</strong>
+            <p>{studentProfile.targetRole || 'No target role yet'} - {readinessProfile?.overall ?? 0}/100 readiness</p>
+          </div>
         )}
 
         <div className={styles.header}>

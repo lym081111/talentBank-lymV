@@ -9,6 +9,45 @@
   margin: 0 auto;
 }
 
+.profileBanner {
+  margin-bottom: 20px;
+  border: 1px solid rgba(34, 211, 238, 0.24);
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(circle at top right, rgba(34, 211, 238, 0.12), transparent 36%),
+    var(--color-surface);
+  padding: 18px 22px;
+  box-shadow: var(--shadow-sm);
+}
+
+.profileBanner span,
+.profileBanner strong,
+.profileBanner p {
+  display: block;
+}
+
+.profileBanner span {
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.profileBanner strong {
+  margin-top: 4px;
+  color: var(--color-text);
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.profileBanner p {
+  margin: 4px 0 0 0;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
 .header {
   background: var(--color-surface);
   border-radius: var(--radius-xl);
