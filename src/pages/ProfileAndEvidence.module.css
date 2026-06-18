@@ -126,6 +126,169 @@
   transition: width 0.3s ease;
 }
 
+.resumeImportSection {
+  background: linear-gradient(135deg, #f8fbff 0%, #eef7ff 100%);
+  border: 1px solid #cfe0f5;
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  margin-bottom: 28px;
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+}
+
+.resumeImportHeader {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+
+.resumeImportEyebrow {
+  display: inline-flex;
+  margin-bottom: 8px;
+  color: #0f766e;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.resumeImportHeader h3 {
+  margin: 0;
+  color: #172033;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.resumeImportHeader p {
+  margin: 8px 0 0;
+  color: #526179;
+  font-size: 14px;
+  line-height: 1.65;
+  max-width: 640px;
+}
+
+.resumeUploadButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 170px;
+  padding: 12px 18px;
+  border: 1px solid #0ea5e9;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #0369a1;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.resumeUploadButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px rgba(14, 165, 233, 0.18);
+}
+
+.resumeUploadButton input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.resumeTextarea {
+  width: 100%;
+  min-height: 190px;
+  resize: vertical;
+  padding: 16px;
+  border: 1px solid #cad8ea;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #172033;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.65;
+  box-sizing: border-box;
+  outline: none;
+  transition: all var(--transition);
+}
+
+.resumeTextarea:focus {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.12);
+}
+
+.resumeImportActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.resumePrimaryButton,
+.resumeSecondaryButton {
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.resumePrimaryButton {
+  border: none;
+  background: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%);
+  color: #ffffff;
+  box-shadow: 0 12px 26px rgba(14, 165, 233, 0.2);
+}
+
+.resumeSecondaryButton {
+  border: 1px solid #cad8ea;
+  background: #ffffff;
+  color: #526179;
+}
+
+.resumePrimaryButton:hover:not(:disabled),
+.resumeSecondaryButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.resumePrimaryButton:disabled,
+.resumeSecondaryButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  box-shadow: none;
+}
+
+.resumeStatus {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.resumeStatus.success {
+  color: #047857;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+}
+
+.resumeStatus.error {
+  color: #b91c1c;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+}
+
+.resumeStatus.info {
+  color: #0369a1;
+  background: #e0f2fe;
+  border: 1px solid #bae6fd;
+}
+
 .successMessage {
   background: linear-gradient(135deg, var(--color-success-light) 0%, var(--color-primary-light) 100%);
   border: 1px solid var(--color-success);
@@ -396,6 +559,14 @@
 @media (max-width: 600px) {
   .container {
     padding: 24px 16px;
+  }
+
+  .resumeImportHeader {
+    grid-template-columns: 1fr;
+  }
+
+  .resumeUploadButton {
+    width: 100%;
   }
 
   .profileCard,

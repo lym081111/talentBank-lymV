@@ -138,6 +138,11 @@ function App() {
     handleNavigate('profile');
   };
 
+  const handleEditCurrentProfile = (returnPage?: Page) => {
+    setProfileReturnPage(returnPage ?? currentPage);
+    handleNavigate('profile');
+  };
+
   const handleUpdateEvidenceFromDashboard = () => {
     setProfileReturnPage('dashboard');
     handleNavigate('profile');
@@ -183,7 +188,7 @@ function App() {
             profile={readinessProfile}
             studentProfile={studentProfile}
             gaps={gaps}
-            onBuildProfile={() => handleBuildOwn('jobs')}
+            onBuildProfile={() => handleEditCurrentProfile('jobs')}
             onViewDashboard={() => handleNavigate('dashboard')}
             onViewApplications={() => handleNavigate('gaps')}
           />

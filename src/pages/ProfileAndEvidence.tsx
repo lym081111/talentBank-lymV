@@ -23,6 +23,142 @@ interface Props {
 }
 
 type FormMode = 'closed' | 'add' | { editing: Evidence } | { template: Partial<Omit<Evidence, 'id'>> };
+type ResumeImportStatus = { type: 'success' | 'error' | 'info'; message: string } | null;
+
+const KNOWN_RESUME_SKILLS = [
+  'React', 'Next.js', 'TypeScript', 'JavaScript', 'Node.js', 'Express', 'Python', 'Django',
+  'Flask', 'Java', 'Spring Boot', 'C#', '.NET', 'SQL', 'PostgreSQL', 'MySQL', 'MongoDB',
+  'Firebase', 'AWS', 'Azure', 'Docker', 'Kubernetes', 'GitHub Actions', 'CI/CD', 'REST API',
+  'GraphQL', 'Tailwind', 'Figma', 'Power BI', 'Tableau', 'Excel', 'Pandas', 'NumPy',
+  'Machine Learning', 'TensorFlow', 'PyTorch', 'Kafka', 'Spark', 'Flink', 'ClickHouse',
+  'Data Pipeline', 'ETL', 'UI/UX', 'Product Management', 'User Research', 'A/B Testing',
+];
+
+const RESUME_SECTION_TYPES: Record<string, Evidence['type']> = {
+  experience: 'internship',
+  work: 'internship',
+  internship: 'internship',
+  employment: 'internship',
+  projects: 'portfolio',
+  project: 'portfolio',
+  portfolio: 'portfolio',
+  certificates: 'certificate',
+  certifications: 'certificate',
+  courses: 'certificate',
+  education: 'fyp',
+  capstone: 'fyp',
+  hackathon: 'hackathon',
+  achievements: 'hackathon',
+};
+
+function cleanResumeLine(line: string) {
+  return line.replace(/^[\-*•\u2022]\s*/, '').replace(/\s+/g, ' ').trim();
+}
+
+function inferTargetRole(text: string) {
+  const lower = text.toLowerCase();
+  const explicit = text.match(/(?:target role|desired role|applying for|seeking|objective)\s*[:\-]\s*([^\n\r]+)/i)?.[1]?.trim();
+  if (explicit) return explicit.slice(0, 80);
+  if (/data engineer|etl|pipeline|spark|kafka|clickhouse/.test(lower)) return 'Data Engineer';
+  if (/product manager|roadmap|stakeholder|user research|a\/b testing/.test(lower)) return 'Product Manager';
+  if (/ui\/ux|figma|prototype|wireframe|user journey/.test(lower)) return 'UI/UX Designer';
+  if (/frontend|react|next\.js|typescript|tailwind/.test(lower)) return 'Frontend Engineer';
+  if (/backend|node\.js|api|spring boot|database/.test(lower)) return 'Backend Engineer';
+  if (/software engineer|full stack|full-stack/.test(lower)) return 'Software Engineer';
+  return '';
+}
+
+function extractResumeSkills(text: string) {
+  const lower = text.toLowerCase();
+  return KNOWN_RESUME_SKILLS.filter((skill) => lower.includes(skill.toLowerCase()));
+}
+
+function extractProfileFromResume(text: string): Partial<StudentProfile> {
+  const lines = text.split(/\r?\n/).map(cleanResumeLine).filter(Boolean);
+  const name = lines.find((line) =>
+    line.length >= 2 &&
+    line.length <= 60 &&
+    !/@|https?:|www\.|linkedin|github|resume|curriculum vitae|phone|email|\d{3,}/i.test(line)
+  ) || '';
+  const university = lines.find((line) => /university|college|institute|politeknik|monash|nottingham|apu|taylors|taylor's|um|utm|utar|sunway/i.test(line)) || '';
+  const major =
+    text.match(/(?:major|degree|programme|program)\s*[:\-]\s*([^\n\r]+)/i)?.[1]?.trim() ||
+    lines.find((line) => /computer science|software engineering|information systems|data science|business analytics|information technology|cybersecurity/i.test(line)) ||
+    '';
+  const yearMatch = text.match(/(?:year|yr)\s*([1-5])|final\s*year/i);
+  const year = yearMatch?.[1] ? Number(yearMatch[1]) : /final\s*year/i.test(text) ? 4 : undefined;
+  const targetRole = inferTargetRole(text);
+
+  return {
+    ...(name ? { name } : {}),
+    ...(university ? { university } : {}),
+    ...(major ? { major: major.slice(0, 90) } : {}),
+    ...(year ? { year } : {}),
+    ...(targetRole ? { targetRole } : {}),
+  };
+}
+
+function getResumeSection(line: string) {
+  const key = line.toLowerCase().replace(/[:\-]/g, '').trim();
+  return Object.keys(RESUME_SECTION_TYPES).find((section) => key === section || key.includes(section));
+}
+
+function extractOutcome(text: string) {
+  const metrics = text.match(/\d+(?:\.\d+)?%|\d+(?:,\d{3})?\+?\s?(?:users|requests|transactions|prs|projects|stakeholders|customers|events|features)|MYR\s?[\d,.]+[Kk]?/gi);
+  if (metrics?.length) return `Quantified signals: ${Array.from(new Set(metrics)).slice(0, 4).join(', ')}`;
+  const resultLine = text.split(/\r?\n/).map(cleanResumeLine).find((line) => /improved|reduced|increased|shipped|deployed|launched|built|led|finalist|won|promoted/i.test(line));
+  return resultLine ? resultLine.slice(0, 120) : undefined;
+}
+
+function parseResumeIntoEvidence(text: string): Omit<Evidence, 'id'>[] {
+  const lines = text.split(/\r?\n/).map(cleanResumeLine).filter(Boolean);
+  const sections: Record<string, string[]> = {};
+  let currentSection = 'summary';
+
+  for (const line of lines) {
+    const detected = getResumeSection(line);
+    if (detected) {
+      currentSection = detected;
+      sections[currentSection] ??= [];
+      continue;
+    }
+    sections[currentSection] ??= [];
+    sections[currentSection].push(line);
+  }
+
+  const resumeSkills = extractResumeSkills(text);
+  const evidenceItems = Object.entries(sections)
+    .filter(([, sectionLines]) => sectionLines.join(' ').length >= 80)
+    .slice(0, 6)
+    .map(([section, sectionLines]) => {
+      const sectionText = sectionLines.slice(0, 8).join(' ');
+      const sectionSkills = extractResumeSkills(sectionText);
+      const type = RESUME_SECTION_TYPES[section] ?? (
+        /project|built|github|deployed|app|website|system/i.test(sectionText) ? 'portfolio' : 'internship'
+      );
+      return {
+        type,
+        title: (sectionLines.find((line) => line.length >= 4 && line.length <= 120) || `${section} evidence`).replace(/[:|]+$/g, '').slice(0, 120),
+        description: sectionText.length >= 50
+          ? sectionText.slice(0, 700)
+          : `${sectionText} This resume block needs more detail, but it gives PathLens a starting point for evidence extraction.`,
+        technologies: (sectionSkills.length ? sectionSkills : resumeSkills).slice(0, 10).join(', ') || undefined,
+        outcome: extractOutcome(sectionText),
+        verified: false,
+      };
+    });
+
+  if (evidenceItems.length > 0) return evidenceItems;
+
+  return [{
+    type: 'portfolio',
+    title: 'Imported resume summary',
+    description: text.slice(0, 700),
+    technologies: resumeSkills.slice(0, 10).join(', ') || undefined,
+    outcome: extractOutcome(text),
+    verified: false,
+  }];
+}
 
 const EVIDENCE_TEMPLATES: Array<{
   emoji: string;
@@ -99,6 +235,8 @@ export function ProfileAndEvidence({
   const [showSuccess, setShowSuccess] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(!isDemoMode && evidence.length === 0);
   const [editForm, setEditForm] = useState(profile);
+  const [resumeText, setResumeText] = useState('');
+  const [resumeImportStatus, setResumeImportStatus] = useState<ResumeImportStatus>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const allExtractedSkills = useMemo(() => {
     const skills: ExtractedSkill[] = [];
@@ -161,6 +299,60 @@ export function ProfileAndEvidence({
 
   const handleExportEvidence = () => {
     exportEvidenceToPDF(profile.name, evidence);
+  };
+
+  const handleResumeFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!/\.(txt|md|csv|rtf)$/i.test(file.name) && !file.type.startsWith('text/')) {
+      setResumeImportStatus({
+        type: 'error',
+        message: 'For this prototype, upload a TXT/MD resume or paste the text from your PDF/DOCX resume below.',
+      });
+      event.target.value = '';
+      return;
+    }
+
+    const text = await file.text();
+    setResumeText(text);
+    setResumeImportStatus({
+      type: 'info',
+      message: `Loaded ${file.name}. Review the text, then click "Import resume into profile".`,
+    });
+    event.target.value = '';
+  };
+
+  const handleImportResume = (analyzeAfter = false) => {
+    const text = resumeText.trim();
+    if (text.length < 80) {
+      setResumeImportStatus({
+        type: 'error',
+        message: 'Paste or upload more resume text so PathLens has enough evidence to extract.',
+      });
+      return;
+    }
+
+    const profileUpdates = extractProfileFromResume(text);
+    const importedEvidence = parseResumeIntoEvidence(text);
+
+    if (onUpdateProfile && Object.keys(profileUpdates).length > 0) {
+      onUpdateProfile(profileUpdates);
+    }
+
+    importedEvidence.forEach((item) => onAddEvidence(item));
+    setResumeText('');
+    setIsEditingProfile(false);
+    setFormMode('closed');
+    setShowSuccess(true);
+    setResumeImportStatus({
+      type: 'success',
+      message: `Imported ${importedEvidence.length} evidence block${importedEvidence.length === 1 ? '' : 's'} from your resume. Review them below, then run the Lens Scan.`,
+    });
+
+    if (analyzeAfter) {
+      onAnalyze();
+    }
   };
 
   return (
@@ -406,6 +598,71 @@ export function ProfileAndEvidence({
             </div>
           </div>
         </div>
+
+        <section className={styles.resumeImportSection}>
+          <div className={styles.resumeImportHeader}>
+            <div>
+              <span className={styles.resumeImportEyebrow}>Resume Autopilot</span>
+              <h3>Upload your resume text and let PathLens build the first draft.</h3>
+              <p>
+                Paste a resume or upload a TXT/MD version. PathLens will prefill profile fields,
+                detect skills, and convert resume sections into editable evidence blocks.
+              </p>
+            </div>
+            <label className={styles.resumeUploadButton}>
+              Upload resume text
+              <input
+                type="file"
+                accept=".txt,.md,.csv,.rtf,text/plain,text/markdown,text/csv"
+                onChange={handleResumeFile}
+              />
+            </label>
+          </div>
+
+          <textarea
+            className={styles.resumeTextarea}
+            value={resumeText}
+            onChange={(event) => setResumeText(event.target.value)}
+            placeholder="Paste your resume here. Include education, projects, internships, technologies, outcomes, links, and target role if you have one."
+            rows={8}
+          />
+
+          <div className={styles.resumeImportActions}>
+            <button
+              type="button"
+              className={styles.resumePrimaryButton}
+              onClick={() => handleImportResume(false)}
+              disabled={resumeText.trim().length < 80}
+            >
+              Import resume into profile
+            </button>
+            <button
+              type="button"
+              className={styles.resumePrimaryButton}
+              onClick={() => handleImportResume(true)}
+              disabled={resumeText.trim().length < 80}
+            >
+              Import and run Lens Scan
+            </button>
+            <button
+              type="button"
+              className={styles.resumeSecondaryButton}
+              onClick={() => {
+                setResumeText('');
+                setResumeImportStatus(null);
+              }}
+              disabled={!resumeText && !resumeImportStatus}
+            >
+              Clear resume text
+            </button>
+          </div>
+
+          {resumeImportStatus && (
+            <div className={`${styles.resumeStatus} ${styles[resumeImportStatus.type]}`}>
+              {resumeImportStatus.message}
+            </div>
+          )}
+        </section>
 
         <div className={styles.evidenceSection}>
           {showSuccess && (
