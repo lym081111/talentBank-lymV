@@ -1,225 +1,171 @@
 .nav {
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #dbe5f4;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 10px 35px rgba(15, 23, 42, 0.06);
 }
 
 .navContent {
-  max-width: 1200px;
+  max-width: 1240px;
+  min-height: 68px;
   margin: 0 auto;
-  padding: 0 24px;
-  height: 64px;
-  display: flex;
+  padding: 0 22px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 18px;
   align-items: center;
-  justify-content: space-between;
-  gap: 32px;
 }
 
-.navLeft {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-}
-
-.navRight {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
-}
-
-.homeBtn {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: var(--radius-md);
-  transition: all var(--transition);
-  flex-shrink: 0;
-  color: var(--color-text);
-}
-
-.homeBtn:hover {
-  background: var(--color-primary-light);
-  transform: scale(1.1);
-}
-
-.homeBtn:active {
-  transform: scale(0.95);
-}
-
-.navBrand {
-  font-size: 18px;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -0.5px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
+.navLeft,
+.navRight,
 .navSteps {
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex: 1;
+}
+
+.navLeft {
+  gap: 12px;
+}
+
+.navRight {
+  gap: 9px;
+}
+
+.homeBtn {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2563eb 0%, #14b8a6 100%);
+  color: white;
+  font-size: 13px;
+  font-weight: 900;
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.18);
+}
+
+.navBrand {
+  color: #111827;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.navSub {
+  margin-top: 3px;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.navSteps {
+  justify-content: center;
+  gap: 4px;
   overflow-x: auto;
-  padding-bottom: 4px;
+  padding: 8px 0;
 }
 
 .navSteps::-webkit-scrollbar {
-  height: 3px;
+  height: 4px;
+}
+
+.navSteps::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
 }
 
 .step {
-  background: none;
-  padding: 8px 14px;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: var(--radius-md);
-  transition: all var(--transition);
+  border-radius: 999px;
+  background: transparent;
+  color: #64748b;
+  padding: 9px 13px;
+  font-size: 13px;
+  font-weight: 850;
   white-space: nowrap;
-  position: relative;
 }
 
 .step:hover {
-  color: var(--color-primary);
-  background: var(--color-primary-light);
+  background: #eff6ff;
+  color: #1d4ed8;
 }
 
 .step.active {
-  color: var(--color-primary);
-  font-weight: 700;
-  background: var(--color-primary-light);
+  background: #dbeafe;
+  color: #1d4ed8;
 }
 
-.step.active::after {
-  content: '';
-  position: absolute;
-  bottom: -12px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-primary) 100%);
-  border-radius: 1px;
-}
-
-.step.disabled {
-  color: var(--color-text-muted);
-  opacity: 0.5;
-  cursor: not-allowed;
-  background: transparent;
-}
-
-.step.disabled:hover {
-  color: var(--color-text-muted);
-  background: transparent;
-}
-
-.divider {
-  color: var(--color-border);
-  font-size: 13px;
-  flex-shrink: 0;
-  opacity: 0.5;
-}
-
-.darkModeBtn {
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: var(--radius-md);
-  transition: all var(--transition);
-  flex-shrink: 0;
-  color: var(--color-text);
-}
-
-.darkModeBtn:hover {
-  background: var(--color-primary-light);
-  transform: scale(1.1);
-}
-
-.darkModeBtn:active {
-  transform: scale(0.95);
-}
-
-.resetBtn {
-  padding: 7px 16px;
-  background: transparent;
-  color: var(--color-text-muted);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
+.userPill {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
-  flex-shrink: 0;
-  transition: all var(--transition);
+  border: 1px solid #dbe5f4;
+  border-radius: 999px;
+  background: #f8fafc;
+  color: #334155;
+  padding: 8px 11px;
+  font-size: 12px;
+  font-weight: 900;
 }
 
+.darkModeBtn,
+.resetBtn,
+.logoutBtn {
+  border-radius: 999px;
+  padding: 9px 12px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.darkModeBtn,
+.resetBtn {
+  border: 1px solid #dbe5f4;
+  background: white;
+  color: #475569;
+}
+
+.logoutBtn {
+  background: #111827;
+  color: white;
+}
+
+.darkModeBtn:hover,
 .resetBtn:hover {
-  background: var(--color-warning-light);
-  color: var(--color-warning);
-  border-color: var(--color-warning);
-  transform: translateY(-1px);
+  border-color: #93c5fd;
+  color: #1d4ed8;
 }
 
-@media (max-width: 640px) {
+.logoutBtn:hover {
+  background: #2563eb;
+}
+
+@media (max-width: 980px) {
   .navContent {
-    height: auto;
-    flex-wrap: wrap;
+    grid-template-columns: 1fr;
     padding: 12px 16px;
-    gap: 12px;
+  }
+
+  .navLeft,
+  .navRight {
+    justify-content: space-between;
   }
 
   .navSteps {
-    width: 100%;
-    justify-content: center;
-    gap: 2px;
-  }
-
-  .step {
-    padding: 6px 10px;
-    font-size: 13px;
-  }
-
-  .divider {
-    font-size: 11px;
-  }
-
-  .resetBtn {
-    margin-left: 0;
-    flex: 1;
+    justify-content: flex-start;
   }
 }
 
-@media (max-width: 420px) {
-  .navSteps {
-    gap: 1px;
+@media (max-width: 560px) {
+  .navRight {
     flex-wrap: wrap;
-    row-gap: 4px;
+    justify-content: flex-start;
   }
 
-  .step {
-    padding: 5px 8px;
-    font-size: 11px;
-  }
-
-  .divider {
-    font-size: 9px;
-  }
-
-  .navBrand {
-    font-size: 14px;
+  .userPill {
+    max-width: 100%;
   }
 }

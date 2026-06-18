@@ -231,7 +231,7 @@ export function EmployerPortal({ profile, evidence, readinessProfile, onBuildOwn
   const questions = buildQuestions(activeReadiness, activeEvidence);
 
   return (
-    <div className="min-h-screen bg-[#070b13] text-white">
+    <div className="readablePage min-h-screen bg-[#070b13] text-white">
       <div className="border-b border-white/10 bg-[#050810]/95">
         <div className="max-w-6xl mx-auto px-6 py-5 flex flex-wrap items-center gap-5">
           <button onClick={onBack} className="text-white/45 hover:text-white text-sm font-bold transition-colors">

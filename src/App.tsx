@@ -4,6 +4,8 @@ import { Navigation } from './components/Navigation';
 // Lazy-load page components so each page's code only downloads when first visited.
 // This splits the 1.7 MB bundle into per-page chunks, reducing initial load time.
 const Landing = lazy(() => import('./pages/Landing').then((m) => ({ default: m.Landing })));
+const AuthPage = lazy(() => import('./pages/AuthPage').then((m) => ({ default: m.AuthPage })));
+const JobSearch = lazy(() => import('./pages/JobSearch').then((m) => ({ default: m.JobSearch })));
 const ProfileAndEvidence = lazy(() =>
   import('./pages/ProfileAndEvidence').then((m) => ({ default: m.ProfileAndEvidence }))
 );
@@ -38,6 +40,18 @@ import { StudentProfile } from './types/evidence';
 import { priyaSharmaProfile } from './data/mockStudent';
 import './App.css';
 import type { Page } from './types/navigation';
+import type { AuthUser } from './pages/AuthPage';
+
+const AUTH_KEY = 'pathlens_auth_user';
+
+function loadAuthUser(): AuthUser | null {
+  try {
+    const saved = localStorage.getItem(AUTH_KEY);
+    return saved ? JSON.parse(saved) as AuthUser : null;
+  } catch {
+    return null;
+  }
+}
 
 function createBlankProfile(): StudentProfile {
   return {
@@ -52,7 +66,8 @@ function createBlankProfile(): StudentProfile {
 }
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<Page>('landing');
+  const [authUser, setAuthUser] = useState<AuthUser | null>(loadAuthUser);
+  const [currentPage, setCurrentPage] = useState<Page>(() => authUser ? 'landing' : 'auth');
   const [profileReturnPage, setProfileReturnPage] = useState<Page>('landing');
   const [lightweightViewReturnPage, setLightweightViewReturnPage] = useState<Page>('landing');
   const { isDark, toggle: toggleDarkMode } = useDarkMode();
@@ -73,21 +88,39 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     const PAGE_TITLES: Record<string, string> = {
-      landing: 'PathLens — Career Readiness for Asia\'s Tech Market',
-      profile: 'Your Profile & Evidence — PathLens',
-      extraction: 'Skills Detected — PathLens',
-      dashboard: 'Your Readiness Landscape — PathLens',
-      gaps: 'Paths Forward — PathLens',
-      cohort: 'University Cohort View — PathLens',
-      trajectory: 'Career Path Navigator — PathLens',
-      'talent-portal': 'Career OS — PathLens',
+      auth: 'Login - PathLens Career OS',
+      landing: 'Career OS Home - PathLens',
+      profile: 'Profile Builder - PathLens',
+      jobs: 'Job Search - PathLens',
+      extraction: 'Skills Detected - PathLens',
+      dashboard: 'Candidate Dashboard - PathLens',
+      gaps: 'Applications and Paths - PathLens',
+      cohort: 'University Cohort View - PathLens',
+      trajectory: 'Career Path Navigator - PathLens',
+      'talent-portal': 'Career OS - PathLens',
       'employer-portal': 'Employer Hiring Brief - PathLens',
     };
     document.title = PAGE_TITLES[currentPage] ?? 'PathLens';
   }, [currentPage]);
 
   const handleNavigate = (page: Page) => {
+    if (!authUser && page !== 'auth') {
+      setCurrentPage('auth');
+      return;
+    }
     setCurrentPage(page);
+  };
+
+  const handleAuthenticate = (user: AuthUser) => {
+    setAuthUser(user);
+    localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+    setCurrentPage('landing');
+  };
+
+  const handleLogout = () => {
+    setAuthUser(null);
+    localStorage.removeItem(AUTH_KEY);
+    setCurrentPage('auth');
   };
 
   const handleViewDemo = (profile: StudentProfile) => {
@@ -128,9 +161,12 @@ function App() {
 
   const renderPage = () => {
     switch (currentPage) {
+      case 'auth':
+        return <AuthPage onAuthenticate={handleAuthenticate} />;
       case 'landing':
         return (
           <Landing
+            userName={authUser?.name}
             onNavigate={(page) => {
               if (page === 'cohort' || page === 'employer-portal') {
                 handleNavigateToLightweightView(page);
@@ -139,6 +175,17 @@ function App() {
               }
             }}
             onBuildOwn={() => handleBuildOwn('landing')}
+          />
+        );
+      case 'jobs':
+        return (
+          <JobSearch
+            profile={readinessProfile}
+            studentProfile={studentProfile}
+            gaps={gaps}
+            onBuildProfile={() => handleBuildOwn('jobs')}
+            onViewDashboard={() => handleNavigate('dashboard')}
+            onViewApplications={() => handleNavigate('gaps')}
           />
         );
       case 'profile':
@@ -240,7 +287,7 @@ function App() {
           />
         );
       default:
-        return <Landing onNavigate={handleNavigate} onBuildOwn={() => handleBuildOwn('landing')} />;
+        return <Landing userName={authUser?.name} onNavigate={handleNavigate} onBuildOwn={() => handleBuildOwn('landing')} />;
     }
   };
 
@@ -250,9 +297,11 @@ function App() {
         <Navigation
           currentPage={currentPage}
           onNavigate={handleNavigate}
-          showNav={currentPage !== 'landing' && currentPage !== 'talent-portal' && currentPage !== 'employer-portal' && currentPage !== 'cohort'}
+          showNav={Boolean(authUser) && currentPage !== 'auth'}
           onResetDemo={resetToDemo}
           onGoHome={handleGoHome}
+          onLogout={handleLogout}
+          userName={authUser?.name}
           isDark={isDark}
           onToggleDarkMode={toggleDarkMode}
         />
@@ -261,12 +310,12 @@ function App() {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             minHeight: '60vh', color: 'var(--color-text-muted)', fontSize: '14px',
           }}>
-            Loading…
+            Loading...
           </div>
         }>
           <div key={currentPage} className="pageWrapper">
             {renderPage()}
-            {currentPage !== 'landing' && currentPage !== 'cohort' && <AppFooter />}
+            {currentPage !== 'auth' && currentPage !== 'landing' && currentPage !== 'cohort' && <AppFooter />}
           </div>
         </Suspense>
       </div>

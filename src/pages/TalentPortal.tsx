@@ -573,7 +573,7 @@ export function TalentPortal({ onViewDemo, onBuildOwn, onBack }: Props) {
   const impactSignals = useMemo(() => getImpactSignals(selectedProfile), [selectedProfile]);
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#070b13] text-white">
+    <div className="readablePage min-h-screen overflow-x-hidden bg-[#070b13] text-white">
       <style>
         {`
           @keyframes fadeIn {

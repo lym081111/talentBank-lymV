@@ -4,6 +4,16 @@ import { priyaSharmaProfile } from '../data/mockStudent';
 
 const STORAGE_KEY = 'pathlens_student_profile';
 
+const blankProfile: StudentProfile = {
+  id: 'student_blank_profile',
+  name: '',
+  university: '',
+  year: 1,
+  major: '',
+  targetRole: '',
+  evidence: [],
+};
+
 function loadProfile(): StudentProfile {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -11,7 +21,7 @@ function loadProfile(): StudentProfile {
   } catch {
     // ignore parse errors
   }
-  return priyaSharmaProfile;
+  return blankProfile;
 }
 
 function saveProfile(profile: StudentProfile): void {

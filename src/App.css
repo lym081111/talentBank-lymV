@@ -162,6 +162,30 @@ html, body {
   background: var(--color-bg);
 }
 
+.readablePage {
+  background: #f6f8fb !important;
+  color: #172033 !important;
+}
+
+.readablePage [class*="bg-[#0"],
+.readablePage [class*="bg-slate-950"],
+.readablePage [class*="bg-slate-900"],
+.readablePage [class*="bg-white/["] {
+  background: #ffffff !important;
+}
+
+.readablePage [class*="text-white"] {
+  color: #334155 !important;
+}
+
+.readablePage [class*="border-white"] {
+  border-color: #dbe5f4 !important;
+}
+
+.readablePage [class*="shadow-"] {
+  box-shadow: 0 16px 50px rgba(15, 23, 42, 0.08) !important;
+}
+
 button, input, textarea, select {
   font-family: inherit;
   font-size: inherit;

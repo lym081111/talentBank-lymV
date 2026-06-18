@@ -7,66 +7,70 @@ interface Props {
   showNav: boolean;
   onResetDemo?: () => void;
   onGoHome?: () => void;
+  onLogout?: () => void;
+  userName?: string;
   isDark?: boolean;
   onToggleDarkMode?: () => void;
 }
 
-const STEP_ORDER: Page[] = ['profile', 'extraction', 'dashboard', 'gaps', 'cohort'];
-// These pages are accessible from the dashboard but not sequential steps
-const SIDE_PAGES: Page[] = ['trajectory'];
+const NAV_ITEMS: Array<{ page: Page; label: string }> = [
+  { page: 'landing', label: 'Home' },
+  { page: 'jobs', label: 'Jobs' },
+  { page: 'profile', label: 'Profile' },
+  { page: 'extraction', label: 'Skills' },
+  { page: 'dashboard', label: 'Dashboard' },
+  { page: 'gaps', label: 'Applications' },
+  { page: 'employer-portal', label: 'Employer' },
+  { page: 'cohort', label: 'University' },
+];
 
-export function Navigation({ currentPage, onNavigate, showNav, onResetDemo, onGoHome, isDark, onToggleDarkMode }: Props) {
+export function Navigation({
+  currentPage,
+  onNavigate,
+  showNav,
+  onResetDemo,
+  onGoHome,
+  onLogout,
+  userName,
+  isDark,
+  onToggleDarkMode,
+}: Props) {
   if (!showNav) return null;
 
-  // For side pages, treat as if we're on dashboard for accessibility
-  const effectivePage = SIDE_PAGES.includes(currentPage) ? 'dashboard' : currentPage;
-  const currentIndex = STEP_ORDER.indexOf(effectivePage);
-
-  const isStepAccessible = (page: Page) => {
-    const pageIndex = STEP_ORDER.indexOf(page);
-    return pageIndex <= currentIndex || pageIndex === 0; // Can always go back to profile
-  };
-
-  const steps = [
-    { page: 'profile' as const, label: 'Evidence' },
-    { page: 'extraction' as const, label: 'Skills' },
-    { page: 'dashboard' as const, label: 'Landscape' },
-    { page: 'gaps' as const, label: 'Paths' },
-    { page: 'cohort' as const, label: 'Cohort' },
-  ];
-
   return (
-    <nav className={styles.nav} role="navigation" aria-label="PathLens navigation">
+    <nav className={styles.nav} role="navigation" aria-label="Career OS navigation">
       <div className={styles.navContent}>
         <div className={styles.navLeft}>
           <button
             className={styles.homeBtn}
             onClick={onGoHome}
-            title="Back to home"
-            aria-label="Back to home"
+            title="Back to Career OS home"
+            aria-label="Back to Career OS home"
           >
-            🏠
+            OS
           </button>
-          <div className={styles.navBrand} aria-label="PathLens">PathLens</div>
+          <div>
+            <div className={styles.navBrand} aria-label="PathLens">PathLens</div>
+            <div className={styles.navSub}>Career OS</div>
+          </div>
         </div>
-        <div className={styles.navSteps} role="list" aria-label="Assessment steps">
-          {steps.map((step, idx) => (
-            <div key={step.page} role="listitem" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+
+        <div className={styles.navSteps} role="list" aria-label="Platform pages">
+          {NAV_ITEMS.map((item) => (
+            <div key={item.page} role="listitem">
               <button
-                className={`${styles.step} ${currentPage === step.page ? styles.active : ''} ${!isStepAccessible(step.page) ? styles.disabled : ''}`}
-                onClick={() => isStepAccessible(step.page) && onNavigate(step.page)}
-                disabled={!isStepAccessible(step.page)}
-                aria-current={currentPage === step.page ? 'step' : undefined}
-                aria-disabled={!isStepAccessible(step.page)}
-                title={!isStepAccessible(step.page) ? 'Complete previous steps first' : `Go to ${step.label}`}
+                className={`${styles.step} ${currentPage === item.page ? styles.active : ''}`}
+                onClick={() => onNavigate(item.page)}
+                aria-current={currentPage === item.page ? 'page' : undefined}
               >
-                {step.label}
+                {item.label}
               </button>
-              {idx < steps.length - 1 && <span className={styles.divider} aria-hidden="true">→</span>}
             </div>
           ))}
         </div>
+
         <div className={styles.navRight}>
+          {userName && <span className={styles.userPill}>{userName}</span>}
           {onToggleDarkMode && (
             <button
               className={styles.darkModeBtn}
@@ -75,16 +79,21 @@ export function Navigation({ currentPage, onNavigate, showNav, onResetDemo, onGo
               aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
               aria-pressed={isDark}
             >
-              {isDark ? '☀️' : '🌙'}
+              {isDark ? 'Light' : 'Dark'}
             </button>
           )}
           {onResetDemo && (
             <button
               className={styles.resetBtn}
               onClick={onResetDemo}
-              aria-label="Reset to demo profile"
+              aria-label="Reset to sample profile"
             >
-              Reset to Demo
+              Reset sample
+            </button>
+          )}
+          {onLogout && (
+            <button className={styles.logoutBtn} onClick={onLogout}>
+              Logout
             </button>
           )}
         </div>

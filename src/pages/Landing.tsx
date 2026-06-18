@@ -1,283 +1,113 @@
 import { Page } from '../types/navigation';
+import styles from './Landing.module.css';
 
 interface Props {
+  userName?: string;
   onNavigate: (page: Page) => void;
   onBuildOwn: () => void;
 }
 
-const MILESTONES = [
-  { year: 'Evidence', role: 'Resume proof blocks', detail: 'Projects, internships, certificates' },
-  { year: 'Extraction', role: 'Transparent skill parsing', detail: 'Matched phrase + confidence' },
-  { year: 'Readiness', role: '6-dimension profile', detail: 'Score, status, why, source' },
-  { year: 'Action', role: 'Sprint, brief, intervention', detail: 'Three views from one evidence profile' },
+const CAREER_OS_FEATURES = [
+  ['Profile and resume builder', 'Create a live evidence profile from projects, internships, certificates, and resume items.'],
+  ['Job listings', 'Browse mock roles across Malaysia, Singapore, Indonesia, and remote SEA teams.'],
+  ['Keyword and job search', 'Search by skill, market, company, and work mode.'],
+  ['Job matching', 'See fit score, matched evidence, blockers, and next actions before applying.'],
+  ['Job applications', 'Save mock applications and generate evidence-backed application talking points.'],
+  ['Candidate dashboard', 'Readiness score, skill extraction, gaps, paths, and application targets.'],
+  ['Employer dashboard', 'Role-specific shortlist brief and interview probes from the same profile.'],
+  ['University dashboard', 'Mock cohort intervention board for programme action.'],
 ];
 
-const DEMO_STEPS = ['Evidence', 'Skill Signals', 'Readiness Map', 'Blockers', 'Action Sprint', 'Hiring / University Insight'];
-
-const CAREER_OS_COVERAGE = [
-  {
-    title: 'Profile + Resume Builder',
-    detail: 'Students build a profile from projects, internships, certificates, and resume evidence.',
-  },
-  {
-    title: 'Job Matching',
-    detail: 'Paths and application targets are matched against readiness, skills, and proof gaps.',
-  },
-  {
-    title: 'Candidate Dashboard',
-    detail: 'The Talent View shows readiness, evidence quality, gaps, and next actions.',
-  },
-  {
-    title: 'Employer Dashboard',
-    detail: 'A lightweight hiring brief answers shortlist decision and interview questions.',
-  },
-  {
-    title: 'Applications',
-    detail: 'The application pack turns evidence into claims, blockers, and talking points.',
-  },
-  {
-    title: 'Search / Discovery',
-    detail: 'Recruiters can switch hiring roles and discover the best-fit candidate from the same evidence.',
-  },
-];
-
-function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+export function Landing({ userName = 'Career OS user', onNavigate, onBuildOwn }: Props) {
   return (
-    <div className={`bg-white/5 border border-white/10 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-white/20 ${className}`}>
-      {children}
-    </div>
-  );
-}
-
-export function Landing({ onNavigate, onBuildOwn }: Props) {
-  const scrollToRole = () => document.getElementById('role-selection')?.scrollIntoView({ behavior: 'smooth' });
-
-  return (
-    <div className="bg-[#0a0f1e] min-h-screen text-white overflow-x-hidden">
-      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{ backgroundImage: 'linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px)', backgroundSize: '60px 60px' }}
-        />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 max-w-6xl mx-auto px-6 py-24 w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <span className="inline-flex items-center gap-2 text-emerald-400 text-xs font-black tracking-widest uppercase mb-8 border border-emerald-400/30 px-4 py-2 rounded-full">
-              <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
-              Adaptive Readiness Profile - Universities Module 03
-            </span>
-
-            <h1 className="text-5xl lg:text-6xl font-black leading-[1.05] tracking-tight mb-6">
-              Turn student evidence
-              <span className="block text-emerald-400">into career readiness.</span>
-            </h1>
-
-            <p className="text-lg text-white/60 leading-relaxed mb-4 max-w-xl">
-              PathLens turns projects, internships, certificates, and resumes into one transparent readiness profile. The same evidence powers Talent, Employer, and University views.
-            </p>
-            <p className="text-base text-emerald-200/90 leading-relaxed mb-5 max-w-xl font-bold">
-              Not a prediction engine. PathLens makes readiness visible from student evidence.
-            </p>
-            <p className="text-sm text-white/45 leading-relaxed mb-5 max-w-xl">
-              PathLens is the evidence and readiness layer inside Career OS: it gives the jobsite profile enough proof to support matching, applications, candidate dashboards, and employer briefs without pretending to be a full backend job board.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-7 max-w-xl">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-                <div className="text-xs text-emerald-300 font-black uppercase tracking-[0.16em] mb-2">Student value</div>
-                <p className="text-sm text-white/55 leading-relaxed">See what to improve next and how to turn evidence into applications.</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-                <div className="text-xs text-cyan-300 font-black uppercase tracking-[0.16em] mb-2">University value</div>
-                <p className="text-sm text-white/55 leading-relaxed">Spot cohort-level gaps early and run targeted interventions before application season.</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-7 max-w-xl">
-              <div>
-                <button
-                  onClick={() => onNavigate('talent-portal')}
-                  className="w-full px-7 py-4 bg-emerald-400 hover:bg-emerald-300 text-black font-black text-sm rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/25 active:scale-95"
-                >
-                  Try the 2-minute demo
-                </button>
-                <p className="mt-2 text-xs text-white/35 leading-relaxed">Pick a sample candidate and move through the full judge flow without typing anything.</p>
-              </div>
-              <div>
-                <button
-                  onClick={onBuildOwn}
-                  className="w-full px-7 py-4 border border-white/20 hover:border-cyan-300/60 text-white font-black text-sm rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 hover:bg-white/5"
-                >
-                  Build your own profile
-                </button>
-                <p className="mt-2 text-xs text-white/35 leading-relaxed">Start from a blank profile and enter your own evidence. No demo identity is carried over.</p>
-              </div>
-            </div>
-
-            <div className="mb-7 max-w-xl rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-              <div className="text-[11px] text-white/35 font-black uppercase tracking-[0.18em] mb-3">2-minute judge flow</div>
-              <div className="flex flex-wrap items-center gap-2">
-                {DEMO_STEPS.map((step, index) => (
-                  <div key={step} className="flex items-center gap-2">
-                    <span className="rounded-full border border-emerald-300/30 bg-emerald-300/10 px-3 py-1 text-[11px] font-black text-emerald-100">{step}</span>
-                    {index < DEMO_STEPS.length - 1 && <span className="text-white/20">-&gt;</span>}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <p className="text-xs text-white/20 font-semibold tracking-wide">
-              transparent evidence extraction + AI-assisted explanation - deterministic scoring - no black-box career prediction
-            </p>
+    <main className={styles.page}>
+      <section className={styles.hero}>
+        <div className={styles.heroCopy}>
+          <span className={styles.kicker}>Career OS + Adaptive Readiness Profile</span>
+          <h1>One jobsite flow. Evidence underneath every match.</h1>
+          <p>
+            Welcome, {userName}. PathLens is now framed as a proper Career OS prototype:
+            build a profile, search jobs, apply with proof, and use readiness insights to improve before rejection.
+          </p>
+          <div className={styles.ctas}>
+            <button className={styles.primary} onClick={() => onNavigate('jobs')}>
+              Search jobs
+            </button>
+            <button className={styles.secondary} onClick={onBuildOwn}>
+              Build profile
+            </button>
           </div>
-
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-xs text-emerald-400 font-black uppercase tracking-widest">Scope map</p>
-              <span className="text-xs bg-emerald-400/10 text-emerald-400 border border-emerald-400/20 px-2 py-1 rounded-full font-bold">Stage 1</span>
-            </div>
-            <div className="relative pl-6">
-              <div className="absolute left-1.5 top-2 bottom-2 w-px bg-gradient-to-b from-emerald-400 via-blue-400 to-blue-400/20" />
-              <div className="space-y-6">
-                {MILESTONES.map((m, i) => (
-                  <div key={m.year} className="relative">
-                    <div className={`absolute -left-[22px] top-1.5 w-3 h-3 rounded-full border-2 border-[#0a0f1e] ${i === 0 ? 'bg-emerald-400' : i === MILESTONES.length - 1 ? 'bg-blue-400' : 'bg-white/40'}`} />
-                    <div className="text-xs text-white/30 font-bold mb-0.5">{m.year}</div>
-                    <div className="font-black text-white text-sm">{m.role}</div>
-                    <div className="text-white/30 text-xs mt-0.5">{m.detail}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <p className="mt-5 text-xs text-white/25 italic border-t border-white/10 pt-4">
-              Stage 1 prototype - frontend only, localStorage persistence. Application targets and cohort data are seeded mocks showing the shared evidence pattern.
-            </p>
-          </Card>
         </div>
 
-        <button
-          onClick={scrollToRole}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30 hover:text-emerald-400 transition-colors duration-300 group z-10"
-        >
-          <span className="text-xs font-bold uppercase tracking-widest">Explore</span>
-          <div className="w-6 h-10 border-2 border-white/20 group-hover:border-emerald-400/50 rounded-full flex items-start justify-center pt-1.5 transition-colors duration-300">
-            <div className="w-1 h-2 bg-white/40 group-hover:bg-emerald-400 rounded-full animate-bounce transition-colors duration-300" />
+        <aside className={styles.panel}>
+          <div className={styles.panelHeader}>
+            <span>Today in your Career OS</span>
+            <strong>3 recommended actions</strong>
           </div>
-        </button>
-      </section>
-
-      <div className="border-y border-white/10 bg-white/[0.02] py-10">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between mb-6">
-            <div>
-              <p className="text-xs text-emerald-300 font-black uppercase tracking-[0.2em] mb-2">Career OS coverage</p>
-              <h2 className="text-2xl md:text-3xl font-black text-white">The compulsory jobsite features, powered by one evidence profile.</h2>
-            </div>
-            <p className="text-sm text-white/40 max-w-xl">
-              Stage 1 stays frontend-only, but the prototype shows how readiness evidence feeds the required Career OS surfaces.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-            {CAREER_OS_COVERAGE.map((item) => (
-              <div key={item.title} className="rounded-2xl border border-white/10 bg-slate-950/45 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-300/35 hover:bg-white/[0.05]">
-                <div className="text-sm font-black text-white">{item.title}</div>
-                <p className="mt-2 text-xs leading-relaxed text-white/45">{item.detail}</p>
-              </div>
+          <div className={styles.actionList}>
+            {[
+              ['Complete your proof passport', 'Add links, outcomes, and verified evidence.'],
+              ['Search matching roles', 'Use keyword search and compare role fit.'],
+              ['Close application blockers', 'Improve the weakest readiness dimension first.'],
+            ].map(([title, body], index) => (
+              <button key={title} onClick={() => index === 1 ? onNavigate('jobs') : index === 2 ? onNavigate('gaps') : onBuildOwn()}>
+                <span>{index + 1}</span>
+                <div>
+                  <strong>{title}</strong>
+                  <p>{body}</p>
+                </div>
+              </button>
             ))}
           </div>
-        </div>
-      </div>
+        </aside>
+      </section>
 
-      <div id="role-selection" className="py-20 px-6 bg-[#080d18]">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-xs text-white/30 font-black uppercase tracking-widest mb-3">Choose Your View</p>
-            <h2 className="text-3xl lg:text-4xl font-black text-white mb-4">Same evidence, different question.</h2>
-            <p className="text-white/40 max-w-2xl mx-auto">Talent gets the full workspace. Employer and University get lightweight readouts from the same profile.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <button
-              onClick={() => onNavigate('talent-portal')}
-              className="group relative text-left bg-white/[0.03] hover:bg-emerald-500/8 border border-white/10 hover:border-emerald-400/40 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-emerald-500/10"
-            >
-              <div className="text-xs text-emerald-400 font-black uppercase tracking-widest mb-2">For Talent & Students</div>
-              <h3 className="text-white font-black text-xl mb-3 leading-tight">
-                Talent View
-                <span className="block text-white/40 text-base font-bold mt-1">Full interactive workspace</span>
-              </h3>
-              <p className="text-white/40 text-sm leading-relaxed mb-6">What should I improve next, and how do I turn my evidence into applications?</p>
-              <div className="flex flex-wrap gap-2 mb-6">
-                {['Evidence pages', 'Readiness audit', 'Gap plan', 'Application pack'].map(t => (
-                  <span key={t} className="text-xs px-2 py-1 bg-emerald-400/10 text-emerald-400/70 rounded-md font-semibold border border-emerald-400/15">{t}</span>
-                ))}
-              </div>
-              <div className="flex items-center gap-2 text-emerald-400 font-black text-sm group-hover:gap-3 transition-all duration-200">
-                <span>Open Talent View</span>
-                <span>-&gt;</span>
-              </div>
-            </button>
-
-            <button
-              onClick={() => onNavigate('employer-portal')}
-              className="group relative text-left bg-white/[0.03] hover:bg-blue-500/8 border border-white/10 hover:border-blue-400/40 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/10"
-            >
-              <div className="text-xs text-blue-400 font-black uppercase tracking-widest mb-2">For Employers</div>
-              <h3 className="text-white font-black text-xl mb-3 leading-tight">
-                Employer View
-                <span className="block text-white/40 text-base font-bold mt-1">Evidence-backed hiring brief</span>
-              </h3>
-              <p className="text-white/40 text-sm leading-relaxed mb-6">Should I shortlist this candidate, and what should I ask in interview?</p>
-              <div className="flex flex-wrap gap-2 mb-6">
-                {['Shortlist signal', 'Interview probes', 'Source trail', 'No ATS'].map(t => (
-                  <span key={t} className="text-xs px-2 py-1 bg-blue-400/10 text-blue-400/70 rounded-md font-semibold border border-blue-400/15">{t}</span>
-                ))}
-              </div>
-              <div className="flex items-center gap-2 text-blue-400 font-black text-sm group-hover:gap-3 transition-all duration-200">
-                <span>Open Employer View</span>
-                <span>-&gt;</span>
-              </div>
-            </button>
-
-            <button
-              onClick={() => onNavigate('cohort')}
-              className="group relative text-left bg-white/[0.03] hover:bg-cyan-500/8 border border-white/10 hover:border-cyan-400/40 rounded-3xl p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-500/10"
-            >
-              <div className="text-xs text-cyan-400 font-black uppercase tracking-widest mb-2">For Universities</div>
-              <h3 className="text-white font-black text-xl mb-3 leading-tight">
-                University View
-                <span className="block text-white/40 text-base font-bold mt-1">Cohort intervention board</span>
-              </h3>
-              <p className="text-white/40 text-sm leading-relaxed mb-6">Which cohort gaps need intervention, who owns them, and how do we measure movement?</p>
-              <div className="flex flex-wrap gap-2 mb-6">
-                {['Top gaps', 'Interventions', 'Owners', 'Measures'].map(t => (
-                  <span key={t} className="text-xs px-2 py-1 bg-cyan-400/10 text-cyan-400/70 rounded-md font-semibold border border-cyan-400/15">{t}</span>
-                ))}
-              </div>
-              <div className="flex items-center gap-2 text-cyan-400 font-black text-sm group-hover:gap-3 transition-all duration-200">
-                <span>Open University View</span>
-                <span>-&gt;</span>
-              </div>
-            </button>
-          </div>
-
-          <div className="mt-8 text-center">
-            <button
-              onClick={onBuildOwn}
-              className="text-sm font-black text-white/55 hover:text-white underline underline-offset-4"
-            >
-              Build a blank profile with your own evidence
-            </button>
-          </div>
-
-          <p className="text-center text-xs text-white/20 mt-8">
-            Talentbank Tech Hackathon 2026 - Stage 1 prototype - Universities Module 03 - Shared evidence views
+      <section className={styles.coverage}>
+        <div className={styles.sectionHeader}>
+          <span>Starter Kit coverage</span>
+          <h2>Core jobsite features, not just a demo profile.</h2>
+          <p>
+            The prototype remains frontend-only, but each core feature is clickable enough for judges to understand the product flow.
           </p>
         </div>
-      </div>
-    </div>
+        <div className={styles.featureGrid}>
+          {CAREER_OS_FEATURES.map(([title, body]) => (
+            <article key={title}>
+              <strong>{title}</strong>
+              <p>{body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.workspace}>
+        <div className={styles.sectionHeader}>
+          <span>Choose a workspace</span>
+          <h2>Same platform, different job to be done.</h2>
+        </div>
+        <div className={styles.workspaceGrid}>
+          <button onClick={() => onNavigate('jobs')}>
+            <small>Candidate flow</small>
+            <strong>Job Search</strong>
+            <p>Find roles, inspect match quality, and save mock applications.</p>
+          </button>
+          <button onClick={() => onNavigate('dashboard')}>
+            <small>Candidate dashboard</small>
+            <strong>Readiness Profile</strong>
+            <p>See scores, evidence sources, blockers, paths, and application assets.</p>
+          </button>
+          <button onClick={() => onNavigate('employer-portal')}>
+            <small>Employer dashboard</small>
+            <strong>Hiring Brief</strong>
+            <p>Pick a role and see which profile deserves a shortlist conversation.</p>
+          </button>
+          <button onClick={() => onNavigate('cohort')}>
+            <small>University module</small>
+            <strong>Cohort Interventions</strong>
+            <p>Turn readiness gaps into programme actions, owners, and measures.</p>
+          </button>
+        </div>
+      </section>
+    </main>
   );
 }

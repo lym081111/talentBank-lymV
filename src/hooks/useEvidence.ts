@@ -10,7 +10,7 @@ function generateId(): string {
 export function useEvidence() {
   const [evidence, setEvidence] = useState<Evidence[]>(() => {
     const stored = loadEvidence();
-    return stored ?? priyaSharmaProfile.evidence;
+    return stored ?? [];
   });
 
   useEffect(() => {
