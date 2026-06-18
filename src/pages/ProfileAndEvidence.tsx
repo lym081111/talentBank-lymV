@@ -5,6 +5,7 @@ import { EvidenceForm } from '../components/EvidenceForm';
 import { SkillsByDemandVisualization } from '../components/SkillsByDemandVisualization';
 import { exportEvidenceToPDF } from '../utils/pdfExport';
 import { exportProfileToJSON } from '../utils/profileExport';
+import { aishaPatelProfile, danielLeeProfile, kaiChenProfile, priyaSharmaProfile } from '../data/mockStudent';
 // import { extractSkillsFromEvidence } from '../utils/skillExtraction'; // Not currently used
 import styles from './ProfileAndEvidence.module.css';
 
@@ -24,6 +25,9 @@ interface Props {
 
 type FormMode = 'closed' | 'add' | { editing: Evidence } | { template: Partial<Omit<Evidence, 'id'>> };
 type ResumeImportStatus = { type: 'success' | 'error' | 'info'; message: string } | null;
+type EvidenceIdentity = Pick<StudentProfile, 'name' | 'major' | 'targetRole'> & Partial<Pick<StudentProfile, 'university' | 'year'>>;
+
+const SAMPLE_PROFILES = [danielLeeProfile, priyaSharmaProfile, kaiChenProfile, aishaPatelProfile];
 
 const KNOWN_RESUME_SKILLS = [
   'React', 'Next.js', 'TypeScript', 'JavaScript', 'Node.js', 'Express', 'Python', 'Django',
@@ -71,6 +75,37 @@ function inferTargetRole(text: string) {
 function extractResumeSkills(text: string) {
   const lower = text.toLowerCase();
   return KNOWN_RESUME_SKILLS.filter((skill) => lower.includes(skill.toLowerCase()));
+}
+
+function evidenceSignature(items: Evidence[]) {
+  return items.map((item) => item.id).sort().join('|');
+}
+
+function matchSampleProfileFromEvidence(items: Evidence[]): EvidenceIdentity | undefined {
+  if (items.length === 0) return undefined;
+  const currentSignature = evidenceSignature(items);
+  return SAMPLE_PROFILES.find((sample) => evidenceSignature(sample.evidence) === currentSignature);
+}
+
+function inferProfileFallbackFromEvidence(items: Evidence[]): EvidenceIdentity {
+  const evidenceText = items
+    .map((item) => `${item.title} ${item.description} ${item.technologies ?? ''} ${item.outcome ?? ''}`)
+    .join('\n');
+  const targetRole = inferTargetRole(evidenceText);
+  const skills = extractResumeSkills(evidenceText);
+  const major = skills.some((skill) => /figma|ui\/ux|product/i.test(skill))
+    ? 'Design / Product'
+    : skills.some((skill) => /sql|python|kafka|spark|tableau|power bi/i.test(skill))
+      ? 'Data / Computer Science'
+      : skills.length > 0
+        ? 'Computer Science / Software'
+        : '';
+
+  return {
+    name: 'Imported Candidate',
+    major,
+    targetRole,
+  };
 }
 
 function extractProfileFromResume(text: string): Partial<StudentProfile> {
@@ -238,6 +273,14 @@ export function ProfileAndEvidence({
   const [resumeText, setResumeText] = useState('');
   const [resumeImportStatus, setResumeImportStatus] = useState<ResumeImportStatus>(null);
   const formRef = useRef<HTMLDivElement>(null);
+  const evidenceIdentity = useMemo(() => {
+    return matchSampleProfileFromEvidence(evidence) ?? inferProfileFallbackFromEvidence(evidence);
+  }, [evidence]);
+  const displayName = profile.name.trim() || evidenceIdentity?.name || 'New Candidate';
+  const displayUniversity = profile.university?.trim() || (evidenceIdentity && 'university' in evidenceIdentity ? evidenceIdentity.university : '') || '';
+  const displayYear = profile.year || (evidenceIdentity && 'year' in evidenceIdentity ? evidenceIdentity.year : 1);
+  const displayMajor = profile.major.trim() || evidenceIdentity?.major || 'Major to confirm';
+  const displayTargetRole = profile.targetRole.trim() || evidenceIdentity?.targetRole || 'Target role to confirm';
   const allExtractedSkills = useMemo(() => {
     const skills: ExtractedSkill[] = [];
     evidence.forEach(item => {
@@ -273,6 +316,30 @@ export function ProfileAndEvidence({
     }
   }, [profile, isDemoMode, evidence.length]);
 
+  useEffect(() => {
+    if (!onUpdateProfile || profile.name.trim() || evidence.length === 0) return;
+
+    const sampleProfile = matchSampleProfileFromEvidence(evidence);
+    if (sampleProfile) {
+      onUpdateProfile({
+        name: sampleProfile.name,
+        university: sampleProfile.university,
+        year: sampleProfile.year,
+        major: sampleProfile.major,
+        targetRole: sampleProfile.targetRole,
+      });
+      return;
+    }
+
+    const fallback = inferProfileFallbackFromEvidence(evidence);
+    onUpdateProfile({
+      name: fallback.name,
+      major: profile.major || fallback.major || 'Major to confirm',
+      targetRole: profile.targetRole || fallback.targetRole || 'Target role to confirm',
+      year: profile.year || 1,
+    });
+  }, [evidence, onUpdateProfile, profile.major, profile.name, profile.targetRole, profile.year]);
+
 
   function handleSave(data: Omit<Evidence, 'id'>) {
     if (formMode === 'add' || (typeof formMode === 'object' && 'template' in formMode)) {
@@ -298,7 +365,7 @@ export function ProfileAndEvidence({
   };
 
   const handleExportEvidence = () => {
-    exportEvidenceToPDF(profile.name, evidence);
+    exportEvidenceToPDF(displayName, evidence);
   };
 
   const handleResumeFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -392,7 +459,7 @@ export function ProfileAndEvidence({
                   Career OS — Evidence Bank
                 </div>
                 <h2 style={{ margin: 0, color: 'white', fontSize: '24px', fontWeight: 900, letterSpacing: '-0.04em' }}>
-                  {profile.name}'s resume is now a Proof Passport.
+                  {displayName}'s resume is now a Proof Passport.
                 </h2>
                 <p style={{ margin: '10px 0 0 0', color: 'rgba(255,255,255,0.62)', fontSize: '14px', lineHeight: 1.7 }}>
                   Inspect each proof block, then follow the same flow a student would use: evidence, lens scan, readiness map, blockers, sprint, and university insight.
@@ -546,7 +613,7 @@ export function ProfileAndEvidence({
           ) : (
             <>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <h2 style={{ margin: 0 }}>{profile.name}</h2>
+                <h2 style={{ margin: 0 }}>{displayName}</h2>
                 <button
                   onClick={() => {
                     setEditForm(profile);
@@ -562,19 +629,19 @@ export function ProfileAndEvidence({
                 </button>
               </div>
               <div className={styles.profileDetails}>
-                {profile.university && (
+                {displayUniversity && (
                   <div className={styles.detail}>
-                    <strong>University:</strong> {profile.university}
+                    <strong>University:</strong> {displayUniversity}
                   </div>
                 )}
                 <div className={styles.detail}>
-                  <strong>Year:</strong> {profile.year}
+                  <strong>Year:</strong> {displayYear}
                 </div>
                 <div className={styles.detail}>
-                  <strong>Major:</strong> {profile.major}
+                  <strong>Major:</strong> {displayMajor}
                 </div>
                 <div className={styles.detail}>
-                  <strong>Target Role:</strong> {profile.targetRole}
+                  <strong>Target Role:</strong> {displayTargetRole}
                 </div>
                 <div className={styles.detail}>
                   <strong>Evidence Items:</strong> {evidence.length}
