@@ -56,7 +56,6 @@ const RESUME_SECTION_TYPES: Record<string, Evidence['type']> = {
   certificates: 'certificate',
   certifications: 'certificate',
   courses: 'certificate',
-  education: 'fyp',
   capstone: 'fyp',
   hackathon: 'hackathon',
   achievements: 'hackathon',
@@ -157,7 +156,7 @@ function extractProfileFromResume(text: string): Partial<StudentProfile> {
   };
 }
 
-function getResumeSection(line: string) {
+function getResumeSectionMatch(line: string): { section: string; remainder: string } | null {
   const key = line.toLowerCase().replace(/[:\-]/g, '').trim();
   const ignoredHeadings = [
     'summary',
@@ -168,12 +167,68 @@ function getResumeSection(line: string) {
     'skills',
     'education',
   ];
-  const ignored = ignoredHeadings.find((section) => key === section || key.startsWith(`${section} `));
-  if (ignored) return ignored;
+  const allHeadings = [
+    ...ignoredHeadings,
+    ...Object.keys(RESUME_SECTION_TYPES).sort((a, b) => b.length - a.length),
+  ].sort((a, b) => b.length - a.length);
 
-  return Object.keys(RESUME_SECTION_TYPES)
-    .sort((a, b) => b.length - a.length)
-    .find((section) => key === section || key.startsWith(`${section} `));
+  const heading = allHeadings.find((section) => key === section || key.startsWith(`${section} `));
+  if (!heading) return null;
+
+  const remainder = line
+    .replace(new RegExp(`^${escapeResumeRegExp(heading)}\\b\\s*[:\\-]?\\s*`, 'i'), '')
+    .trim();
+
+  return { section: heading, remainder };
+}
+
+function normalizeResumeTextForParsing(text: string) {
+  const sectionHeadings = [
+    'SELF-INTRODUCTION',
+    'SUMMARY',
+    'PROFILE',
+    'OBJECTIVE',
+    'PROJECTS',
+    'PROJECT EXPERIENCE',
+    'COMPETITION EXPERIENCE',
+    'WORK EXPERIENCE',
+    'INTERNSHIP',
+    'CERTIFICATES',
+    'CERTIFICATIONS',
+    'ACHIEVEMENTS',
+    'SKILLS',
+    'EDUCATION',
+  ];
+
+  let normalized = text
+    .replace(/\r\n?/g, '\n')
+    .replace(/[ \t]+/g, ' ')
+    .replace(/\s+(?=SELF-INTRODUCTION|SUMMARY|PROFILE|OBJECTIVE|PROJECTS|PROJECT EXPERIENCE|COMPETITION EXPERIENCE|WORK EXPERIENCE|INTERNSHIP|CERTIFICATES|CERTIFICATIONS|ACHIEVEMENTS|SKILLS|EDUCATION\b)/gi, '\n')
+    .replace(/\s+(?=Technologies Used\s*:|Technologies\s*:|Tech Stack\s*:|Tools\s*:)/gi, '\n')
+    .replace(/\s+(?=[•\u2022*]\s+)/g, '\n')
+    .replace(/\s+(?=Participant\s*\|)/gi, '\n');
+
+  normalized = normalized.replace(
+    /([.!?])\s+([A-Z][A-Za-z0-9&: /()'’.-]{8,140}?)\s+(?=Technologies Used\s*:|Technologies\s*:|Tech Stack\s*:|Tools\s*:)/g,
+    '$1\n$2\n'
+  );
+
+  for (const heading of sectionHeadings) {
+    normalized = normalized.replace(
+      new RegExp(`\\b${escapeResumeRegExp(heading)}\\b\\s+([^\\n])`, 'gi'),
+      (match, nextChar, offset, source) => {
+        const before = source[offset - 1];
+        if (before && before !== '\n') return match;
+        return `${heading}\n${nextChar}`;
+      }
+    );
+  }
+
+  return normalized
+    .split('\n')
+    .map(cleanResumeLine)
+    .filter(Boolean)
+    .join('\n');
 }
 
 function extractOutcome(text: string) {
@@ -183,16 +238,18 @@ function extractOutcome(text: string) {
   return resultLine ? resultLine.slice(0, 120) : undefined;
 }
 
-function parseResumeIntoEvidence(text: string): Omit<Evidence, 'id'>[] {
-  const lines = text.split(/\r?\n/).map(cleanResumeLine).filter(Boolean);
+export function parseResumeIntoEvidence(text: string): Omit<Evidence, 'id'>[] {
+  const normalizedText = normalizeResumeTextForParsing(text);
+  const lines = normalizedText.split(/\r?\n/).map(cleanResumeLine).filter(Boolean);
   const sections: Record<string, string[]> = {};
   let currentSection = 'summary';
 
   for (const line of lines) {
-    const detected = getResumeSection(line);
+    const detected = getResumeSectionMatch(line);
     if (detected) {
-      currentSection = detected;
+      currentSection = detected.section;
       sections[currentSection] ??= [];
+      if (detected.remainder) sections[currentSection].push(detected.remainder);
       continue;
     }
     sections[currentSection] ??= [];
@@ -272,6 +329,15 @@ function splitResumeSectionIntoEntries(lines: string[]): ResumeEntryDraft[] {
 
     current ??= { title: stripResumeDate(line), descriptionLines: [], technologies: '' };
     if (current.title === line && current.descriptionLines.length === 0) continue;
+    if (
+      !current.technologies &&
+      current.descriptionLines.length === 0 &&
+      line.length <= 80 &&
+      !/^(?:built|implemented|designed|integrated|developed|configured|programmed|deployed|created|collaborated|pitched|used|wrote|fixed|attended|learned|conducted|reduced|increased|optimized|automated)\b/i.test(line)
+    ) {
+      current.title = `${current.title} ${stripResumeDate(line)}`.slice(0, 150);
+      continue;
+    }
     current.descriptionLines.push(line);
   }
 
@@ -364,14 +430,44 @@ async function extractPdfText(file: File): Promise<string> {
   for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
     const page = await pdf.getPage(pageNumber);
     const content = await page.getTextContent();
-    const pageText = content.items
-      .map((item) => {
-        if (typeof item === 'object' && item && 'str' in item) {
-          return String((item as { str?: unknown }).str ?? '');
-        }
-        return '';
-      })
-      .join(' ');
+    const spans = (content.items as Array<{ str?: unknown; transform?: number[]; width?: number; height?: number }>)
+      .map((item) => ({
+        text: String(item.str ?? '').trim(),
+        x: Number(item.transform?.[4] ?? 0),
+        y: Number(item.transform?.[5] ?? 0),
+        height: Number(item.height ?? 0),
+      }))
+      .filter((item) => item.text);
+
+    const lines: Array<{ y: number; height: number; spans: typeof spans }> = [];
+    const sortedSpans = [...spans].sort((a, b) => b.y - a.y || a.x - b.x);
+
+    for (const span of sortedSpans) {
+      const tolerance = Math.max(2.5, span.height * 0.45);
+      const line = lines.find((candidate) => Math.abs(candidate.y - span.y) <= tolerance);
+
+      if (line) {
+        line.spans.push(span);
+        line.y = (line.y * (line.spans.length - 1) + span.y) / line.spans.length;
+        line.height = Math.max(line.height, span.height);
+      } else {
+        lines.push({ y: span.y, height: span.height, spans: [span] });
+      }
+    }
+
+    const pageText = lines
+      .sort((a, b) => b.y - a.y)
+      .map((line) =>
+        line.spans
+          .sort((a, b) => a.x - b.x)
+          .map((span) => span.text)
+          .join(' ')
+          .replace(/\s+/g, ' ')
+          .trim()
+      )
+      .filter(Boolean)
+      .join('\n');
+
     pages.push(pageText);
   }
 
