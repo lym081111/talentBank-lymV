@@ -139,6 +139,18 @@
   font-weight: 900;
 }
 
+.status {
+  border: 1px solid #bfdbfe;
+  border-radius: 14px;
+  background: #eff6ff;
+  color: #1e40af;
+  padding: 12px 14px;
+  margin: -8px 0 18px;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
 .card input,
 .card select {
   display: block;

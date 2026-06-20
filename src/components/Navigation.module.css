@@ -112,7 +112,6 @@
   font-weight: 900;
 }
 
-.darkModeBtn,
 .resetBtn,
 .logoutBtn {
   border-radius: 999px;
@@ -121,7 +120,6 @@
   font-weight: 900;
 }
 
-.darkModeBtn,
 .resetBtn {
   border: 1px solid #dbe5f4;
   background: white;
@@ -133,7 +131,6 @@
   color: white;
 }
 
-.darkModeBtn:hover,
 .resetBtn:hover {
   border-color: #93c5fd;
   color: #1d4ed8;

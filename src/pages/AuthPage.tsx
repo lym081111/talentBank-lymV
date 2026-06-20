@@ -16,13 +16,32 @@ export function AuthPage({ onAuthenticate }: Props) {
   const [name, setName] = useState('Alyssa Tan');
   const [email, setEmail] = useState('alyssa@university.edu');
   const [role, setRole] = useState<AuthUser['role']>('candidate');
+  const [message, setMessage] = useState('');
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    onAuthenticate({
+    const nextUser = {
       name: name.trim() || 'Career OS User',
       email: email.trim() || 'user@example.com',
       role,
+    };
+
+    if (mode === 'register') {
+      try {
+        localStorage.setItem('pathlens_registered_user', JSON.stringify(nextUser));
+      } catch {
+        // Registration still proceeds in-memory for the prototype.
+      }
+      setMode('login');
+      setMessage('Account created. Log in with the same details to continue.');
+      return;
+    }
+
+    setMessage('');
+    onAuthenticate({
+      name: nextUser.name,
+      email: nextUser.email,
+      role: nextUser.role,
     });
   }
 
@@ -65,6 +84,8 @@ export function AuthPage({ onAuthenticate }: Props) {
             <h2>{mode === 'login' ? 'Welcome back' : 'Create your Career OS account'}</h2>
             <p>{mode === 'login' ? 'Use the seeded account or enter your own details.' : 'Prototype account stored locally in this browser.'}</p>
           </div>
+
+          {message && <div className={styles.status}>{message}</div>}
 
           <label>
             Full name

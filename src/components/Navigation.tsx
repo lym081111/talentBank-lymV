@@ -9,8 +9,6 @@ interface Props {
   onGoHome?: () => void;
   onLogout?: () => void;
   userName?: string;
-  isDark?: boolean;
-  onToggleDarkMode?: () => void;
 }
 
 const NAV_ITEMS: Array<{ page: Page; label: string }> = [
@@ -32,8 +30,6 @@ export function Navigation({
   onGoHome,
   onLogout,
   userName,
-  isDark,
-  onToggleDarkMode,
 }: Props) {
   if (!showNav) return null;
 
@@ -71,17 +67,6 @@ export function Navigation({
 
         <div className={styles.navRight}>
           {userName && <span className={styles.userPill}>{userName}</span>}
-          {onToggleDarkMode && (
-            <button
-              className={styles.darkModeBtn}
-              onClick={onToggleDarkMode}
-              title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-              aria-pressed={isDark}
-            >
-              {isDark ? 'Light' : 'Dark'}
-            </button>
-          )}
           {onResetDemo && (
             <button
               className={styles.resetBtn}

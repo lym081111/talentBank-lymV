@@ -92,7 +92,7 @@ export function CohortView({ cohort, readinessProfile, studentProfile, onBack, b
   const topGap = cohort.topGaps[0];
 
   return (
-    <div className="readablePage darkReadablePage min-h-screen bg-[#07101d] px-5 py-8 text-white">
+    <div className="readablePage min-h-screen bg-[#07101d] px-5 py-8 text-white">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>

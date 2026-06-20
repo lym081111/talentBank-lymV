@@ -35,7 +35,6 @@ import { calculateReadinessProfile } from './utils/readinessScoring';
 import { generateGaps } from './utils/nextActions';
 import { useEvidence } from './hooks/useEvidence';
 import { useStudentProfile } from './hooks/useStudentProfile';
-import { useDarkMode } from './hooks/useDarkMode';
 import { StudentProfile } from './types/evidence';
 import { priyaSharmaProfile } from './data/mockStudent';
 import './App.css';
@@ -53,10 +52,10 @@ function loadAuthUser(): AuthUser | null {
   }
 }
 
-function createBlankProfile(): StudentProfile {
+function createBlankProfile(user?: AuthUser | null): StudentProfile {
   return {
     id: `student_custom_${Date.now()}`,
-    name: '',
+    name: user?.name ?? '',
     university: '',
     year: 1,
     major: '',
@@ -70,9 +69,8 @@ function App() {
   const [currentPage, setCurrentPage] = useState<Page>(() => authUser ? 'landing' : 'auth');
   const [profileReturnPage, setProfileReturnPage] = useState<Page>('landing');
   const [lightweightViewReturnPage, setLightweightViewReturnPage] = useState<Page>('landing');
-  const { isDark, toggle: toggleDarkMode } = useDarkMode();
 
-  const { evidence, addEvidence, updateEvidence, deleteEvidence, resetToDemo, clearAll, setEvidence } = useEvidence();
+  const { evidence, addEvidence, updateEvidence, deleteEvidence, resetToDemo, clearAll, setEvidence, replaceEvidence } = useEvidence();
   const { profile: studentProfile, updateProfile, isDemoProfile } = useStudentProfile();
 
   const readinessProfile = useMemo(() => {
@@ -103,6 +101,21 @@ function App() {
     document.title = PAGE_TITLES[currentPage] ?? 'PathLens';
   }, [currentPage]);
 
+  useEffect(() => {
+    try {
+      localStorage.removeItem('pathlens_dark_mode');
+    } catch {
+      // Ignore storage errors.
+    }
+    document.documentElement.classList.remove('dark-mode');
+    document.documentElement.style.colorScheme = 'light';
+  }, []);
+
+  useEffect(() => {
+    if (!authUser || studentProfile.name.trim()) return;
+    updateProfile({ name: authUser.name });
+  }, [authUser, studentProfile.name, updateProfile]);
+
   const handleNavigate = (page: Page) => {
     if (!authUser && page !== 'auth') {
       setCurrentPage('auth');
@@ -114,6 +127,9 @@ function App() {
   const handleAuthenticate = (user: AuthUser) => {
     setAuthUser(user);
     localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+    if (!studentProfile.name.trim()) {
+      updateProfile({ name: user.name });
+    }
     setCurrentPage('landing');
   };
 
@@ -131,9 +147,27 @@ function App() {
     handleNavigate('profile');
   };
 
+  const hasSavedProfile = () => {
+    return Boolean(
+      evidence.length > 0 ||
+      studentProfile.name.trim() ||
+      studentProfile.major.trim() ||
+      studentProfile.targetRole.trim() ||
+      studentProfile.university?.trim()
+    );
+  };
+
   const handleBuildOwn = (returnPage?: Page) => {
     setProfileReturnPage(returnPage ?? (currentPage === 'profile' ? profileReturnPage : currentPage));
-    updateProfile(createBlankProfile());
+    if (!hasSavedProfile()) {
+      updateProfile(createBlankProfile(authUser));
+    }
+    handleNavigate('profile');
+  };
+
+  const handleStartBlankProfile = (returnPage?: Page) => {
+    setProfileReturnPage(returnPage ?? (currentPage === 'profile' ? profileReturnPage : currentPage));
+    updateProfile(createBlankProfile(authUser));
     clearAll();
     handleNavigate('profile');
   };
@@ -203,8 +237,9 @@ function App() {
             onAddEvidence={addEvidence}
             onUpdateEvidence={updateEvidence}
             onDeleteEvidence={deleteEvidence}
+            onReplaceEvidence={replaceEvidence}
             onAnalyze={() => handleNavigate('extraction')}
-            onClearAndStart={() => handleBuildOwn()}
+            onClearAndStart={() => handleStartBlankProfile()}
             onBack={() => handleNavigate(profileReturnPage)}
             backLabel={
               profileReturnPage === 'talent-portal'
@@ -307,8 +342,6 @@ function App() {
           onGoHome={handleGoHome}
           onLogout={handleLogout}
           userName={authUser?.name}
-          isDark={isDark}
-          onToggleDarkMode={toggleDarkMode}
         />
         <Suspense fallback={
           <div style={{

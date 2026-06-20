@@ -21,6 +21,10 @@ export function useEvidence() {
     setEvidence(prev => [...prev, { ...data, id: generateId() }]);
   }, []);
 
+  const replaceEvidence = useCallback((items: Array<Omit<Evidence, 'id'>>) => {
+    setEvidence(items.map((item) => ({ ...item, id: generateId() })));
+  }, []);
+
   const updateEvidence = useCallback((id: string, data: Omit<Evidence, 'id'>) => {
     setEvidence(prev =>
       prev.map(item => (item.id === id ? { ...data, id } : item))
@@ -39,5 +43,5 @@ export function useEvidence() {
     setEvidence([]);
   }, []);
 
-  return { evidence, addEvidence, updateEvidence, deleteEvidence, resetToDemo, clearAll, setEvidence };
+  return { evidence, addEvidence, updateEvidence, deleteEvidence, resetToDemo, clearAll, setEvidence, replaceEvidence };
 }

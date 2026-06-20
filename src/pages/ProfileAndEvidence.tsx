@@ -17,6 +17,7 @@ interface Props {
   onAddEvidence: (data: Omit<Evidence, 'id'>) => void;
   onUpdateEvidence: (id: string, data: Omit<Evidence, 'id'>) => void;
   onDeleteEvidence: (id: string) => void;
+  onReplaceEvidence: (items: Array<Omit<Evidence, 'id'>>) => void;
   onAnalyze: () => void;
   onClearAndStart?: () => void;
   onBack?: () => void;
@@ -317,6 +318,66 @@ function stripResumeDate(line: string) {
     .trim();
 }
 
+function isSupportedResumeFile(file: File) {
+  const lowerName = file.name.toLowerCase();
+  return (
+    /\.(txt|md|csv|rtf|pdf|docx)$/i.test(lowerName) ||
+    file.type.startsWith('text/') ||
+    file.type === 'application/pdf' ||
+    file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  );
+}
+
+async function extractTextFromResumeFile(file: File): Promise<string> {
+  const lowerName = file.name.toLowerCase();
+  if (lowerName.endsWith('.pdf') || file.type === 'application/pdf') {
+    return extractPdfText(file);
+  }
+
+  if (
+    lowerName.endsWith('.docx') ||
+    file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  ) {
+    return extractDocxText(file);
+  }
+
+  if (file.type.startsWith('text/') || /\.(txt|md|csv|rtf)$/i.test(lowerName)) {
+    return file.text();
+  }
+
+  throw new Error('Unsupported resume format.');
+}
+
+async function extractDocxText(file: File): Promise<string> {
+  const mammoth = await import('mammoth');
+  const result = await mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
+  return result.value;
+}
+
+async function extractPdfText(file: File): Promise<string> {
+  const pdfjs = await import('pdfjs-dist');
+  pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
+
+  const pdf = await pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
+  const pages: string[] = [];
+
+  for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+    const page = await pdf.getPage(pageNumber);
+    const content = await page.getTextContent();
+    const pageText = content.items
+      .map((item) => {
+        if (typeof item === 'object' && item && 'str' in item) {
+          return String((item as { str?: unknown }).str ?? '');
+        }
+        return '';
+      })
+      .join(' ');
+    pages.push(pageText);
+  }
+
+  return pages.join('\n');
+}
+
 const EVIDENCE_TEMPLATES: Array<{
   emoji: string;
   label: string;
@@ -383,6 +444,7 @@ export function ProfileAndEvidence({
   onAddEvidence,
   onUpdateEvidence,
   onDeleteEvidence,
+  onReplaceEvidence,
   onAnalyze,
   onClearAndStart,
   onBack,
@@ -394,6 +456,7 @@ export function ProfileAndEvidence({
   const [editForm, setEditForm] = useState(profile);
   const [resumeText, setResumeText] = useState('');
   const [resumeImportStatus, setResumeImportStatus] = useState<ResumeImportStatus>(null);
+  const [isImportingResume, setIsImportingResume] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
   const evidenceIdentity = useMemo(() => {
     return matchSampleProfileFromEvidence(evidence) ?? inferProfileFallbackFromEvidence(evidence);
@@ -494,22 +557,45 @@ export function ProfileAndEvidence({
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (!/\.(txt|md|csv|rtf)$/i.test(file.name) && !file.type.startsWith('text/')) {
+    if (!isSupportedResumeFile(file)) {
       setResumeImportStatus({
         type: 'error',
-        message: 'For this prototype, upload a TXT/MD resume or paste the text from your PDF/DOCX resume below.',
+        message: 'Upload a TXT, MD, PDF, or DOCX resume. Legacy .doc files need to be saved as DOCX or PDF first.',
       });
       event.target.value = '';
       return;
     }
 
-    const text = await file.text();
-    setResumeText(text);
+    setIsImportingResume(true);
     setResumeImportStatus({
       type: 'info',
-      message: `Loaded ${file.name}. Review the text, then click "Import resume into profile".`,
+      message: `Reading ${file.name}...`,
     });
-    event.target.value = '';
+
+    try {
+      const text = await extractTextFromResumeFile(file);
+      if (text.trim().length < 80) {
+        setResumeImportStatus({
+          type: 'error',
+          message: `I could not extract enough text from ${file.name}. Try exporting it as a text-based PDF or paste the resume text directly.`,
+        });
+        return;
+      }
+
+      setResumeText(text);
+      setResumeImportStatus({
+        type: 'info',
+        message: `Loaded ${file.name}. Review the extracted text, then import and scan.`,
+      });
+    } catch {
+      setResumeImportStatus({
+        type: 'error',
+        message: `Could not read ${file.name}. Try a text-based PDF, DOCX, TXT, or paste the resume text directly.`,
+      });
+    } finally {
+      setIsImportingResume(false);
+      event.target.value = '';
+    }
   };
 
   const handleImportResume = (analyzeAfter = false) => {
@@ -529,14 +615,16 @@ export function ProfileAndEvidence({
       onUpdateProfile(profileUpdates);
     }
 
-    importedEvidence.forEach((item) => onAddEvidence(item));
+    onReplaceEvidence(importedEvidence);
     setResumeText('');
     setIsEditingProfile(false);
     setFormMode('closed');
     setShowSuccess(true);
     setResumeImportStatus({
       type: 'success',
-      message: `Imported ${importedEvidence.length} evidence block${importedEvidence.length === 1 ? '' : 's'} from your resume. Review them below, then run the Lens Scan.`,
+      message: analyzeAfter
+        ? `Imported ${importedEvidence.length} evidence block${importedEvidence.length === 1 ? '' : 's'} from your resume. Running Lens Scan...`
+        : `Imported ${importedEvidence.length} evidence block${importedEvidence.length === 1 ? '' : 's'} from your resume. Review them below, then run the Lens Scan.`,
     });
 
     if (analyzeAfter) {
@@ -794,15 +882,15 @@ export function ProfileAndEvidence({
               <span className={styles.resumeImportEyebrow}>Resume Autopilot</span>
               <h3>Upload your resume text and let PathLens build the first draft.</h3>
               <p>
-                Paste a resume or upload a TXT/MD version. PathLens will prefill profile fields,
+                Paste a resume or upload a PDF, DOCX, TXT, or MD file. PathLens will prefill profile fields,
                 detect skills, and convert resume sections into editable evidence blocks.
               </p>
             </div>
             <label className={styles.resumeUploadButton}>
-              Upload resume text
+              Upload resume
               <input
                 type="file"
-                accept=".txt,.md,.csv,.rtf,text/plain,text/markdown,text/csv"
+                accept=".pdf,.docx,.txt,.md,.csv,.rtf,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,text/markdown,text/csv"
                 onChange={handleResumeFile}
               />
             </label>
@@ -813,6 +901,7 @@ export function ProfileAndEvidence({
             value={resumeText}
             onChange={(event) => setResumeText(event.target.value)}
             placeholder="Paste your resume here. Include education, projects, internships, technologies, outcomes, links, and target role if you have one."
+            disabled={isImportingResume}
             rows={8}
           />
 
@@ -820,18 +909,18 @@ export function ProfileAndEvidence({
             <button
               type="button"
               className={styles.resumePrimaryButton}
-              onClick={() => handleImportResume(false)}
-              disabled={resumeText.trim().length < 80}
+              onClick={() => handleImportResume(true)}
+              disabled={resumeText.trim().length < 80 || isImportingResume}
             >
-              Import resume into profile
+              Import resume and scan
             </button>
             <button
               type="button"
-              className={styles.resumePrimaryButton}
-              onClick={() => handleImportResume(true)}
-              disabled={resumeText.trim().length < 80}
+              className={styles.resumeSecondaryButton}
+              onClick={() => handleImportResume(false)}
+              disabled={resumeText.trim().length < 80 || isImportingResume}
             >
-              Import and run Lens Scan
+              Import only
             </button>
             <button
               type="button"
@@ -840,7 +929,7 @@ export function ProfileAndEvidence({
                 setResumeText('');
                 setResumeImportStatus(null);
               }}
-              disabled={!resumeText && !resumeImportStatus}
+              disabled={isImportingResume || (!resumeText && !resumeImportStatus)}
             >
               Clear resume text
             </button>
