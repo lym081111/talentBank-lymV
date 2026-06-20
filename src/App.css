@@ -10,7 +10,7 @@
   --color-primary-light: #eff6ff;
 
   /* Accent: Vibrant Green for growth & success */
-  --color-accent: #10b981;
+  --color-accent: #0f766e;
   --color-accent-light: #ecfdf5;
   --color-accent-dark: #059669;
 
@@ -19,21 +19,21 @@
   --color-secondary-light: #f1f5f9;
 
   /* Success: Fresh green for positive progress */
-  --color-success: #10b981;
+  --color-success: #065f46;
   --color-success-light: #ecfdf5;
 
   /* Warning: Golden amber for attention needed */
-  --color-warning: #f59e0b;
+  --color-warning: #b45309;
   --color-warning-light: #fffbeb;
 
   /* Danger: Rose for destructive actions */
-  --color-danger: #ef4444;
+  --color-danger: #b91c1c;
   --color-danger-light: #fee2e2;
 
   /* Neutral grays - professional clean palette */
   --color-text: #1f2937;
-  --color-text-secondary: #6b7280;
-  --color-text-muted: #9ca3af;
+  --color-text-secondary: #475569;
+  --color-text-muted: #475569;
   --color-border: #e5e7eb;
   --color-divider: #d1d5db;
 
@@ -120,8 +120,62 @@ html, body {
   color: #334155 !important;
 }
 
+.readablePage [class*="text-cyan"] {
+  color: #0e7490 !important;
+}
+
+.readablePage [class*="text-blue"] {
+  color: #1d4ed8 !important;
+}
+
+.readablePage [class*="text-emerald"] {
+  color: #065f46 !important;
+}
+
+.readablePage [class*="text-amber"] {
+  color: #b45309 !important;
+}
+
+.readablePage [class*="text-rose"] {
+  color: #be123c !important;
+}
+
 .readablePage [class*="border-white"] {
   border-color: #dbe5f4 !important;
+}
+
+.readablePage [class*="border-cyan"],
+.readablePage [class*="border-blue"] {
+  border-color: #bfdbfe !important;
+}
+
+.readablePage [class*="border-emerald"] {
+  border-color: #a7f3d0 !important;
+}
+
+.readablePage [class*="border-amber"] {
+  border-color: #fde68a !important;
+}
+
+.readablePage [class*="border-rose"] {
+  border-color: #fecdd3 !important;
+}
+
+.readablePage [class*="bg-cyan"],
+.readablePage [class*="bg-blue"] {
+  background: #eff6ff !important;
+}
+
+.readablePage [class*="bg-emerald"] {
+  background: #ecfdf5 !important;
+}
+
+.readablePage [class*="bg-amber"] {
+  background: #fffbeb !important;
+}
+
+.readablePage [class*="bg-rose"] {
+  background: #fff1f2 !important;
 }
 
 .readablePage [class*="shadow-"] {

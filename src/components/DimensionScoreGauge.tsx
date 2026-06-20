@@ -119,10 +119,7 @@ export function DimensionScoreGauge({ dimension, evidence = [], extractedSkills 
         <div style={{
           fontSize: '28px',
           fontWeight: '900',
-          background: `linear-gradient(135deg, ${color} 0%, var(--color-primary) 100%)`,
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
+          color,
         }}>
           {score}/100
         </div>

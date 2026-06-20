@@ -5,30 +5,30 @@
 }
 
 .section {
-  background: rgba(15, 23, 42, 0.74);
-  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: #ffffff;
+  border: 1px solid #dbe5f4;
   border-radius: var(--radius-lg);
   padding: 24px;
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 16px 50px rgba(15, 23, 42, 0.08);
   transition: all var(--transition-slow);
 }
 
 .section:hover {
-  box-shadow: 0 22px 60px rgba(34, 211, 238, 0.1);
-  border-color: rgba(34, 211, 238, 0.35);
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.10);
+  border-color: #bfdbfe;
 }
 
 .section h3 {
   margin: 0 0 6px 0;
   font-size: 18px;
-  color: #f8fafc;
+  color: #172033;
   font-weight: 700;
 }
 
 .subtitle {
   margin: 0 0 18px 0;
   font-size: 13px;
-  color: #94a3b8;
+  color: #475569;
   font-weight: 500;
 }
 
@@ -40,8 +40,8 @@
 }
 
 .stat {
-  background: rgba(8, 13, 24, 0.82);
-  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: #f8fafc;
+  border: 1px solid #dbe5f4;
   border-radius: var(--radius-lg);
   padding: 18px;
   text-align: center;
@@ -50,7 +50,7 @@
 
 .stat:hover {
   transform: translateY(-4px);
-  box-shadow: 0 16px 36px rgba(34, 211, 238, 0.08);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
 }
 
 .statValue {
@@ -62,7 +62,7 @@
 
 .statLabel {
   font-size: 13px;
-  color: #cbd5e1;
+  color: #334155;
   line-height: 1.4;
   font-weight: 600;
 }
@@ -70,7 +70,7 @@
 .gapItem {
   margin-bottom: 18px;
   padding-bottom: 18px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+  border-bottom: 1px solid #dbe5f4;
 }
 
 .gapItem:last-child {
@@ -82,12 +82,12 @@
 .gapName {
   font-weight: 700;
   font-size: 14px;
-  color: #f8fafc;
+  color: #172033;
   margin-bottom: 8px;
 }
 
 .gapBar {
-  background: rgba(148, 163, 184, 0.12);
+  background: #e2e8f0;
   height: 8px;
   border-radius: 6px;
   overflow: hidden;
@@ -104,13 +104,14 @@
 
 .gapStat {
   font-size: 12px;
-  color: #94a3b8;
+  color: #475569;
   font-weight: 500;
 }
 
 .intervention {
-  background: rgba(8, 13, 24, 0.74);
-  border-left: 3px solid #22d3ee;
+  background: #f8fafc;
+  border: 1px solid #dbe5f4;
+  border-left: 3px solid #0e7490;
   border-radius: var(--radius-md);
   padding: 16px;
   margin-bottom: 12px;
@@ -118,8 +119,8 @@
 }
 
 .intervention:hover {
-  background: rgba(34, 211, 238, 0.08);
-  border-left-color: #60a5fa;
+  background: #eff6ff;
+  border-left-color: #1d4ed8;
 }
 
 .intervention:last-child {
@@ -137,13 +138,13 @@
 .interventionHeader h4 {
   margin: 0;
   font-size: 14px;
-  color: #f8fafc;
+  color: #172033;
   font-weight: 700;
 }
 
 .interventionTarget {
-  background: rgba(34, 211, 238, 0.12);
-  color: #a5f3fc;
+  background: #e0f2fe;
+  color: #0e7490;
   padding: 3px 8px;
   border-radius: 12px;
   font-size: 11px;
@@ -156,18 +157,18 @@
   margin: 0 0 8px 0;
   font-size: 13px;
   line-height: 1.6;
-  color: #cbd5e1;
+  color: #334155;
 }
 
 .interventionImpact {
   font-size: 12px;
-  color: #94a3b8;
+  color: #475569;
   line-height: 1.5;
   font-weight: 500;
 }
 
 .interventionImpact strong {
-  color: #f8fafc;
+  color: #172033;
   font-weight: 700;
 }
 

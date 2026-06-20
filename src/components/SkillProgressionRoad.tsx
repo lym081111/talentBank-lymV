@@ -68,10 +68,10 @@ export function SkillProgressionRoad({ skills }: Props) {
       <div style={{
         position: 'relative',
         padding: '28px',
-        background: 'linear-gradient(135deg, rgba(2, 6, 23, 0.96) 0%, rgba(15, 23, 42, 0.96) 58%, rgba(8, 47, 73, 0.82) 100%)',
+        background: 'linear-gradient(135deg, #ffffff 0%, #eff6ff 58%, #ecfeff 100%)',
         borderRadius: '24px',
-        border: '1px solid rgba(103, 232, 249, 0.24)',
-        boxShadow: '0 24px 70px rgba(2, 6, 23, 0.28)',
+        border: '1px solid #bfdbfe',
+        boxShadow: '0 24px 70px rgba(15, 23, 42, 0.10)',
         overflow: 'hidden',
       }}>
         <svg
@@ -89,14 +89,14 @@ export function SkillProgressionRoad({ skills }: Props) {
         >
           <path
             d="M 90 520 C 250 280, 360 360, 510 210 S 800 100, 1085 82"
-            stroke="#22d3ee"
+            stroke="#bae6fd"
             strokeWidth="30"
             fill="none"
             strokeLinecap="round"
           />
           <path
             d="M 90 520 C 250 280, 360 360, 510 210 S 800 100, 1085 82"
-            stroke="#fef08a"
+            stroke="#1d4ed8"
             strokeWidth="5"
             fill="none"
             strokeDasharray="18,24"
@@ -111,9 +111,9 @@ export function SkillProgressionRoad({ skills }: Props) {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                border: '1px solid rgba(52, 211, 153, 0.35)',
-                background: 'rgba(52, 211, 153, 0.12)',
-                color: '#bbf7d0',
+                border: '1px solid #a7f3d0',
+                background: '#ecfdf5',
+                color: '#065f46',
                 padding: '10px 14px',
                 borderRadius: '999px',
                 fontSize: '12px',
@@ -127,7 +127,8 @@ export function SkillProgressionRoad({ skills }: Props) {
               <div style={{ display: 'grid', gap: '14px', marginTop: '28px' }}>
                 {orderedSkills.map((skill, idx) => {
                   const isHigh = skill.priority === 'high';
-                  const color = isHigh ? '#fb7185' : skill.priority === 'medium' ? '#fbbf24' : '#34d399';
+                  const color = isHigh ? '#be123c' : skill.priority === 'medium' ? '#b45309' : '#065f46';
+                  const background = isHigh ? '#fff1f2' : skill.priority === 'medium' ? '#fffbeb' : '#ecfdf5';
 
                   return (
                     <div
@@ -138,10 +139,10 @@ export function SkillProgressionRoad({ skills }: Props) {
                         gap: '14px',
                         alignItems: 'center',
                         border: `1px solid ${color}55`,
-                        background: isHigh ? 'rgba(251, 113, 133, 0.10)' : 'rgba(255, 255, 255, 0.055)',
+                        background,
                         borderRadius: '18px',
                         padding: '14px',
-                        boxShadow: isHigh ? '0 18px 45px rgba(251, 113, 133, 0.12)' : 'none',
+                        boxShadow: isHigh ? '0 18px 45px rgba(190, 18, 60, 0.10)' : 'none',
                       }}
                     >
                       <div style={{
@@ -160,10 +161,10 @@ export function SkillProgressionRoad({ skills }: Props) {
                         {idx + 1}
                       </div>
                       <div style={{ flex: '1 1 230px', minWidth: 0 }}>
-                        <div style={{ color: '#ffffff', fontSize: '16px', fontWeight: 900, lineHeight: 1.2 }}>
+                        <div style={{ color: '#172033', fontSize: '16px', fontWeight: 900, lineHeight: 1.2 }}>
                           {skill.skill}
                         </div>
-                        <div style={{ marginTop: '6px', color: 'rgba(255,255,255,0.52)', fontSize: '12px', lineHeight: 1.45 }}>
+                        <div style={{ marginTop: '6px', color: '#475569', fontSize: '12px', lineHeight: 1.45 }}>
                           {skill.resources.slice(0, 2).join(' | ')}
                         </div>
                       </div>
@@ -171,7 +172,7 @@ export function SkillProgressionRoad({ skills }: Props) {
                         <div style={{ color, fontSize: '12px', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                           {skill.priority} priority
                         </div>
-                        <div style={{ color: '#ffffff', fontSize: '13px', fontWeight: 800, marginTop: '5px' }}>
+                        <div style={{ color: '#172033', fontSize: '13px', fontWeight: 800, marginTop: '5px' }}>
                           {skill.weeksToLearn} weeks | {skill.salaryImpact}
                         </div>
                       </div>
@@ -185,9 +186,9 @@ export function SkillProgressionRoad({ skills }: Props) {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '10px',
-                border: '1px solid rgba(103, 232, 249, 0.34)',
-                background: 'linear-gradient(135deg, rgba(103, 232, 249, 0.18), rgba(167, 139, 250, 0.16))',
-                color: '#e0f2fe',
+                border: '1px solid #bfdbfe',
+                background: '#eff6ff',
+                color: '#1d4ed8',
                 padding: '12px 16px',
                 borderRadius: '999px',
                 fontSize: '13px',
@@ -198,35 +199,35 @@ export function SkillProgressionRoad({ skills }: Props) {
             </div>
 
             <aside style={{
-              border: '1px solid rgba(255,255,255,0.10)',
-              background: 'rgba(2, 6, 23, 0.64)',
+              border: '1px solid #dbe5f4',
+              background: '#ffffff',
               borderRadius: '22px',
               padding: '18px',
             }}>
-              <div style={{ color: '#93c5fd', fontSize: '11px', fontWeight: 900, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+              <div style={{ color: '#1d4ed8', fontSize: '11px', fontWeight: 900, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
                 Market context
               </div>
               <div style={{ display: 'grid', gap: '12px', marginTop: '14px' }}>
                 {marketSignals.map((signal) => (
                   <div key={signal.label} style={{
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    background: 'rgba(255,255,255,0.045)',
+                    border: '1px solid #dbe5f4',
+                    background: '#f8fafc',
                     borderRadius: '16px',
                     padding: '13px',
                   }}>
-                    <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '10px', fontWeight: 900, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                    <div style={{ color: '#475569', fontSize: '10px', fontWeight: 900, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                       {signal.label}
                     </div>
-                    <div style={{ color: '#ffffff', fontSize: '22px', fontWeight: 900, marginTop: '5px' }}>
+                    <div style={{ color: '#172033', fontSize: '22px', fontWeight: 900, marginTop: '5px' }}>
                       {signal.value}
                     </div>
-                    <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: '11px', lineHeight: 1.4, marginTop: '5px' }}>
+                    <div style={{ color: '#475569', fontSize: '11px', lineHeight: 1.4, marginTop: '5px' }}>
                       {signal.note}
                     </div>
                   </div>
                 ))}
               </div>
-              <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '11px', lineHeight: 1.55, margin: '14px 0 0 0' }}>
+              <p style={{ color: '#475569', fontSize: '11px', lineHeight: 1.55, margin: '14px 0 0 0' }}>
                 These are external market signals. PathLens still scores only the candidate evidence you entered.
               </p>
             </aside>
@@ -235,8 +236,8 @@ export function SkillProgressionRoad({ skills }: Props) {
       </div>
 
       <div style={{
-        background: 'rgba(103, 232, 249, 0.06)',
-        border: '1px dashed rgba(103, 232, 249, 0.38)',
+        background: '#eff6ff',
+        border: '1px dashed #93c5fd',
         borderRadius: 'var(--radius-lg)',
         padding: '20px',
         marginTop: '24px',

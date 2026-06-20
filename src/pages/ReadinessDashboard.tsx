@@ -607,20 +607,20 @@ function CareerScoreMeaning({
           label: 'Market-ready',
           salary: 'MYR 630K-875K/year',
           action: 'Use the application pack to defend senior or high-growth roles with specific proof.',
-          color: '#34d399',
+          color: '#065f46',
         }
       : profile.overall >= 55
         ? {
             label: 'Good trajectory',
             salary: 'MYR 420K-560K/year',
             action: `Close ${weakDimension?.dimension ?? 'the weakest gap'} before claiming higher bands.`,
-            color: '#67e8f9',
+            color: '#0e7490',
           }
         : {
             label: 'Foundation-building',
             salary: 'MYR 168K-252K/year',
             action: 'Build one verifiable project with tests, deployment, and a clear outcome.',
-            color: '#fbbf24',
+            color: '#b45309',
           };
 
   return (

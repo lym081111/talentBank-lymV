@@ -32,7 +32,8 @@
 }
 
 .number {
-  background: linear-gradient(135deg, var(--color-warning-light) 0%, var(--color-warning) 20%);
+  background: var(--color-warning-light);
+  border: 1px solid var(--color-warning);
   color: var(--color-warning);
   width: 32px;
   height: 32px;
@@ -64,10 +65,7 @@
 .score {
   font-size: 24px;
   font-weight: 900;
-  background: linear-gradient(135deg, var(--color-warning) 0%, var(--color-primary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-warning);
 }
 
 .impactBadge {
