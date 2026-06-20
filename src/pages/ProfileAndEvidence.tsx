@@ -36,13 +36,19 @@ const KNOWN_RESUME_SKILLS = [
   'GraphQL', 'Tailwind', 'Figma', 'Power BI', 'Tableau', 'Excel', 'Pandas', 'NumPy',
   'Machine Learning', 'TensorFlow', 'PyTorch', 'Kafka', 'Spark', 'Flink', 'ClickHouse',
   'Data Pipeline', 'ETL', 'UI/UX', 'Product Management', 'User Research', 'A/B Testing',
+  'PHP', 'C++', 'ESP32', 'Arduino IDE', 'Arduino', 'IoT', 'Blynk', 'MQTT', 'Node-RED',
+  'InfluxDB', 'Telegram Bot API', 'Raspberry Pi', 'Rasberry Pi', 'Computer Vision',
+  'Cisco Packet Tracer', 'Streamlit',
 ];
 
 const RESUME_SECTION_TYPES: Record<string, Evidence['type']> = {
+  'project experience': 'portfolio',
   experience: 'internship',
+  'work experience': 'internship',
   work: 'internship',
   internship: 'internship',
   employment: 'internship',
+  'competition experience': 'hackathon',
   projects: 'portfolio',
   project: 'portfolio',
   portfolio: 'portfolio',
@@ -56,7 +62,14 @@ const RESUME_SECTION_TYPES: Record<string, Evidence['type']> = {
 };
 
 function cleanResumeLine(line: string) {
-  return line.replace(/^[\-*•\u2022]\s*/, '').replace(/\s+/g, ' ').trim();
+  return line
+    .replace(/â€™/g, "'")
+    .replace(/â€œ|â€/g, '"')
+    .replace(/â€“|â€”/g, '-')
+    .replace(/Â°/g, 'deg')
+    .replace(/^[\s\-*•\u2022]+/, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function inferTargetRole(text: string) {
@@ -74,7 +87,17 @@ function inferTargetRole(text: string) {
 
 function extractResumeSkills(text: string) {
   const lower = text.toLowerCase();
-  return KNOWN_RESUME_SKILLS.filter((skill) => lower.includes(skill.toLowerCase()));
+  return KNOWN_RESUME_SKILLS.filter((skill) => {
+    const normalizedSkill = skill.toLowerCase();
+    if (/^[a-z0-9+#. /-]+$/i.test(skill)) {
+      return new RegExp(`(^|[^a-z0-9])${escapeResumeRegExp(normalizedSkill)}([^a-z0-9]|$)`, 'i').test(lower);
+    }
+    return lower.includes(normalizedSkill);
+  });
+}
+
+function escapeResumeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function evidenceSignature(items: Evidence[]) {
@@ -135,7 +158,21 @@ function extractProfileFromResume(text: string): Partial<StudentProfile> {
 
 function getResumeSection(line: string) {
   const key = line.toLowerCase().replace(/[:\-]/g, '').trim();
-  return Object.keys(RESUME_SECTION_TYPES).find((section) => key === section || key.includes(section));
+  const ignoredHeadings = [
+    'summary',
+    'profile',
+    'self introduction',
+    'objective',
+    'technical skills',
+    'skills',
+    'education',
+  ];
+  const ignored = ignoredHeadings.find((section) => key === section || key.startsWith(`${section} `));
+  if (ignored) return ignored;
+
+  return Object.keys(RESUME_SECTION_TYPES)
+    .sort((a, b) => b.length - a.length)
+    .find((section) => key === section || key.startsWith(`${section} `));
 }
 
 function extractOutcome(text: string) {
@@ -163,25 +200,30 @@ function parseResumeIntoEvidence(text: string): Omit<Evidence, 'id'>[] {
 
   const resumeSkills = extractResumeSkills(text);
   const evidenceItems = Object.entries(sections)
-    .filter(([, sectionLines]) => sectionLines.join(' ').length >= 80)
-    .slice(0, 6)
-    .map(([section, sectionLines]) => {
-      const sectionText = sectionLines.slice(0, 8).join(' ');
-      const sectionSkills = extractResumeSkills(sectionText);
-      const type = RESUME_SECTION_TYPES[section] ?? (
-        /project|built|github|deployed|app|website|system/i.test(sectionText) ? 'portfolio' : 'internship'
-      );
-      return {
-        type,
-        title: (sectionLines.find((line) => line.length >= 4 && line.length <= 120) || `${section} evidence`).replace(/[:|]+$/g, '').slice(0, 120),
-        description: sectionText.length >= 50
-          ? sectionText.slice(0, 700)
-          : `${sectionText} This resume block needs more detail, but it gives PathLens a starting point for evidence extraction.`,
-        technologies: (sectionSkills.length ? sectionSkills : resumeSkills).slice(0, 10).join(', ') || undefined,
-        outcome: extractOutcome(sectionText),
-        verified: false,
-      };
-    });
+    .flatMap(([section, sectionLines]) => {
+      const type = RESUME_SECTION_TYPES[section];
+      if (!type || sectionLines.join(' ').length < 80) return [];
+
+      return splitResumeSectionIntoEntries(sectionLines)
+        .map((entry) => {
+          const sectionText = entry.descriptionLines.join(' ');
+          const combinedText = `${entry.title} ${sectionText} ${entry.technologies}`;
+          const sectionSkills = extractResumeSkills(combinedText);
+          const technologies = normalizeTechnologyList(entry.technologies || sectionSkills.join(', '));
+
+          return {
+            type,
+            title: entry.title.replace(/[:|]+$/g, '').slice(0, 120),
+            description: sectionText.length >= 50
+              ? sectionText.slice(0, 900)
+              : `${sectionText || entry.title} This resume block needs more detail, but it gives PathLens a starting point for evidence extraction.`,
+            technologies: technologies || undefined,
+            outcome: extractOutcome(sectionText || entry.title),
+            verified: false,
+          };
+        });
+    })
+    .slice(0, 10);
 
   if (evidenceItems.length > 0) return evidenceItems;
 
@@ -193,6 +235,86 @@ function parseResumeIntoEvidence(text: string): Omit<Evidence, 'id'>[] {
     outcome: extractOutcome(text),
     verified: false,
   }];
+}
+
+interface ResumeEntryDraft {
+  title: string;
+  descriptionLines: string[];
+  technologies: string;
+}
+
+function splitResumeSectionIntoEntries(lines: string[]): ResumeEntryDraft[] {
+  const entries: ResumeEntryDraft[] = [];
+  let current: ResumeEntryDraft | null = null;
+
+  const pushCurrent = () => {
+    if (!current) return;
+    const description = current.descriptionLines.join(' ');
+    if (current.title.length >= 4 && (description.length >= 40 || current.technologies)) {
+      entries.push(current);
+    }
+  };
+
+  for (const line of lines) {
+    const technologies = extractTechnologiesFromLine(line);
+    if (technologies) {
+      current ??= { title: 'Imported resume item', descriptionLines: [], technologies: '' };
+      current.technologies = normalizeTechnologyList([current.technologies, technologies].filter(Boolean).join(', '));
+      continue;
+    }
+
+    if (isLikelyResumeItemTitle(line, current)) {
+      pushCurrent();
+      current = { title: stripResumeDate(line), descriptionLines: [], technologies: '' };
+      continue;
+    }
+
+    current ??= { title: stripResumeDate(line), descriptionLines: [], technologies: '' };
+    if (current.title === line && current.descriptionLines.length === 0) continue;
+    current.descriptionLines.push(line);
+  }
+
+  pushCurrent();
+  return entries.length > 0 ? entries : [{
+    title: lines.find((line) => line.length >= 4 && line.length <= 120) || 'Imported resume item',
+    descriptionLines: lines.slice(1),
+    technologies: '',
+  }];
+}
+
+function extractTechnologiesFromLine(line: string) {
+  return line.match(/^(?:technologies used|technologies|tech stack|tools|skills)\s*:\s*(.+)$/i)?.[1]?.trim() ?? '';
+}
+
+function normalizeTechnologyList(value: string) {
+  const seen = new Set<string>();
+  return value
+    .split(/[,;|]/)
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .filter((item) => {
+      const key = item.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(0, 12)
+    .join(', ');
+}
+
+function isLikelyResumeItemTitle(line: string, current: ResumeEntryDraft | null) {
+  if (line.length < 4 || line.length > 150) return false;
+  if (/^(?:cgpa|spm|foundation|bachelor|universiti|university|college|programming languages|databases|tools|iot & networking)\b/i.test(line)) return false;
+  if (/^(?:built|implemented|designed|integrated|developed|configured|programmed|deployed|created|collaborated|pitched|used|wrote|fixed|attended|learned|conducted|reduced|increased|optimized|automated)\b/i.test(line)) return false;
+  if (!current) return true;
+  return current.descriptionLines.length > 0 || Boolean(current.technologies);
+}
+
+function stripResumeDate(line: string) {
+  return line
+    .replace(/\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)\.?\s+\d{4}.*$/i, '')
+    .replace(/\s+\d{4}\s*-\s*(?:present|\d{4}).*$/i, '')
+    .trim();
 }
 
 const EVIDENCE_TEMPLATES: Array<{

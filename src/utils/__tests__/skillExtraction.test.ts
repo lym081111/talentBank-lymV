@@ -63,4 +63,26 @@ describe('extractSkillsFromEvidence', () => {
     const names = skills.map((s) => s.skill);
     expect(names.some((n) => n.toLowerCase().includes('typescript') || n.toLowerCase().includes('api'))).toBe(true);
   });
+
+  it('keeps SQL-family evidence tied to the matched database phrase', () => {
+    const skills = extractSkillsFromEvidence([
+      makeEvidence({ title: 'Student Curriculum Management System', technologies: 'PHP, MySQL' }),
+    ]);
+    const names = skills.map((s) => s.skill);
+    expect(names).toContain('SQL');
+    expect(skills.find((s) => s.skill === 'SQL')?.sourcePhrase).toMatch(/MySQL/i);
+  });
+
+  it('does not match TypeScript from ordinary words ending in ts', () => {
+    const skills = extractSkillsFromEvidence([
+      makeEvidence({
+        title: 'Energy Harvesting System with Real-Time Mobile App Visualisation',
+        description: 'Integrated sensors and built hardware circuits for real-time current metrics.',
+        technologies: 'ESP32, Hardware Circuitry, IoT, Arduino IDE',
+      }),
+    ]);
+    const names = skills.map((s) => s.skill);
+    expect(names).not.toContain('TypeScript');
+    expect(names).not.toContain('JavaScript / TypeScript');
+  });
 });

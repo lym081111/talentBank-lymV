@@ -49,11 +49,12 @@ export function extractSkillsFromEvidence(evidence: Evidence[]): ExtractedSkill[
 function extractSourcePhrase(evidence: Evidence, keyword: string): string {
   const combinedText = `${evidence.title} ${evidence.description} ${evidence.technologies || ''}`;
   const words = combinedText.split(/\s+/);
+  const keywordTokens = normalizeForMatching(keyword).split(' ').filter(Boolean);
 
   for (let i = 0; i < words.length; i++) {
-    if (words[i].toLowerCase().includes(keyword.toLowerCase())) {
+    if (matchesKeyword(words.slice(i, i + Math.max(1, keywordTokens.length)).join(' '), keyword)) {
       const start = Math.max(0, i - 2);
-      const end = Math.min(words.length, i + 3);
+      const end = Math.min(words.length, i + Math.max(1, keywordTokens.length) + 2);
       return words.slice(start, end).join(' ');
     }
   }
@@ -73,14 +74,22 @@ function matchesKeyword(text: string, keyword: string): boolean {
     return new RegExp(`\\b${escapeRegExp(normalizedKeyword)}\\b`, 'i').test(text);
   }
 
-  const textForMatching = normalizedText.replace(/[^a-z0-9]+/g, ' ');
-  const keywordForMatching = normalizedKeyword.replace(/[^a-z0-9]+/g, ' ').trim();
+  if (normalizedKeyword.startsWith('.')) {
+    return new RegExp(`(^|[^a-z0-9])${escapeRegExp(normalizedKeyword)}([^a-z0-9]|$)`, 'i').test(text);
+  }
+
+  const textForMatching = normalizeForMatching(normalizedText);
+  const keywordForMatching = normalizeForMatching(normalizedKeyword);
 
   if (!keywordForMatching) {
     return false;
   }
 
-  return textForMatching.includes(keywordForMatching);
+  return new RegExp(`(^|\\s)${escapeRegExp(keywordForMatching)}(?=\\s|$)`, 'i').test(textForMatching);
+}
+
+function normalizeForMatching(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
 }
 
 function escapeRegExp(value: string): string {
